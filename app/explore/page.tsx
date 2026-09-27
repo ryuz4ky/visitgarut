@@ -4,7 +4,7 @@ import { Heart, MapPin, Menu, Search, Star } from 'lucide-react'
 import { getPublishedPlaces } from '@/lib/data/places'
 
 export const metadata: Metadata = {
-  title: 'Explore Garut: Tempat Wisata & Destinasi Pilihan | VisitGarut',
+  title: 'Explore Garut: Tempat Wisata & Destinasi Pilihan',
   description: 'Jelajahi tempat wisata dan destinasi pilihan di Garut. Temukan kawasan pegunungan, pemandian air panas, danau, dan pengalaman lokal.',
   alternates: {
     canonical: '/explore',
