@@ -1,0 +1,100 @@
+.simple-landing {
+  min-height: calc(100vh - 76px);
+  background:
+    radial-gradient(circle at 82% 16%, rgba(244,123,32,.14), transparent 25%),
+    linear-gradient(180deg, #f4f1e7 0%, #fffdf8 70%);
+}
+
+.simple-landing-inner {
+  width: min(1180px, 90vw);
+  margin: 0 auto;
+  padding: 92px 0 100px;
+}
+
+.simple-landing h1 {
+  max-width: 800px;
+  margin: 12px 0 16px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(48px, 7vw, 88px);
+  line-height: .96;
+  letter-spacing: -.05em;
+}
+
+.simple-landing-lead {
+  max-width: 680px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.75;
+  font-size: 17px;
+}
+
+.simple-landing-grid {
+  margin-top: 46px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.simple-landing-card {
+  min-height: 180px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: rgba(255,255,255,.88);
+  box-shadow: 0 10px 35px rgba(13,76,61,.06);
+}
+
+.simple-landing-card span {
+  color: var(--orange);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.simple-landing-card h2 {
+  margin: 8px 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 28px;
+  letter-spacing: -.03em;
+}
+
+.simple-landing-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.simple-landing-actions {
+  margin-top: 36px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 19px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: white;
+  color: var(--forest);
+  font-weight: 800;
+}
+
+@media (max-width: 900px) {
+  .simple-landing-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .simple-landing { min-height: calc(100vh - 66px); }
+  .simple-landing-inner { width: calc(100vw - 28px); padding: 62px 0 72px; }
+  .simple-landing h1 { font-size: 52px; }
+  .simple-landing-lead { font-size: 15px; }
+}
