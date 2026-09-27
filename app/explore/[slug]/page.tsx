@@ -8,6 +8,10 @@ type PlacePageProps = {
   params: Promise<{ slug: string }>
 }
 
+function serializeJsonLd(value: unknown) {
+  return JSON.stringify(value).replace(/</g, '\\u003c')
+}
+
 export async function generateStaticParams() {
   const slugs = await getPublishedPlaceSlugs()
   return slugs.map((slug) => ({ slug }))
@@ -19,12 +23,12 @@ export async function generateMetadata({ params }: PlacePageProps): Promise<Meta
 
   if (!place) {
     return {
-      title: 'Destinasi Tidak Ditemukan | VisitGarut',
+      title: 'Destinasi Tidak Ditemukan',
       robots: { index: false, follow: false },
     }
   }
 
-  const title = place.seo_title || `${place.name}, Garut: Panduan Wisata & Informasi | VisitGarut`
+  const title = place.seo_title || `${place.name}, Garut: Panduan Wisata & Informasi`
   const description = place.seo_description || place.short_description || `Panduan mengunjungi ${place.name} di Garut.`
 
   return {
@@ -34,7 +38,7 @@ export async function generateMetadata({ params }: PlacePageProps): Promise<Meta
       canonical: `/explore/${place.slug}`,
     },
     openGraph: {
-      title,
+      title: `${title} | VisitGarut`,
       description,
       type: 'article',
       images: place.cover_image_url ? [{ url: place.cover_image_url }] : undefined,
@@ -57,6 +61,7 @@ export default async function PlacePage({ params }: PlacePageProps) {
     url: `https://visitgarut.com/explore/${place.slug}`,
     address: {
       '@type': 'PostalAddress',
+      ...(place.address ? { streetAddress: place.address } : {}),
       addressLocality: place.district || 'Garut',
       addressRegion: 'Jawa Barat',
       addressCountry: 'ID',
@@ -86,8 +91,8 @@ export default async function PlacePage({ params }: PlacePageProps) {
 
   return (
     <main>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbLd) }} />
 
       <header className="detail-header">
         <Link href="/explore" className="back-link"><ChevronLeft size={18} /> Explore</Link>
