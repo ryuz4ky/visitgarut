@@ -111,9 +111,7 @@ export default async function Home() {
           {destinations.map((item) => (
             <article className="destination-card" key={item.slug}>
               <Link href={`/explore/${item.slug}`} aria-label={`Lihat ${item.name}`}>
-                <div className="destination-image" style={{ backgroundImage: item.cover_image_url ? `url(${item.cover_image_url})` : undefined }}>
-                  <button type="button" aria-label={`Simpan ${item.name}`} onClick={(event) => event.preventDefault()}><Heart size={18} /></button>
-                </div>
+                <div className="destination-image" style={{ backgroundImage: item.cover_image_url ? `url(${item.cover_image_url})` : undefined }} />
                 <div className="destination-body">
                   <h3>{item.name}</h3>
                   <p><MapPin size={14} /> {item.district ? `Kec. ${item.district}` : 'Kabupaten Garut'}</p>
