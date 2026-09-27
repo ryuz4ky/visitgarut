@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import {
   BedDouble,
   CalendarDays,
@@ -6,7 +7,6 @@ import {
   Coffee,
   Compass,
   Heart,
-  Map,
   MapPin,
   Menu,
   Mountain,
@@ -16,80 +16,53 @@ import {
   Star,
   Store,
   Utensils,
-} from "lucide-react";
+} from 'lucide-react'
+import { getFeaturedPlaces } from '@/lib/data/places'
 
 const categories = [
-  { label: "Atraksi Wisata", icon: Mountain },
-  { label: "Cafe & Kuliner", icon: Coffee },
-  { label: "Hotel & Penginapan", icon: BedDouble },
-  { label: "Rental Motor", icon: Compass },
-  { label: "Rental Mobil", icon: Car },
-  { label: "Oleh-Oleh", icon: ShoppingBag },
-  { label: "Event & Aktivitas", icon: CalendarDays },
-];
-
-const destinations = [
-  {
-    name: "Gunung Papandayan",
-    location: "Cisurupan",
-    rating: "4.8",
-    reviews: "1.2k",
-    image:
-      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=85",
-  },
-  {
-    name: "Darajat Pass",
-    location: "Pasirwangi",
-    rating: "4.7",
-    reviews: "980",
-    image:
-      "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1000&q=85",
-  },
-  {
-    name: "Cipanas Garut",
-    location: "Tarogong Kaler",
-    rating: "4.6",
-    reviews: "860",
-    image:
-      "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1000&q=85",
-  },
-  {
-    name: "Situ Bagendit",
-    location: "Banyuresmi",
-    rating: "4.5",
-    reviews: "720",
-    image:
-      "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1000&q=85",
-  },
-];
+  { label: 'Atraksi Wisata', icon: Mountain, href: '/explore' },
+  { label: 'Cafe & Kuliner', icon: Coffee, href: '/eat' },
+  { label: 'Hotel & Penginapan', icon: BedDouble, href: '/stay' },
+  { label: 'Rental Motor', icon: Compass, href: '/transport' },
+  { label: 'Rental Mobil', icon: Car, href: '/transport' },
+  { label: 'Oleh-Oleh', icon: ShoppingBag, href: '/eat' },
+  { label: 'Event & Aktivitas', icon: CalendarDays, href: '/events' },
+]
 
 const localBusinesses = [
-  { name: "Kopi Lokal Garut", type: "Cafe & Kuliner", rating: "4.6", icon: Coffee },
-  { name: "Papandayan Homestay", type: "Penginapan", rating: "4.8", icon: BedDouble },
-  { name: "Garut Motor Rental", type: "Transportasi", rating: "4.7", icon: Car },
-  { name: "Dodol Garut Asli", type: "Oleh-Oleh", rating: "4.6", icon: ShoppingBag },
-];
+  { name: 'Kopi Lokal Garut', type: 'Cafe & Kuliner', rating: '4.6', icon: Coffee },
+  { name: 'Papandayan Homestay', type: 'Penginapan', rating: '4.8', icon: BedDouble },
+  { name: 'Garut Motor Rental', type: 'Transportasi', rating: '4.7', icon: Car },
+  { name: 'Dodol Garut Asli', type: 'Oleh-Oleh', rating: '4.6', icon: ShoppingBag },
+]
 
-export default function Home() {
+function formatReviews(value: number) {
+  if (value >= 1000) return `${(value / 1000).toFixed(value % 1000 === 0 ? 0 : 1)}k`
+  return String(value)
+}
+
+export default async function Home() {
+  const destinations = await getFeaturedPlaces(4)
+
   return (
     <main>
       <header className="site-header">
-        <a className="brand" href="#top" aria-label="VisitGarut home">
+        <Link className="brand" href="/" aria-label="VisitGarut home">
           <span className="brand-mark">⌃</span>
           <span>Visit<span>Garut</span></span>
-        </a>
+        </Link>
 
         <nav className="desktop-nav" aria-label="Main navigation">
-          <a href="#explore">Explore</a>
-          <a href="#stay">Stay</a>
-          <a href="#eat">Eat</a>
-          <a href="#transport">Transport</a>
-          <a href="#events">Events</a>
+          <Link href="/explore">Explore</Link>
+          <Link href="/stay">Stay</Link>
+          <Link href="/eat">Eat</Link>
+          <Link href="/transport">Transport</Link>
+          <Link href="/events">Events</Link>
           <a href="#local">Local Business</a>
         </nav>
 
         <div className="header-actions">
-          <button className="icon-button" aria-label="Search"><Search size={19} /></button>
+          <Link className="icon-button" aria-label="Search" href="/explore"><Search size={19} /></Link>
           <button className="icon-button desktop-only" aria-label="Saved"><Heart size={19} /></button>
           <button className="login-button desktop-only">Masuk / Daftar</button>
           <button className="icon-button mobile-only" aria-label="Menu"><Menu size={21} /></button>
@@ -105,22 +78,22 @@ export default function Home() {
             Alam yang menenangkan, kuliner yang menggugah, dan cerita lokal yang selalu terasa istimewa.
           </p>
 
-          <div className="hero-search" role="search">
+          <form className="hero-search" role="search" action="/explore">
             <Search size={20} />
-            <input aria-label="Cari di VisitGarut" placeholder="Cari wisata, hotel, kuliner, atau aktivitas..." />
-            <button><MapPin size={17} /> Garut</button>
-            <button className="search-submit" aria-label="Cari"><Search size={19} /></button>
-          </div>
+            <input name="q" aria-label="Cari di VisitGarut" placeholder="Cari wisata, hotel, kuliner, atau aktivitas..." />
+            <button type="button"><MapPin size={17} /> Garut</button>
+            <button type="submit" className="search-submit" aria-label="Cari"><Search size={19} /></button>
+          </form>
         </div>
         <div className="hero-note">Dari gunung sampai pantai,<br />semua ada di Garut.</div>
       </section>
 
       <section className="category-strip" aria-label="Kategori VisitGarut">
-        {categories.map(({ label, icon: Icon }) => (
-          <a key={label} href="#explore" className="category-item">
+        {categories.map(({ label, icon: Icon, href }) => (
+          <Link key={label} href={href} className="category-item">
             <span><Icon size={23} /></span>
             <strong>{label}</strong>
-          </a>
+          </Link>
         ))}
       </section>
 
@@ -131,20 +104,22 @@ export default function Home() {
             <h2>Destinasi unggulan di Garut</h2>
             <p>Temukan tempat-tempat terbaik yang wajib kamu kunjungi.</p>
           </div>
-          <a href="#map">Lihat semua <ChevronRight size={17} /></a>
+          <Link href="/explore">Lihat semua <ChevronRight size={17} /></Link>
         </div>
 
         <div className="destination-grid">
           {destinations.map((item) => (
-            <article className="destination-card" key={item.name}>
-              <div className="destination-image" style={{ backgroundImage: `url(${item.image})` }}>
-                <button aria-label={`Simpan ${item.name}`}><Heart size={18} /></button>
-              </div>
-              <div className="destination-body">
-                <h3>{item.name}</h3>
-                <p><MapPin size={14} /> Kec. {item.location}</p>
-                <div className="rating"><Star size={14} fill="currentColor" /> {item.rating} <span>({item.reviews})</span></div>
-              </div>
+            <article className="destination-card" key={item.slug}>
+              <Link href={`/explore/${item.slug}`} aria-label={`Lihat ${item.name}`}>
+                <div className="destination-image" style={{ backgroundImage: item.cover_image_url ? `url(${item.cover_image_url})` : undefined }}>
+                  <button type="button" aria-label={`Simpan ${item.name}`} onClick={(event) => event.preventDefault()}><Heart size={18} /></button>
+                </div>
+                <div className="destination-body">
+                  <h3>{item.name}</h3>
+                  <p><MapPin size={14} /> {item.district ? `Kec. ${item.district}` : 'Kabupaten Garut'}</p>
+                  <div className="rating"><Star size={14} fill="currentColor" /> {item.rating?.toFixed(1) ?? '—'} <span>({formatReviews(item.review_count)})</span></div>
+                </div>
+              </Link>
             </article>
           ))}
         </div>
@@ -157,7 +132,7 @@ export default function Home() {
           <p>
             Temukan wisata, kuliner, penginapan, transportasi, event, dan bisnis lokal berdasarkan area dan jarak terdekat.
           </p>
-          <button className="primary-button">Buka Peta VisitGarut <ChevronRight size={18} /></button>
+          <Link className="primary-button" href="/map">Buka Peta VisitGarut <ChevronRight size={18} /></Link>
         </div>
 
         <div className="map-canvas" aria-label="Mockup peta VisitGarut">
@@ -175,7 +150,7 @@ export default function Home() {
             <div className="map-card-image" />
             <div>
               <strong>Situ Bagendit</strong>
-              <span><Star size={12} fill="currentColor" /> 4.5 · 12 km</span>
+              <span><Star size={12} fill="currentColor" /> 4.6 · 12 km</span>
             </div>
           </div>
         </div>
@@ -188,7 +163,7 @@ export default function Home() {
             <h2>Rekomendasi bisnis lokal</h2>
             <p>Dukung pelaku usaha lokal dan temukan pengalaman autentik di Garut.</p>
           </div>
-          <a href="#">Lihat semua <ChevronRight size={17} /></a>
+          <Link href="/explore">Lihat semua <ChevronRight size={17} /></Link>
         </div>
 
         <div className="business-grid">
@@ -220,10 +195,10 @@ export default function Home() {
       </section>
 
       <footer>
-        <a className="brand footer-brand" href="#top"><span className="brand-mark">⌃</span>Visit<span>Garut</span></a>
+        <Link className="brand footer-brand" href="/"><span className="brand-mark">⌃</span>Visit<span>Garut</span></Link>
         <p>Independent local discovery platform for Garut, West Java.</p>
         <p>© {new Date().getFullYear()} VisitGarut. Not affiliated with the Government of Garut Regency.</p>
       </footer>
     </main>
-  );
+  )
 }
