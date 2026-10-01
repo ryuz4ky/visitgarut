@@ -11,6 +11,7 @@ import './transaction-partner.css'
 import './admin.css'
 import './catalog.css'
 import './search-map.css'
+import './availability.css'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
