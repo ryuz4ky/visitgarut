@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { siteUrl } from '@/lib/site'
-import 'maplibre-gl/dist/maplibre-gl.css'
 import './globals.css'
 import './discovery.css'
 import './marketplace.css'
