@@ -8,11 +8,11 @@ export const metadata: Metadata = {
 }
 
 type EatPageProps = {
-  searchParams: Promise<{ q?: string; subtype?: string; district?: string; verified?: string; amenity?: string; price?: string }>
+  searchParams: Promise<{ q?: string; subtype?: string; district?: string; verified?: string; amenity?: string; price?: string; sort?: string; page?: string }>
 }
 
 export default async function EatPage({ searchParams }: EatPageProps) {
-  const { q = '', subtype = '', district = '', verified = '', amenity = '', price = '' } = await searchParams
+  const { q = '', subtype = '', district = '', verified = '', amenity = '', price = '', sort = '', page = '' } = await searchParams
 
   return (
     <MarketplaceVertical
@@ -22,7 +22,7 @@ export default async function EatPage({ searchParams }: EatPageProps) {
       categorySlug="kuliner"
       action="/eat"
       q={q}
-      filters={{ subtype, district, verified, amenity, price }}
+      filters={{ subtype, district, verified, amenity, price, sort, page }}
       searchPlaceholder="Cari cafe, restoran, makanan khas, atau oleh-oleh..."
       suggestions={[
         { label: 'Cafe & Coffee', description: 'Tempat ngopi dari pusat kota sampai area pegunungan.', href: '/eat?q=cafe' },
