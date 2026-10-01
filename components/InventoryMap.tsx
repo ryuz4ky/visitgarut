@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
-import type { Map as MapLibreMap, Marker as MapLibreMarker } from 'maplibre-gl'
 import { BadgeCheck, BedDouble, Car, MapPin, Mountain, Store, Utensils } from 'lucide-react'
 
 type MapPlace = {
@@ -19,9 +18,40 @@ type MapPlace = {
   price_label: string | null
 }
 
-type InventoryMapProps = {
-  places: MapPlace[]
+type InventoryMapProps = { places: MapPlace[] }
+type MapInstance = {
+  addControl: (control: unknown, position?: string) => void
+  on: (event: string, callback: () => void) => void
+  remove: () => void
+  flyTo: (options: { center: [number, number]; zoom: number }) => void
+  fitBounds: (bounds: BoundsInstance, options: { padding: number; maxZoom: number; duration: number }) => void
+  easeTo: (options: { center: [number, number]; zoom: number; duration: number }) => void
+  getZoom: () => number
 }
+type MarkerInstance = {
+  setLngLat: (coordinates: [number, number]) => MarkerInstance
+  addTo: (map: MapInstance) => MarkerInstance
+  remove: () => void
+}
+type BoundsInstance = {
+  extend: (coordinates: [number, number]) => BoundsInstance
+  isEmpty: () => boolean
+}
+type MapLibreGlobal = {
+  Map: new (options: { container: HTMLElement; style: string; center: [number, number]; zoom: number }) => MapInstance
+  NavigationControl: new (options: { visualizePitch: boolean }) => unknown
+  Marker: new (options: { element: HTMLElement; anchor: string }) => MarkerInstance
+  LngLatBounds: new () => BoundsInstance
+}
+
+declare global {
+  interface Window {
+    maplibregl?: MapLibreGlobal
+  }
+}
+
+const MAPLIBRE_VERSION = '5.24.0'
+let mapLibrePromise: Promise<MapLibreGlobal> | null = null
 
 const categoryOptions = [
   { label: 'Semua', value: '', icon: MapPin },
@@ -40,11 +70,53 @@ function markerLabel(slug: string | null) {
   return '•'
 }
 
+function loadMapLibre() {
+  if (window.maplibregl) return Promise.resolve(window.maplibregl)
+  if (mapLibrePromise) return mapLibrePromise
+
+  mapLibrePromise = new Promise<MapLibreGlobal>((resolve, reject) => {
+    const cssId = 'visitgarut-maplibre-css'
+    if (!document.getElementById(cssId)) {
+      const link = document.createElement('link')
+      link.id = cssId
+      link.rel = 'stylesheet'
+      link.href = `https://unpkg.com/maplibre-gl@${MAPLIBRE_VERSION}/dist/maplibre-gl.css`
+      document.head.appendChild(link)
+    }
+
+    const finish = () => {
+      if (window.maplibregl) resolve(window.maplibregl)
+      else reject(new Error('MapLibre did not initialize'))
+    }
+
+    const existing = document.getElementById('visitgarut-maplibre-js') as HTMLScriptElement | null
+    if (existing) {
+      if (window.maplibregl) finish()
+      else {
+        existing.addEventListener('load', finish, { once: true })
+        existing.addEventListener('error', () => reject(new Error('MapLibre failed to load')), { once: true })
+      }
+      return
+    }
+
+    const script = document.createElement('script')
+    script.id = 'visitgarut-maplibre-js'
+    script.src = `https://unpkg.com/maplibre-gl@${MAPLIBRE_VERSION}/dist/maplibre-gl.js`
+    script.async = true
+    script.addEventListener('load', finish, { once: true })
+    script.addEventListener('error', () => reject(new Error('MapLibre failed to load')), { once: true })
+    document.head.appendChild(script)
+  })
+
+  return mapLibrePromise
+}
+
 export default function InventoryMap({ places }: InventoryMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
-  const mapRef = useRef<MapLibreMap | null>(null)
-  const markersRef = useRef<MapLibreMarker[]>([])
+  const mapRef = useRef<MapInstance | null>(null)
+  const markersRef = useRef<MarkerInstance[]>([])
   const [mapReady, setMapReady] = useState(false)
+  const [mapError, setMapError] = useState(false)
   const [category, setCategory] = useState('')
   const [verifiedOnly, setVerifiedOnly] = useState(false)
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -59,18 +131,20 @@ export default function InventoryMap({ places }: InventoryMapProps) {
     if (!containerRef.current || mapRef.current) return
     let cancelled = false
 
-    import('maplibre-gl').then(({ Map, NavigationControl }) => {
-      if (cancelled || !containerRef.current) return
-      const map = new Map({
-        container: containerRef.current,
-        style: 'https://tiles.openfreemap.org/styles/liberty',
-        center: [107.9, -7.22],
-        zoom: 9.3,
+    loadMapLibre()
+      .then(({ Map, NavigationControl }) => {
+        if (cancelled || !containerRef.current) return
+        const map = new Map({
+          container: containerRef.current,
+          style: 'https://tiles.openfreemap.org/styles/liberty',
+          center: [107.9, -7.22],
+          zoom: 9.3,
+        })
+        map.addControl(new NavigationControl({ visualizePitch: true }), 'top-right')
+        map.on('load', () => setMapReady(true))
+        mapRef.current = map
       })
-      map.addControl(new NavigationControl({ visualizePitch: true }), 'top-right')
-      map.on('load', () => setMapReady(true))
-      mapRef.current = map
-    })
+      .catch(() => setMapError(true))
 
     return () => {
       cancelled = true
@@ -85,8 +159,9 @@ export default function InventoryMap({ places }: InventoryMapProps) {
     if (!mapReady || !mapRef.current) return
     let disposed = false
 
-    import('maplibre-gl').then(({ Marker, LngLatBounds }) => {
-      if (disposed || !mapRef.current) return
+    loadMapLibre().then(({ Marker, LngLatBounds }) => {
+      const map = mapRef.current
+      if (disposed || !map) return
       markersRef.current.forEach((marker) => marker.remove())
       markersRef.current = []
 
@@ -101,30 +176,25 @@ export default function InventoryMap({ places }: InventoryMapProps) {
 
         const marker = new Marker({ element: button, anchor: 'bottom' })
           .setLngLat([place.longitude, place.latitude])
-          .addTo(mapRef.current!)
+          .addTo(map)
         markersRef.current.push(marker)
         bounds.extend([place.longitude, place.latitude])
       })
 
       if (filteredPlaces.length === 1) {
-        mapRef.current.flyTo({ center: [filteredPlaces[0].longitude, filteredPlaces[0].latitude], zoom: 13 })
+        map.flyTo({ center: [filteredPlaces[0].longitude, filteredPlaces[0].latitude], zoom: 13 })
       } else if (filteredPlaces.length > 1 && !bounds.isEmpty()) {
-        mapRef.current.fitBounds(bounds, { padding: 72, maxZoom: 12, duration: 650 })
+        map.fitBounds(bounds, { padding: 72, maxZoom: 12, duration: 650 })
       }
-    })
+    }).catch(() => setMapError(true))
 
-    return () => {
-      disposed = true
-    }
+    return () => { disposed = true }
   }, [filteredPlaces, mapReady])
 
   useEffect(() => {
-    if (!selected || !mapRef.current || !mapReady) return
-    mapRef.current.easeTo({
-      center: [selected.longitude, selected.latitude],
-      zoom: Math.max(mapRef.current.getZoom(), 11),
-      duration: 450,
-    })
+    const map = mapRef.current
+    if (!selected || !map || !mapReady) return
+    map.easeTo({ center: [selected.longitude, selected.latitude], zoom: Math.max(map.getZoom(), 11), duration: 450 })
   }, [selected, mapReady])
 
   return (
@@ -150,7 +220,7 @@ export default function InventoryMap({ places }: InventoryMapProps) {
       </div>
 
       <div className="inventory-map-layout">
-        <div className="inventory-map-canvas" ref={containerRef} />
+        <div className="inventory-map-canvas" ref={containerRef}>{mapError ? <p className="inventory-map-empty">Map belum bisa dimuat. Gunakan daftar lokasi di samping atau Near Me.</p> : null}</div>
         <aside className="inventory-map-results">
           {filteredPlaces.length ? filteredPlaces.map((place) => (
             <button key={place.id} type="button" className={selected?.id === place.id ? 'active' : ''} onClick={() => setSelectedId(place.id)}>
