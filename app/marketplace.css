@@ -1,0 +1,1154 @@
+:root {
+  --vg-forest: #0b4a3a;
+  --vg-forest-2: #073c30;
+  --vg-leaf: #18735a;
+  --vg-orange: #f47b20;
+  --vg-orange-2: #ff9a4f;
+  --vg-cream: #f7f4ec;
+  --vg-paper: #fffdfa;
+  --vg-ink: #16322a;
+  --vg-muted: #6b7d77;
+  --vg-line: rgba(11, 74, 58, 0.12);
+  --vg-shadow: 0 18px 55px rgba(11, 74, 58, 0.11);
+}
+
+.marketplace-page {
+  min-height: 100vh;
+  background: var(--vg-paper);
+  color: var(--vg-ink);
+  padding-bottom: 0;
+}
+
+.vg-header {
+  height: 74px;
+  position: sticky;
+  top: 0;
+  z-index: 70;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 34px;
+  padding: 0 5vw;
+  background: rgba(255, 253, 250, 0.94);
+  border-bottom: 1px solid var(--vg-line);
+  backdrop-filter: blur(18px);
+}
+
+.vg-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 25px;
+  font-weight: 850;
+  letter-spacing: -1.2px;
+  white-space: nowrap;
+}
+
+.vg-brand > span:last-child span,
+.vg-brand.footer > span:last-child span {
+  color: var(--vg-leaf);
+}
+
+.vg-brand-mark {
+  color: var(--vg-orange);
+  font-size: 28px;
+  transform: translateY(-2px);
+}
+
+.vg-desktop-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.vg-desktop-nav a:hover {
+  color: var(--vg-orange);
+}
+
+.vg-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vg-icon-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 0;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  color: var(--vg-ink);
+}
+
+.vg-icon-button:hover {
+  background: rgba(11, 74, 58, 0.07);
+}
+
+.vg-login-button {
+  padding: 11px 17px;
+  border-radius: 999px;
+  background: var(--vg-forest);
+  color: white;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.vg-mobile-only {
+  display: none;
+}
+
+.marketplace-hero {
+  min-height: 620px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(3, 41, 31, 0.86) 0%, rgba(3, 41, 31, 0.56) 46%, rgba(3, 41, 31, 0.28) 100%),
+    url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=2200&q=88') center 48% / cover;
+}
+
+.marketplace-hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 82% 22%, rgba(244, 123, 32, 0.2), transparent 25%),
+    linear-gradient(180deg, transparent 50%, rgba(4, 44, 34, 0.38));
+}
+
+.marketplace-hero-inner {
+  width: min(1180px, 90vw);
+  margin: 0 auto;
+  min-height: 620px;
+  padding: 90px 0 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 36px;
+}
+
+.marketplace-hero-copy {
+  color: white;
+  max-width: 770px;
+}
+
+.marketplace-eyebrow,
+.marketplace-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.marketplace-eyebrow {
+  color: #ffd2b2;
+}
+
+.marketplace-kicker {
+  color: var(--vg-orange);
+}
+
+.marketplace-hero h1 {
+  margin: 14px 0 16px;
+  max-width: 900px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(48px, 6vw, 78px);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+}
+
+.marketplace-hero-copy p {
+  max-width: 670px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.travel-search-card {
+  width: min(1080px, 100%);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.travel-search-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--vg-line);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.travel-search-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.travel-search-tabs button {
+  min-width: 105px;
+  min-height: 58px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--vg-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.travel-search-tabs button.active {
+  color: var(--vg-forest);
+  border-bottom-color: var(--vg-orange);
+}
+
+.travel-search-form {
+  display: grid;
+  grid-template-columns: minmax(260px, 1.7fr) minmax(160px, 0.75fr) minmax(150px, 0.7fr) auto;
+  gap: 10px;
+  align-items: end;
+  padding: 18px 20px 14px;
+}
+
+.search-field {
+  min-width: 0;
+}
+
+.search-field > span {
+  display: block;
+  margin: 0 0 7px 2px;
+  color: var(--vg-muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.search-field > div {
+  height: 52px;
+  padding: 0 14px;
+  border: 1px solid rgba(11, 74, 58, 0.15);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: #fff;
+  color: var(--vg-forest);
+}
+
+.search-field input,
+.search-field select {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--vg-ink);
+  font: inherit;
+  font-size: 13px;
+}
+
+.search-field select {
+  cursor: pointer;
+}
+
+.travel-search-submit {
+  min-height: 52px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--vg-orange);
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.travel-search-submit:hover {
+  background: #dd6813;
+}
+
+.travel-search-suggestions {
+  padding: 0 22px 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+  color: var(--vg-muted);
+  font-size: 12px;
+}
+
+.travel-search-suggestions strong {
+  color: var(--vg-ink);
+}
+
+.travel-search-suggestions a:hover {
+  color: var(--vg-orange);
+}
+
+.marketplace-trust-strip {
+  width: min(1180px, 90vw);
+  margin: -22px auto 0;
+  position: relative;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: white;
+  border: 1px solid var(--vg-line);
+  border-radius: 18px;
+  box-shadow: var(--vg-shadow);
+  overflow: hidden;
+}
+
+.marketplace-trust-strip span {
+  padding: 15px 18px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 800;
+  border-right: 1px solid var(--vg-line);
+}
+
+.marketplace-trust-strip span:last-child {
+  border-right: 0;
+}
+
+.marketplace-shell {
+  width: min(1180px, 90vw);
+  margin: 86px auto;
+}
+
+.marketplace-quick-section {
+  margin-top: 72px;
+}
+
+.marketplace-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 26px;
+}
+
+.marketplace-section-heading.compact {
+  margin-bottom: 22px;
+}
+
+.marketplace-section-heading h2,
+.marketplace-map-copy h2,
+.marketplace-trip-title h2,
+.marketplace-partner-panel h2 {
+  font-family: Georgia, 'Times New Roman', serif;
+  letter-spacing: -0.04em;
+}
+
+.marketplace-section-heading h2 {
+  margin: 7px 0 7px;
+  font-size: clamp(31px, 3.3vw, 46px);
+}
+
+.marketplace-section-heading p {
+  margin: 0;
+  color: var(--vg-muted);
+  line-height: 1.65;
+}
+
+.marketplace-section-heading > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 13px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.quick-action-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.quick-action-card {
+  min-height: 126px;
+  padding: 18px;
+  border: 1px solid var(--vg-line);
+  border-radius: 19px;
+  background: white;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.quick-action-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--vg-shadow);
+}
+
+.quick-action-icon {
+  grid-row: span 2;
+  width: 50px;
+  height: 50px;
+  border-radius: 16px;
+  background: #edf5ef;
+  color: var(--vg-forest);
+  display: grid;
+  place-items: center;
+}
+
+.quick-action-card strong {
+  align-self: end;
+  font-size: 15px;
+}
+
+.quick-action-card small {
+  align-self: start;
+  margin-top: 4px;
+  color: var(--vg-muted);
+  font-size: 11px;
+}
+
+.marketplace-place-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 17px;
+}
+
+.marketplace-place-card {
+  overflow: hidden;
+  border: 1px solid var(--vg-line);
+  border-radius: 20px;
+  background: white;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.marketplace-place-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--vg-shadow);
+}
+
+.marketplace-place-media {
+  position: relative;
+  height: 205px;
+  overflow: hidden;
+  background: #dfeae3;
+}
+
+.marketplace-place-media img {
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.marketplace-place-card:hover .marketplace-place-media img {
+  transform: scale(1.035);
+}
+
+.marketplace-image-fallback {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #d8e8df, #f2e8d8);
+}
+
+.marketplace-place-badge {
+  position: absolute;
+  top: 13px;
+  left: 13px;
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--vg-forest);
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.marketplace-place-copy {
+  padding: 16px;
+}
+
+.marketplace-place-copy h3 {
+  margin: 0 0 7px;
+  font-size: 18px;
+}
+
+.marketplace-place-copy > p {
+  margin: 0 0 9px;
+  color: var(--vg-muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+}
+
+.marketplace-place-copy > small {
+  min-height: 42px;
+  display: block;
+  color: var(--vg-muted);
+  line-height: 1.5;
+  font-size: 11px;
+}
+
+.marketplace-rating {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #e69518;
+  font-size: 12px;
+}
+
+.marketplace-rating span {
+  color: var(--vg-muted);
+}
+
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.collection-card {
+  min-height: 390px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  color: white;
+}
+
+.collection-card > img {
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+
+.collection-card:hover > img {
+  transform: scale(1.04);
+}
+
+.collection-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(4, 35, 27, 0.08) 24%, rgba(4, 35, 27, 0.82) 100%);
+}
+
+.collection-copy {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 26px;
+}
+
+.collection-copy > span {
+  color: #ffd1ae;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  font-weight: 850;
+}
+
+.collection-copy h3 {
+  margin: 8px 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 31px;
+  letter-spacing: -0.04em;
+}
+
+.collection-copy p {
+  margin: 0 0 15px;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.5;
+  font-size: 13px;
+}
+
+.collection-copy strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.marketplace-map-panel {
+  min-height: 500px;
+  display: grid;
+  grid-template-columns: 0.86fr 1.14fr;
+  border-radius: 30px;
+  overflow: hidden;
+  background: #eaf2ec;
+  border: 1px solid var(--vg-line);
+}
+
+.marketplace-map-copy {
+  padding: clamp(34px, 5vw, 66px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.marketplace-map-copy h2 {
+  margin: 9px 0 16px;
+  font-size: clamp(39px, 4.2vw, 58px);
+  line-height: 1.02;
+}
+
+.marketplace-map-copy > p {
+  margin: 0;
+  color: var(--vg-muted);
+  line-height: 1.7;
+}
+
+.marketplace-map-actions,
+.marketplace-partner-actions {
+  margin-top: 26px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.marketplace-primary-button,
+.marketplace-secondary-button,
+.marketplace-trip-cta {
+  min-height: 46px;
+  padding: 0 17px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.marketplace-primary-button {
+  background: var(--vg-forest);
+  color: white;
+}
+
+.marketplace-secondary-button {
+  border: 1px solid var(--vg-line);
+  background: white;
+  color: var(--vg-forest);
+}
+
+.marketplace-map-stats {
+  margin-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  color: var(--vg-muted);
+  font-size: 11px;
+}
+
+.marketplace-map-stats strong {
+  color: var(--vg-forest);
+}
+
+.marketplace-map-visual {
+  position: relative;
+  min-height: 500px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(244, 123, 32, 0.14), transparent 30%),
+    linear-gradient(135deg, #dae9df, #f7efdf);
+}
+
+.marketplace-map-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.42;
+  background-image:
+    linear-gradient(rgba(24, 115, 90, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(24, 115, 90, 0.14) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.marketplace-map-route {
+  position: absolute;
+  width: 720px;
+  height: 180px;
+  border: 9px solid rgba(255, 255, 255, 0.83);
+  border-radius: 50%;
+}
+
+.marketplace-map-route.route-a {
+  left: -130px;
+  top: 180px;
+  transform: rotate(-18deg);
+}
+
+.marketplace-map-route.route-b {
+  left: 110px;
+  top: 50px;
+  transform: rotate(42deg);
+}
+
+.marketplace-map-pin {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  border-radius: 50% 50% 50% 9px;
+  transform: rotate(-45deg);
+  background: var(--vg-orange);
+  color: white;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 12px 28px rgba(11, 74, 58, 0.2);
+}
+
+.marketplace-map-pin svg {
+  transform: rotate(45deg);
+}
+
+.marketplace-map-pin.pin-a { left: 18%; top: 24%; background: var(--vg-forest); }
+.marketplace-map-pin.pin-b { left: 56%; top: 19%; }
+.marketplace-map-pin.pin-c { left: 68%; top: 53%; background: #4f79ba; }
+.marketplace-map-pin.pin-d { left: 36%; top: 65%; background: #936746; }
+
+.marketplace-map-floating-card {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  width: min(280px, calc(100% - 48px));
+  padding: 17px;
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: var(--vg-shadow);
+}
+
+.marketplace-map-floating-card span {
+  color: var(--vg-orange);
+  font-size: 10px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.marketplace-map-floating-card strong,
+.marketplace-map-floating-card small {
+  display: block;
+}
+
+.marketplace-map-floating-card strong {
+  margin: 6px 0 4px;
+}
+
+.marketplace-map-floating-card small {
+  color: var(--vg-muted);
+}
+
+.marketplace-trip-panel {
+  padding: clamp(32px, 5vw, 60px);
+  border-radius: 30px;
+  background: var(--vg-forest);
+  color: white;
+}
+
+.marketplace-trip-title {
+  max-width: 760px;
+}
+
+.marketplace-trip-title .marketplace-kicker {
+  color: #ffc69d;
+}
+
+.marketplace-trip-title h2 {
+  margin: 9px 0 13px;
+  font-size: clamp(39px, 4.5vw, 60px);
+  line-height: 1.02;
+}
+
+.marketplace-trip-title p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.74);
+  line-height: 1.7;
+}
+
+.marketplace-trip-steps {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.marketplace-trip-steps article {
+  min-height: 210px;
+  padding: 22px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.marketplace-trip-steps article > span {
+  display: block;
+  margin-bottom: 26px;
+  color: #ffc69d;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.marketplace-trip-steps h3 {
+  margin: 10px 0 8px;
+  font-size: 18px;
+}
+
+.marketplace-trip-steps p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.marketplace-trip-cta {
+  margin-top: 24px;
+  background: var(--vg-orange);
+  color: white;
+}
+
+.marketplace-partner-panel {
+  padding: clamp(32px, 5vw, 56px);
+  border: 1px solid var(--vg-line);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(244, 123, 32, 0.16), transparent 30%),
+    #f3f7f3;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 40px;
+}
+
+.marketplace-partner-panel h2 {
+  margin: 8px 0 12px;
+  max-width: 780px;
+  font-size: clamp(34px, 4vw, 52px);
+  line-height: 1.05;
+}
+
+.marketplace-partner-panel p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--vg-muted);
+  line-height: 1.7;
+}
+
+.marketplace-footer {
+  width: min(1180px, 90vw);
+  margin: 90px auto 30px;
+  padding: 32px;
+  border-radius: 26px;
+  background: #07372d;
+  color: rgba(255, 255, 255, 0.7);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px 40px;
+  align-items: center;
+  font-size: 12px;
+}
+
+.marketplace-footer .vg-brand {
+  color: white;
+  font-size: 22px;
+}
+
+.marketplace-footer p {
+  margin: 8px 0 0;
+  line-height: 1.5;
+}
+
+.marketplace-footer > p:last-child {
+  grid-column: 1 / -1;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 0;
+}
+
+.marketplace-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 14px;
+  color: white;
+  font-weight: 750;
+}
+
+.mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 1060px) {
+  .vg-desktop-nav { display: none; }
+  .vg-header { grid-template-columns: auto 1fr; }
+  .vg-header-actions { justify-self: end; }
+
+  .travel-search-form {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .travel-search-submit {
+    grid-column: span 2;
+  }
+
+  .quick-action-grid,
+  .marketplace-place-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .marketplace-map-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .marketplace-map-visual {
+    min-height: 420px;
+  }
+
+  .marketplace-partner-panel {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+}
+
+@media (max-width: 760px) {
+  .marketplace-page {
+    padding-bottom: 74px;
+  }
+
+  .vg-header {
+    height: 64px;
+    padding: 0 17px;
+  }
+
+  .vg-brand {
+    font-size: 22px;
+  }
+
+  .vg-desktop-only {
+    display: none;
+  }
+
+  .vg-mobile-only {
+    display: grid;
+  }
+
+  .marketplace-hero,
+  .marketplace-hero-inner {
+    min-height: 670px;
+  }
+
+  .marketplace-hero-inner {
+    width: calc(100vw - 28px);
+    padding: 60px 0 44px;
+    justify-content: flex-end;
+  }
+
+  .marketplace-hero h1 {
+    font-size: 48px;
+  }
+
+  .marketplace-hero-copy p {
+    font-size: 14px;
+  }
+
+  .travel-search-card {
+    border-radius: 20px;
+  }
+
+  .travel-search-tabs {
+    padding: 0 8px;
+  }
+
+  .travel-search-tabs button {
+    min-width: 88px;
+    min-height: 54px;
+    font-size: 11px;
+  }
+
+  .travel-search-form {
+    grid-template-columns: 1fr;
+    padding: 15px;
+  }
+
+  .travel-search-submit {
+    grid-column: auto;
+  }
+
+  .travel-search-suggestions {
+    padding: 0 16px 16px;
+  }
+
+  .marketplace-trust-strip {
+    width: calc(100vw - 28px);
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .marketplace-trust-strip span:nth-child(2) {
+    border-right: 0;
+  }
+
+  .marketplace-trust-strip span:nth-child(-n+2) {
+    border-bottom: 1px solid var(--vg-line);
+  }
+
+  .marketplace-shell,
+  .marketplace-footer {
+    width: calc(100vw - 28px);
+  }
+
+  .marketplace-shell {
+    margin: 64px auto;
+  }
+
+  .marketplace-section-heading {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .marketplace-section-heading h2 {
+    font-size: 34px;
+  }
+
+  .quick-action-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .quick-action-card {
+    min-height: 118px;
+    padding: 15px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 7px;
+  }
+
+  .quick-action-icon {
+    grid-row: auto;
+    width: 44px;
+    height: 44px;
+  }
+
+  .quick-action-card strong,
+  .quick-action-card small {
+    align-self: auto;
+    margin: 0;
+  }
+
+  .marketplace-place-grid {
+    display: flex;
+    overflow-x: auto;
+    gap: 13px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-bottom: 8px;
+  }
+
+  .marketplace-place-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .marketplace-place-card {
+    min-width: 78vw;
+    scroll-snap-align: start;
+  }
+
+  .marketplace-place-media {
+    height: 230px;
+  }
+
+  .collection-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .collection-card {
+    min-height: 330px;
+  }
+
+  .marketplace-map-panel {
+    border-radius: 24px;
+  }
+
+  .marketplace-map-copy {
+    padding: 32px 22px;
+  }
+
+  .marketplace-map-copy h2 {
+    font-size: 40px;
+  }
+
+  .marketplace-map-visual {
+    min-height: 350px;
+  }
+
+  .marketplace-trip-panel {
+    padding: 34px 22px;
+    border-radius: 24px;
+  }
+
+  .marketplace-trip-title h2 {
+    font-size: 40px;
+  }
+
+  .marketplace-trip-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .marketplace-trip-steps article {
+    min-height: 170px;
+  }
+
+  .marketplace-partner-panel {
+    padding: 30px 22px;
+    border-radius: 24px;
+  }
+
+  .marketplace-footer {
+    margin: 64px auto 10px;
+    padding: 26px 22px;
+    grid-template-columns: 1fr;
+  }
+
+  .marketplace-footer-links {
+    justify-content: flex-start;
+  }
+
+  .mobile-bottom-nav {
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    z-index: 90;
+    min-height: 60px;
+    padding: 7px 10px;
+    border: 1px solid var(--vg-line);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 14px 40px rgba(11, 74, 58, 0.18);
+    backdrop-filter: blur(18px);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .mobile-bottom-nav a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 3px;
+    color: var(--vg-muted);
+    font-size: 9px;
+    font-weight: 800;
+  }
+
+  .mobile-bottom-nav a:first-child {
+    color: var(--vg-forest);
+  }
+}
