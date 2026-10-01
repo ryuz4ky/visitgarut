@@ -79,7 +79,7 @@ export default async function PlacePage({ params }: PlacePageProps) {
 
   let initialFavorite = false
   let offers: Array<{ id: string; title: string; description: string | null; promo_code: string | null; price_label: string | null; cta_url: string | null; valid_until: string | null }> = []
-  let reviews: Array<{ id: string; rating: number; body: string | null; status: string; created_at: string; user_id: string; profile: { full_name: string | null; username: string | null } | null }> = []
+  let reviews: Array<{ id: string; rating: number; body: string | null; status: string; created_at: string; user_id: string; profile: null }> = []
 
   if (place.id) {
     const queries = await Promise.all([
@@ -95,7 +95,7 @@ export default async function PlacePage({ params }: PlacePageProps) {
         .limit(3),
       supabase
         .from('reviews')
-        .select('id, rating, body, status, created_at, user_id, profile:profiles(full_name, username)')
+        .select('id, rating, body, status, created_at, user_id')
         .eq('place_id', place.id)
         .order('created_at', { ascending: false })
         .limit(20),
@@ -109,9 +109,7 @@ export default async function PlacePage({ params }: PlacePageProps) {
       status: String(row.status),
       created_at: String(row.created_at),
       user_id: String(row.user_id),
-      profile: Array.isArray(row.profile)
-        ? (row.profile[0] as { full_name: string | null; username: string | null } | undefined) ?? null
-        : (row.profile as { full_name: string | null; username: string | null } | null) ?? null,
+      profile: null,
     }))
   }
 
