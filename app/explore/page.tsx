@@ -1,18 +1,18 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Heart, MapPin, Menu, Search, Star } from 'lucide-react'
+import { BadgeCheck, MapPin, Search, Star } from 'lucide-react'
+import AppHeader from '@/components/AppHeader'
+import MobileBottomNav from '@/components/MobileBottomNav'
 import { getPublishedPlaces } from '@/lib/data/places'
 
 export const metadata: Metadata = {
-  title: 'Explore Garut: Tempat Wisata & Destinasi Pilihan',
-  description: 'Jelajahi tempat wisata dan destinasi pilihan di Garut. Temukan kawasan pegunungan, pemandian air panas, danau, dan pengalaman lokal.',
-  alternates: {
-    canonical: '/explore',
-  },
+  title: 'Explore Garut: Wisata, Stay, Kuliner & Bisnis Lokal',
+  description: 'Jelajahi destinasi, penginapan, kuliner, transportasi, dan bisnis lokal di Garut dengan pencarian dan filter area.',
+  alternates: { canonical: '/explore' },
 }
 
 type ExplorePageProps = {
-  searchParams: Promise<{ q?: string }>
+  searchParams: Promise<{ q?: string; category?: string; district?: string; subtype?: string; verified?: string }>
 }
 
 function formatReviews(value: number) {
@@ -20,70 +20,72 @@ function formatReviews(value: number) {
   return String(value)
 }
 
+function formatLabel(value: string) {
+  return value.replace(/_/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase())
+}
+
 export default async function ExplorePage({ searchParams }: ExplorePageProps) {
-  const { q = '' } = await searchParams
+  const { q = '', category = '', district = '', subtype = '', verified = '' } = await searchParams
   const allPlaces = await getPublishedPlaces()
   const query = q.trim().toLowerCase()
-  const places = query
-    ? allPlaces.filter((place) =>
-        [place.name, place.district, place.category?.name, place.short_description]
-          .filter(Boolean)
-          .some((value) => String(value).toLowerCase().includes(query))
-      )
-    : allPlaces
+
+  const categories = [...new Map(allPlaces.filter((place) => place.category).map((place) => [place.category!.slug, place.category!.name])).entries()]
+  const districts = [...new Set(allPlaces.map((place) => place.district).filter(Boolean) as string[])].sort()
+  const subtypes = [...new Set(allPlaces.map((place) => place.subtype).filter(Boolean) as string[])].sort()
+
+  const places = allPlaces.filter((place) => {
+    if (query && ![place.name, place.district, place.category?.name, place.short_description, place.subtype, ...(place.tags ?? [])].filter(Boolean).some((value) => String(value).toLowerCase().includes(query))) return false
+    if (category && place.category?.slug !== category) return false
+    if (district && place.district !== district) return false
+    if (subtype && place.subtype !== subtype) return false
+    if (verified === '1' && !(place.is_verified || place.data_quality === 'source_verified' || place.data_quality === 'owner_verified')) return false
+    return true
+  })
+
+  const hasFilters = Boolean(query || category || district || subtype || verified)
 
   return (
-    <main>
-      <header className="site-header">
-        <Link className="brand" href="/" aria-label="VisitGarut home">
-          <span className="brand-mark">⌃</span>
-          <span>Visit<span>Garut</span></span>
-        </Link>
-        <nav className="desktop-nav" aria-label="Main navigation">
-          <Link href="/explore">Explore</Link>
-          <Link href="/stay">Stay</Link>
-          <Link href="/eat">Eat</Link>
-          <Link href="/transport">Transport</Link>
-          <Link href="/events">Events</Link>
-          <Link href="/#local">Local Business</Link>
-        </nav>
-        <div className="header-actions">
-          <Link className="icon-button" href="/explore" aria-label="Search"><Search size={19} /></Link>
-          <button className="icon-button desktop-only" aria-label="Saved"><Heart size={19} /></button>
-          <button className="login-button desktop-only">Masuk / Daftar</button>
-          <button className="icon-button mobile-only" aria-label="Menu"><Menu size={21} /></button>
-        </div>
-      </header>
-
+    <main className="marketplace-page">
+      <AppHeader />
       <section className="directory-hero">
         <div>
           <span className="kicker">EXPLORE GARUT</span>
           <h1>Temukan tempat terbaik di Garut.</h1>
-          <p>Dari kawah vulkanik sampai pemandian air panas dan wisata keluarga, mulai perjalananmu dari sini.</p>
+          <p>Cari lintas wisata, stay, kuliner, transportasi, dan bisnis lokal dalam satu discovery layer.</p>
           <form className="directory-search" action="/explore">
             <Search size={20} />
-            <input name="q" defaultValue={q} placeholder="Cari destinasi atau kecamatan..." aria-label="Cari destinasi" />
+            <input name="q" defaultValue={q} placeholder="Cari tempat, area, tipe, atau kebutuhan..." aria-label="Cari VisitGarut" />
             <button type="submit">Cari</button>
           </form>
         </div>
       </section>
 
+      <section className="marketplace-shell catalog-filter-shell">
+        <form className="catalog-filter-form explore-filter-form" action="/explore">
+          {q ? <input type="hidden" name="q" value={q} /> : null}
+          <label><span>Kategori</span><select name="category" defaultValue={category}><option value="">Semua kategori</option>{categories.map(([slug, name]) => <option key={slug} value={slug}>{name}</option>)}</select></label>
+          <label><span>Area</span><select name="district" defaultValue={district}><option value="">Semua area</option>{districts.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+          <label><span>Tipe</span><select name="subtype" defaultValue={subtype}><option value="">Semua tipe</option>{subtypes.map((item) => <option key={item} value={item}>{formatLabel(item)}</option>)}</select></label>
+          <label className="catalog-filter-check"><input type="checkbox" name="verified" value="1" defaultChecked={verified === '1'} /><span><BadgeCheck size={15} /> Verified only</span></label>
+          <button type="submit">Terapkan filter</button>
+          {hasFilters ? <Link href="/explore">Reset</Link> : null}
+        </form>
+      </section>
+
       <section className="directory-shell">
         <div className="directory-toolbar">
-          <div>
-            <strong>{places.length} destinasi</strong>
-            <span>{query ? `Hasil pencarian “${q}”` : 'Pilihan untuk mulai menjelajah Garut'}</span>
-          </div>
-          {query ? <Link href="/explore">Hapus pencarian</Link> : null}
+          <div><strong>{places.length} listing</strong><span>{hasFilters ? 'Hasil sesuai pencarian dan filter' : 'Semua inventory publik VisitGarut'}</span></div>
+          <Link href="/map">Lihat di map</Link>
         </div>
 
         {places.length ? (
           <div className="directory-grid">
             {places.map((place) => (
-              <article className="destination-card" key={place.slug}>
+              <article className="destination-card catalog-place-card" key={place.slug}>
                 <Link href={`/explore/${place.slug}`}>
                   <div className="destination-image" style={{ backgroundImage: place.cover_image_url ? `url(${place.cover_image_url})` : undefined }}>
-                    <span className="destination-badge">{place.category?.name ?? 'Explore'}</span>
+                    <span className="destination-badge">{place.subtype ? formatLabel(place.subtype) : place.category?.name ?? 'Explore'}</span>
+                    {place.data_quality === 'source_verified' || place.data_quality === 'owner_verified' ? <span className="catalog-source-badge"><BadgeCheck size={14} /> Source verified</span> : null}
                   </div>
                   <div className="destination-body">
                     <h2>{place.name}</h2>
@@ -96,13 +98,10 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
             ))}
           </div>
         ) : (
-          <div className="empty-state">
-            <h2>Belum ada hasil.</h2>
-            <p>Coba nama destinasi atau kecamatan lain.</p>
-            <Link className="primary-button" href="/explore">Lihat semua destinasi</Link>
-          </div>
+          <div className="empty-state"><h2>Belum ada hasil.</h2><p>Coba longgarkan kategori, area, tipe, atau verified filter.</p><Link className="primary-button" href="/explore">Lihat semua listing</Link></div>
         )}
       </section>
+      <MobileBottomNav />
     </main>
   )
 }
