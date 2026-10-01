@@ -8,11 +8,11 @@ export const metadata: Metadata = {
 }
 
 type EventsPageProps = {
-  searchParams: Promise<{ q?: string; subtype?: string; district?: string; verified?: string; amenity?: string; price?: string }>
+  searchParams: Promise<{ q?: string; subtype?: string; district?: string; verified?: string; amenity?: string; price?: string; sort?: string; page?: string }>
 }
 
 export default async function EventsPage({ searchParams }: EventsPageProps) {
-  const { q = '', subtype = '', district = '', verified = '', amenity = '', price = '' } = await searchParams
+  const { q = '', subtype = '', district = '', verified = '', amenity = '', price = '', sort = '', page = '' } = await searchParams
 
   return (
     <MarketplaceVertical
@@ -22,7 +22,7 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
       categorySlug="event"
       action="/events"
       q={q}
-      filters={{ subtype, district, verified, amenity, price }}
+      filters={{ subtype, district, verified, amenity, price, sort, page }}
       searchPlaceholder="Cari festival, komunitas, workshop, atau aktivitas..."
       suggestions={[
         { label: 'Festival & Budaya', description: 'Agenda budaya, tradisi, dan festival lokal.', href: '/events?q=festival' },
