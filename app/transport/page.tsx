@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import AvailabilitySearchPanel from '@/components/AvailabilitySearchPanel'
 import MarketplaceVertical from '@/components/MarketplaceVertical'
 
 export const metadata: Metadata = {
@@ -8,12 +9,13 @@ export const metadata: Metadata = {
 }
 
 type TransportPageProps = {
-  searchParams: Promise<{ q?: string; vehicle?: string; subtype?: string; district?: string; verified?: string; amenity?: string; price?: string; sort?: string; page?: string }>
+  searchParams: Promise<{ q?: string; vehicle?: string; subtype?: string; district?: string; verified?: string; amenity?: string; price?: string; sort?: string; page?: string; date?: string; guests?: string }>
 }
 
 export default async function TransportPage({ searchParams }: TransportPageProps) {
-  const { q = '', vehicle = '', subtype = '', district = '', verified = '', amenity = '', price = '', sort = '', page = '' } = await searchParams
+  const { q = '', vehicle = '', subtype = '', district = '', verified = '', amenity = '', price = '', sort = '', page = '', date = '', guests = '1' } = await searchParams
   const initialQuery = q || (vehicle === 'motorbike' ? 'motor' : vehicle === 'car' ? 'mobil' : '')
+  const guestCount = Math.max(1, Math.min(Number.parseInt(guests, 10) || 1, 20))
 
   return (
     <MarketplaceVertical
@@ -24,6 +26,19 @@ export default async function TransportPage({ searchParams }: TransportPageProps
       action="/transport"
       q={initialQuery}
       filters={{ subtype, district, verified, amenity, price, sort, page }}
+      preResults={
+        <AvailabilitySearchPanel
+          action="/transport"
+          categorySlug="transportasi"
+          mode="day"
+          startDate={date}
+          guests={guestCount}
+          query={initialQuery}
+          district={district}
+          subtype={subtype}
+          preserve={{ q: initialQuery, subtype, district, verified, amenity, price, sort }}
+        />
+      }
       searchPlaceholder="Cari rental mobil, motor, driver, travel, atau area..."
       suggestions={[
         { label: 'Rental Mobil', description: 'Bandingkan provider dan inventory mobil yang tersedia.', href: '/transport?subtype=car_rental' },
