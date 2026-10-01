@@ -33,6 +33,24 @@ export type PlaceSummary = {
   category?: { name: string; slug: string } | null
 }
 
+export type SearchPlace = PlaceSummary & {
+  inventory_count: number
+  inventory_min_price: number | null
+}
+
+export type SearchPlacesOptions = {
+  categorySlug?: string
+  query?: string
+  district?: string
+  subtype?: string
+  verified?: boolean
+  amenity?: string
+  priceBucket?: string
+  sort?: 'recommended' | 'price_asc' | 'rating_desc' | 'name_asc' | 'newest'
+  limit?: number
+  offset?: number
+}
+
 export type InventoryItem = {
   id: string
   item_type: string
@@ -99,9 +117,23 @@ function normalizePlace(row: Record<string, unknown>): PlaceSummary {
   }
 }
 
+function normalizeSearchPlace(row: Record<string, unknown>): SearchPlace {
+  const place = normalizePlace({
+    ...row,
+    category: row.category_name && row.category_slug
+      ? { name: String(row.category_name), slug: String(row.category_slug) }
+      : null,
+  })
+  return {
+    ...place,
+    inventory_count: Number(row.inventory_count ?? 0),
+    inventory_min_price: row.inventory_min_price == null ? null : Number(row.inventory_min_price),
+  }
+}
+
 const placeSelect = `id,name,slug,district,subdistrict,village,rating,review_count,short_description,description,cover_image_url,latitude,longitude,seo_title,seo_description,website_url,whatsapp,phone,address,google_maps_url,price_label,opening_hours,amenities,tags,is_verified,subtype,booking_mode,data_quality,category:categories(name, slug)`
 
-function mergeFallbackImage(place: PlaceSummary) {
+function mergeFallbackImage<T extends PlaceSummary>(place: T): T {
   const fallback = fallbackPlaces.find((item) => item.slug === place.slug)
   return { ...place, cover_image_url: place.cover_image_url || fallback?.cover_image_url || null }
 }
@@ -121,6 +153,39 @@ export async function getPublishedPlaces(): Promise<PlaceSummary[]> {
 export async function getPublishedPlacesByCategory(categorySlug: string): Promise<PlaceSummary[]> {
   const places = await getPublishedPlaces()
   return places.filter((place) => place.category?.slug === categorySlug)
+}
+
+export async function searchPlaces(options: SearchPlacesOptions = {}): Promise<{ places: SearchPlace[]; total: number }> {
+  const limit = Math.max(1, Math.min(options.limit ?? 24, 100))
+  const offset = Math.max(options.offset ?? 0, 0)
+  const { data, error } = await getPublicClient().rpc('search_places', {
+    p_category_slug: options.categorySlug || null,
+    p_query: options.query?.trim() || null,
+    p_district: options.district || null,
+    p_subtype: options.subtype || null,
+    p_verified: Boolean(options.verified),
+    p_amenity: options.amenity || null,
+    p_price_bucket: options.priceBucket || null,
+    p_sort: options.sort || 'recommended',
+    p_limit: limit,
+    p_offset: offset,
+  })
+
+  if (error || !data) {
+    const fallback = options.categorySlug
+      ? fallbackPlaces.filter((place) => place.category?.slug === options.categorySlug)
+      : fallbackPlaces
+    return {
+      places: fallback.slice(offset, offset + limit).map((place) => ({ ...place, inventory_count: 0, inventory_min_price: null })),
+      total: fallback.length,
+    }
+  }
+
+  const rows = data as unknown as Record<string, unknown>[]
+  return {
+    places: rows.map(normalizeSearchPlace).map(mergeFallbackImage),
+    total: rows.length ? Number(rows[0].total_count ?? rows.length) : 0,
+  }
 }
 
 export async function getMapPlaces(): Promise<PlaceSummary[]> {
