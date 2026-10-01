@@ -22,7 +22,7 @@ export default function AppHeader() {
         <Link className="vg-icon-button" href="/explore" aria-label="Cari"><Search size={19} /></Link>
         <Link className="vg-icon-button vg-desktop-only" href="/trip" aria-label="Rencana perjalanan"><Heart size={19} /></Link>
         <Link className="vg-login-button vg-desktop-only" href="/trip">Rencanakan Trip</Link>
-        <button className="vg-icon-button vg-mobile-only" type="button" aria-label="Menu"><Menu size={21} /></button>
+        <Link className="vg-icon-button vg-mobile-only" href="/explore" aria-label="Buka eksplorasi"><Menu size={21} /></Link>
       </div>
     </header>
   )
