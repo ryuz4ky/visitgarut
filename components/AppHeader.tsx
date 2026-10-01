@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Heart, Menu, Search } from 'lucide-react'
+import { Heart, Menu, Search, UserRound } from 'lucide-react'
 
 export default function AppHeader() {
   return (
@@ -20,9 +20,9 @@ export default function AppHeader() {
 
       <div className="vg-header-actions">
         <Link className="vg-icon-button" href="/explore" aria-label="Cari"><Search size={19} /></Link>
-        <Link className="vg-icon-button vg-desktop-only" href="/trip" aria-label="Rencana perjalanan"><Heart size={19} /></Link>
-        <Link className="vg-login-button vg-desktop-only" href="/trip">Rencanakan Trip</Link>
-        <Link className="vg-icon-button vg-mobile-only" href="/explore" aria-label="Buka eksplorasi"><Menu size={21} /></Link>
+        <Link className="vg-icon-button vg-desktop-only" href="/account" aria-label="Tempat tersimpan"><Heart size={19} /></Link>
+        <Link className="vg-login-button vg-desktop-only" href="/account"><UserRound size={16} /> Akun</Link>
+        <Link className="vg-icon-button vg-mobile-only" href="/account" aria-label="Akun"><Menu size={21} /></Link>
       </div>
     </header>
   )
