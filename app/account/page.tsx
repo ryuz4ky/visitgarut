@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { BriefcaseBusiness } from 'lucide-react'
 import AppHeader from '@/components/AppHeader'
 import MobileBottomNav from '@/components/MobileBottomNav'
 import AccountDashboard from '@/components/AccountDashboard'
@@ -62,6 +64,7 @@ export default async function AccountPage() {
     created_at: String(row.created_at),
     place: Array.isArray(row.place) ? row.place[0] ?? null : row.place ?? null,
   }))
+  const hasApprovedClaim = claims.some((claim) => claim.status === 'approved')
 
   return (
     <main className="marketplace-page account-page">
@@ -71,6 +74,7 @@ export default async function AccountPage() {
           <span className="marketplace-eyebrow">PERSONAL TRAVEL SPACE</span>
           <h1>Perjalanan Garut kamu, tersimpan rapi.</h1>
           <p>Kelola tempat favorit, itinerary, profil, dan listing bisnis dari satu dashboard.</p>
+          {hasApprovedClaim ? <Link className="account-partner-cta" href="/partner"><BriefcaseBusiness size={17} /> Buka Partner Center</Link> : null}
         </div>
       </section>
       <div className="marketplace-shell account-shell">
