@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import AvailabilitySearchPanel from '@/components/AvailabilitySearchPanel'
 import MarketplaceVertical from '@/components/MarketplaceVertical'
 
 export const metadata: Metadata = {
@@ -8,11 +9,12 @@ export const metadata: Metadata = {
 }
 
 type StayPageProps = {
-  searchParams: Promise<{ q?: string; subtype?: string; district?: string; verified?: string; amenity?: string; price?: string; sort?: string; page?: string }>
+  searchParams: Promise<{ q?: string; subtype?: string; district?: string; verified?: string; amenity?: string; price?: string; sort?: string; page?: string; checkin?: string; checkout?: string; guests?: string }>
 }
 
 export default async function StayPage({ searchParams }: StayPageProps) {
-  const { q = '', subtype = '', district = '', verified = '', amenity = '', price = '', sort = '', page = '' } = await searchParams
+  const { q = '', subtype = '', district = '', verified = '', amenity = '', price = '', sort = '', page = '', checkin = '', checkout = '', guests = '1' } = await searchParams
+  const guestCount = Math.max(1, Math.min(Number.parseInt(guests, 10) || 1, 20))
 
   return (
     <MarketplaceVertical
@@ -23,6 +25,20 @@ export default async function StayPage({ searchParams }: StayPageProps) {
       action="/stay"
       q={q}
       filters={{ subtype, district, verified, amenity, price, sort, page }}
+      preResults={
+        <AvailabilitySearchPanel
+          action="/stay"
+          categorySlug="penginapan"
+          mode="range"
+          startDate={checkin}
+          endDate={checkout}
+          guests={guestCount}
+          query={q}
+          district={district}
+          subtype={subtype}
+          preserve={{ q, subtype, district, verified, amenity, price, sort }}
+        />
+      }
       searchPlaceholder="Cari area, hotel, villa, resort, atau homestay..."
       suggestions={[
         { label: 'Cipanas & Tarogong', description: 'Cocok untuk hot spring, keluarga, dan akses dekat kota.', href: '/stay?district=Tarogong%20Kaler' },
