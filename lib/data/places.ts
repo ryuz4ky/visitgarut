@@ -5,6 +5,8 @@ export type PlaceSummary = {
   name: string
   slug: string
   district: string | null
+  subdistrict?: string | null
+  village?: string | null
   rating: number | null
   review_count: number
   short_description: string | null
@@ -16,8 +18,14 @@ export type PlaceSummary = {
   seo_description?: string | null
   website_url?: string | null
   whatsapp?: string | null
+  phone?: string | null
   address?: string | null
+  google_maps_url?: string | null
   price_label?: string | null
+  opening_hours?: Record<string, unknown> | null
+  amenities?: Record<string, unknown> | unknown[] | null
+  tags?: string[]
+  is_verified?: boolean
   category?: {
     name: string
     slug: string
@@ -93,6 +101,8 @@ function normalizePlace(row: Record<string, unknown>): PlaceSummary {
     name: String(row.name),
     slug: String(row.slug),
     district: (row.district as string | null) ?? null,
+    subdistrict: (row.subdistrict as string | null | undefined) ?? null,
+    village: (row.village as string | null | undefined) ?? null,
     rating: row.rating == null ? null : Number(row.rating),
     review_count: Number(row.review_count ?? 0),
     short_description: (row.short_description as string | null) ?? null,
@@ -104,8 +114,14 @@ function normalizePlace(row: Record<string, unknown>): PlaceSummary {
     seo_description: (row.seo_description as string | null | undefined) ?? null,
     website_url: (row.website_url as string | null | undefined) ?? null,
     whatsapp: (row.whatsapp as string | null | undefined) ?? null,
+    phone: (row.phone as string | null | undefined) ?? null,
     address: (row.address as string | null | undefined) ?? null,
+    google_maps_url: (row.google_maps_url as string | null | undefined) ?? null,
     price_label: (row.price_label as string | null | undefined) ?? null,
+    opening_hours: (row.opening_hours as Record<string, unknown> | null | undefined) ?? null,
+    amenities: (row.amenities as Record<string, unknown> | unknown[] | null | undefined) ?? null,
+    tags: Array.isArray(row.tags) ? row.tags.map(String) : [],
+    is_verified: Boolean(row.is_verified),
     category,
   }
 }
@@ -115,6 +131,8 @@ const placeSelect = `
   name,
   slug,
   district,
+  subdistrict,
+  village,
   rating,
   review_count,
   short_description,
@@ -126,8 +144,14 @@ const placeSelect = `
   seo_description,
   website_url,
   whatsapp,
+  phone,
   address,
+  google_maps_url,
   price_label,
+  opening_hours,
+  amenities,
+  tags,
+  is_verified,
   category:categories(name, slug)
 `
 
