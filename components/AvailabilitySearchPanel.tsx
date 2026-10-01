@@ -1,6 +1,9 @@
+'use client'
+
 import Link from 'next/link'
+import { useEffect, useMemo, useState } from 'react'
 import { CalendarDays, ExternalLink, SearchCheck, Users } from 'lucide-react'
-import { searchAvailableInventory } from '@/lib/data/availability'
+import { createClient } from '@/lib/supabase/client'
 
 type AvailabilitySearchPanelProps = {
   action: string
@@ -13,6 +16,21 @@ type AvailabilitySearchPanelProps = {
   district?: string
   subtype?: string
   preserve?: Record<string, string | undefined>
+}
+
+type AvailableInventoryItem = {
+  inventory_item_id: string
+  place_name: string
+  place_slug: string
+  district: string | null
+  subtype: string | null
+  item_type: string
+  item_name: string
+  capacity: number | null
+  effective_price: number | null
+  currency: string
+  price_unit: string | null
+  booking_url: string | null
 }
 
 function formatPrice(value: number, currency: string) {
@@ -28,7 +46,7 @@ function formatSubtype(value?: string | null) {
   return value.replace(/_/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase())
 }
 
-export default async function AvailabilitySearchPanel({
+export default function AvailabilitySearchPanel({
   action,
   categorySlug,
   mode,
@@ -40,20 +58,69 @@ export default async function AvailabilitySearchPanel({
   subtype = '',
   preserve = {},
 }: AvailabilitySearchPanelProps) {
+  const supabase = useMemo(() => createClient(), [])
+  const [results, setResults] = useState<AvailableInventoryItem[]>([])
+  const [loading, setLoading] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
+
   const hasSearch = Boolean(startDate)
   const invalidRange = mode === 'range' && Boolean(startDate && endDate && endDate <= startDate)
-  const results = hasSearch && !invalidRange
-    ? await searchAvailableInventory({
-        categorySlug,
-        startDate,
-        endDate: mode === 'range' ? endDate || undefined : undefined,
-        query,
-        district,
-        subtype,
-        guests,
-        limit: 24,
+
+  useEffect(() => {
+    let active = true
+
+    async function loadAvailability() {
+      if (!hasSearch || invalidRange) {
+        setResults([])
+        setLoadError(null)
+        return
+      }
+
+      setLoading(true)
+      setLoadError(null)
+
+      const { data, error } = await supabase.rpc('search_available_inventory', {
+        p_category_slug: categorySlug,
+        p_start_date: startDate,
+        p_end_date: mode === 'range' ? endDate || null : null,
+        p_query: query.trim() || null,
+        p_district: district || null,
+        p_subtype: subtype || null,
+        p_guests: Math.max(1, Math.min(guests || 1, 20)),
+        p_limit: 24,
       })
-    : []
+
+      if (!active) return
+
+      if (error) {
+        setResults([])
+        setLoadError('Live availability belum dapat dimuat. Kamu masih bisa melihat katalog dan mengirim inquiry langsung ke partner.')
+        setLoading(false)
+        return
+      }
+
+      const normalized = ((data ?? []) as Record<string, unknown>[]).map((row) => ({
+        inventory_item_id: String(row.inventory_item_id),
+        place_name: String(row.place_name),
+        place_slug: String(row.place_slug),
+        district: (row.district as string | null) ?? null,
+        subtype: (row.subtype as string | null) ?? null,
+        item_type: String(row.item_type),
+        item_name: String(row.item_name),
+        capacity: row.capacity == null ? null : Number(row.capacity),
+        effective_price: row.effective_price == null ? null : Number(row.effective_price),
+        currency: String(row.currency || 'IDR'),
+        price_unit: (row.price_unit as string | null) ?? null,
+        booking_url: (row.booking_url as string | null) ?? null,
+      }))
+
+      setResults(normalized)
+      setLoading(false)
+    }
+
+    loadAvailability()
+    return () => { active = false }
+  }, [categorySlug, district, endDate, guests, hasSearch, invalidRange, mode, query, startDate, subtype, supabase])
 
   return (
     <section className="marketplace-shell availability-search-shell">
@@ -86,8 +153,10 @@ export default async function AvailabilitySearchPanel({
       </form>
 
       {invalidRange ? <div className="availability-message error">Tanggal selesai harus setelah tanggal mulai.</div> : null}
+      {loadError ? <div className="availability-message error">{loadError}</div> : null}
+      {loading ? <div className="availability-message"><strong>Mengecek live availability…</strong><p>Mengambil kalender inventory yang dipublikasikan partner.</p></div> : null}
 
-      {hasSearch && !invalidRange ? (
+      {hasSearch && !invalidRange && !loading && !loadError ? (
         results.length ? (
           <div className="availability-results">
             <div className="availability-results-heading">
@@ -95,21 +164,30 @@ export default async function AvailabilitySearchPanel({
               <span>Availability berasal dari kalender partner VisitGarut.</span>
             </div>
             <div className="availability-result-grid">
-              {results.map((item) => (
-                <article key={item.inventory_item_id}>
-                  <div>
-                    <span>{formatSubtype(item.subtype)} · {formatSubtype(item.item_type)}</span>
-                    <h3>{item.place_name}</h3>
-                    <p>{item.item_name}</p>
-                    <small>{item.district || 'Kabupaten Garut'}{item.capacity ? ` · hingga ${item.capacity} orang` : ''}</small>
-                  </div>
-                  <div className="availability-result-actions">
-                    {item.effective_price != null ? <strong>{formatPrice(item.effective_price, item.currency)}{item.price_unit ? ` / ${item.price_unit.replace(/_/g, ' ')}` : ''}</strong> : <strong>Cek harga partner</strong>}
-                    <Link href={`/explore/${item.place_slug}`}>Lihat listing</Link>
-                    {item.booking_url ? <a href={item.booking_url} target="_blank" rel="noreferrer">Booking partner <ExternalLink size={13} /></a> : null}
-                  </div>
-                </article>
-              ))}
+              {results.map((item) => {
+                const bookingParams = new URLSearchParams()
+                bookingParams.set('item', item.inventory_item_id)
+                bookingParams.set('start', startDate)
+                if (mode === 'range' && endDate) bookingParams.set('end', endDate)
+                bookingParams.set('guests', String(Math.max(1, guests)))
+                const listingHref = `/explore/${item.place_slug}?${bookingParams.toString()}#booking`
+
+                return (
+                  <article key={item.inventory_item_id}>
+                    <div>
+                      <span>{formatSubtype(item.subtype)} · {formatSubtype(item.item_type)}</span>
+                      <h3>{item.place_name}</h3>
+                      <p>{item.item_name}</p>
+                      <small>{item.district || 'Kabupaten Garut'}{item.capacity ? ` · hingga ${item.capacity} orang` : ''}</small>
+                    </div>
+                    <div className="availability-result-actions">
+                      {item.effective_price != null ? <strong>{formatPrice(item.effective_price, item.currency)}{item.price_unit ? ` / ${item.price_unit.replace(/_/g, ' ')}` : ''}</strong> : <strong>Cek harga partner</strong>}
+                      <Link href={listingHref}>Pilih & inquiry</Link>
+                      {item.booking_url ? <a href={item.booking_url} target="_blank" rel="noreferrer">Booking partner <ExternalLink size={13} /></a> : null}
+                    </div>
+                  </article>
+                )
+              })}
             </div>
           </div>
         ) : (
