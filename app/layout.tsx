@@ -7,6 +7,7 @@ import './trip.css'
 import './vertical.css'
 import './app-features.css'
 import './nearby-enhancements.css'
+import './transaction-partner.css'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
