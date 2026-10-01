@@ -66,7 +66,6 @@ export default function InventoryMap({ places }: InventoryMapProps) {
         style: 'https://tiles.openfreemap.org/styles/liberty',
         center: [107.9, -7.22],
         zoom: 9.3,
-        attributionControl: true,
       })
       map.addControl(new NavigationControl({ visualizePitch: true }), 'top-right')
       map.on('load', () => setMapReady(true))
