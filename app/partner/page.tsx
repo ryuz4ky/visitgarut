@@ -2,13 +2,18 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import AppHeader from '@/components/AppHeader'
 import MobileBottomNav from '@/components/MobileBottomNav'
+import PartnerAvailabilityManager from '@/components/PartnerAvailabilityManager'
 import PartnerDashboard from '@/components/PartnerDashboard'
 import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = {
   title: 'Partner Center',
-  description: 'Kelola listing, inventory, offer, dan inquiry traveler untuk partner VisitGarut.',
+  description: 'Kelola listing, inventory, offer, availability, dan inquiry traveler untuk partner VisitGarut.',
   robots: { index: false, follow: true },
+}
+
+function toIsoDate(date: Date) {
+  return date.toISOString().slice(0, 10)
 }
 
 export default async function PartnerPage() {
@@ -48,13 +53,36 @@ export default async function PartnerPage() {
     ...row,
     price_amount: row.price_amount == null ? null : Number(row.price_amount),
   }))
+  const inventoryIds = inventory.map((row) => String(row.id))
+
+  const today = new Date()
+  const horizon = new Date(today)
+  horizon.setDate(horizon.getDate() + 90)
+
+  const availabilityResult = inventoryIds.length
+    ? await supabase
+        .from('inventory_availability')
+        .select('id, inventory_item_id, available_date, quantity_available, price_amount, currency, status')
+        .in('inventory_item_id', inventoryIds)
+        .gte('available_date', toIsoDate(today))
+        .lte('available_date', toIsoDate(horizon))
+        .order('available_date', { ascending: true })
+        .limit(1000)
+    : { data: [], error: null }
+
+  const availability = (availabilityResult.data ?? []).map((row: Record<string, unknown>) => ({
+    ...row,
+    quantity_available: Number(row.quantity_available ?? 0),
+    price_amount: row.price_amount == null ? null : Number(row.price_amount),
+  }))
 
   return (
     <main className="marketplace-page partner-page">
       <AppHeader />
-      <section className="partner-hero"><div><span className="marketplace-eyebrow">VISITGARUT PARTNER CENTER</span><h1>Listing, inventory, promo, dan inquiry dalam satu dashboard.</h1><p>Kelola room, kendaraan, produk, paket, offer, dan traveler intent dari satu tempat.</p></div></section>
+      <section className="partner-hero"><div><span className="marketplace-eyebrow">VISITGARUT PARTNER CENTER</span><h1>Listing, inventory, availability, promo, dan inquiry dalam satu dashboard.</h1><p>Kelola room, kendaraan, produk, paket, kalender stok, offer, dan traveler intent dari satu tempat.</p></div></section>
       <div className="marketplace-shell partner-shell">
         <PartnerDashboard userId={user.id} places={places} offers={(offersResult.data ?? []) as never} leads={(leadsResult.data ?? []) as never} inventory={inventory as never} />
+        <PartnerAvailabilityManager places={places} inventory={inventory as never} availability={availability as never} />
       </div>
       <MobileBottomNav />
     </main>
