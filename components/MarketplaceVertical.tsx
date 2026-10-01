@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { BadgeCheck, Car, ChevronLeft, ChevronRight, Gift, Hotel, MapPin, Search, ShoppingBag, Star, Store, TentTree } from 'lucide-react'
@@ -20,6 +21,7 @@ type MarketplaceVerticalProps = {
   suggestions: Suggestion[]
   emptyTitle: string
   emptyDescription: string
+  preResults?: ReactNode
 }
 
 const PAGE_SIZE = 12
@@ -67,7 +69,7 @@ function buildPageHref(action: string, q: string, filters: FilterParams, page: n
   return query ? `${action}?${query}` : action
 }
 
-export default async function MarketplaceVertical({ eyebrow, title, description, categorySlug, action, q = '', filters = {}, searchPlaceholder, suggestions, emptyTitle, emptyDescription }: MarketplaceVerticalProps) {
+export default async function MarketplaceVertical({ eyebrow, title, description, categorySlug, action, q = '', filters = {}, searchPlaceholder, suggestions, emptyTitle, emptyDescription, preResults }: MarketplaceVerticalProps) {
   const allPlaces = await getPublishedPlacesByCategory(categorySlug)
   const districts = [...new Set(allPlaces.map((place) => place.district).filter(Boolean) as string[])].sort()
   const subtypes = [...new Set(allPlaces.map((place) => place.subtype).filter(Boolean) as string[])].sort()
@@ -107,6 +109,8 @@ export default async function MarketplaceVertical({ eyebrow, title, description,
           </form>
         </div>
       </section>
+
+      {preResults}
 
       <section className="marketplace-shell catalog-filter-shell">
         <form className="catalog-filter-form" action={action}>
