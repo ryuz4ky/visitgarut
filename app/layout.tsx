@@ -4,6 +4,7 @@ import './globals.css'
 import './discovery.css'
 import './marketplace.css'
 import './trip.css'
+import './vertical.css'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
