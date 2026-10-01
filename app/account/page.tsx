@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { BriefcaseBusiness } from 'lucide-react'
+import { BriefcaseBusiness, ShieldCheck } from 'lucide-react'
 import AppHeader from '@/components/AppHeader'
 import MobileBottomNav from '@/components/MobileBottomNav'
 import AccountDashboard from '@/components/AccountDashboard'
@@ -20,7 +20,7 @@ export default async function AccountPage() {
   if (!user) redirect('/login?next=/account')
 
   const [profileResult, favoritesResult, itinerariesResult, claimsResult] = await Promise.all([
-    supabase.from('profiles').select('full_name, username, avatar_url').eq('id', user.id).maybeSingle(),
+    supabase.from('profiles').select('full_name, username, avatar_url, role').eq('id', user.id).maybeSingle(),
     supabase
       .from('favorites')
       .select('created_at, place:places(id, name, slug, district, cover_image_url, rating)')
@@ -65,6 +65,7 @@ export default async function AccountPage() {
     place: Array.isArray(row.place) ? row.place[0] ?? null : row.place ?? null,
   }))
   const hasApprovedClaim = claims.some((claim) => claim.status === 'approved')
+  const isAdmin = profileResult.data?.role === 'admin'
 
   return (
     <main className="marketplace-page account-page">
@@ -75,6 +76,7 @@ export default async function AccountPage() {
           <h1>Perjalanan Garut kamu, tersimpan rapi.</h1>
           <p>Kelola tempat favorit, itinerary, profil, dan listing bisnis dari satu dashboard.</p>
           {hasApprovedClaim ? <Link className="account-partner-cta" href="/partner"><BriefcaseBusiness size={17} /> Buka Partner Center</Link> : null}
+          {isAdmin ? <Link className="account-admin-cta" href="/admin"><ShieldCheck size={17} /> Admin Operations</Link> : null}
         </div>
       </section>
       <div className="marketplace-shell account-shell">
