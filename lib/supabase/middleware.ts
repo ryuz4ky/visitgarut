@@ -1,15 +1,12 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { getSupabaseConfig } from '@/lib/supabase/config'
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request })
+  const { url, publishableKey } = getSupabaseConfig()
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-
-  if (!url || !key) return response
-
-  const supabase = createServerClient(url, key, {
+  const supabase = createServerClient(url, publishableKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll()
@@ -24,8 +21,12 @@ export async function updateSession(request: NextRequest) {
     },
   })
 
-  // getUser validates the token with Supabase Auth and refreshes cookies when needed.
-  await supabase.auth.getUser()
+  try {
+    // Validate/refresh sessions, but never take down public pages if auth is temporarily unavailable.
+    await supabase.auth.getUser()
+  } catch (error) {
+    console.error('Supabase session refresh failed', error)
+  }
 
   return response
 }
