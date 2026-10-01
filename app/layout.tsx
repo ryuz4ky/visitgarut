@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { siteUrl } from '@/lib/site'
+import 'maplibre-gl/dist/maplibre-gl.css'
 import './globals.css'
 import './discovery.css'
 import './marketplace.css'
@@ -10,6 +11,7 @@ import './nearby-enhancements.css'
 import './transaction-partner.css'
 import './admin.css'
 import './catalog.css'
+import './search-map.css'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
