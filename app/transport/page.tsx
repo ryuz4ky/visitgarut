@@ -8,11 +8,11 @@ export const metadata: Metadata = {
 }
 
 type TransportPageProps = {
-  searchParams: Promise<{ q?: string; vehicle?: string; subtype?: string; district?: string; verified?: string; amenity?: string; price?: string }>
+  searchParams: Promise<{ q?: string; vehicle?: string; subtype?: string; district?: string; verified?: string; amenity?: string; price?: string; sort?: string; page?: string }>
 }
 
 export default async function TransportPage({ searchParams }: TransportPageProps) {
-  const { q = '', vehicle = '', subtype = '', district = '', verified = '', amenity = '', price = '' } = await searchParams
+  const { q = '', vehicle = '', subtype = '', district = '', verified = '', amenity = '', price = '', sort = '', page = '' } = await searchParams
   const initialQuery = q || (vehicle === 'motorbike' ? 'motor' : vehicle === 'car' ? 'mobil' : '')
 
   return (
@@ -23,7 +23,7 @@ export default async function TransportPage({ searchParams }: TransportPageProps
       categorySlug="transportasi"
       action="/transport"
       q={initialQuery}
-      filters={{ subtype, district, verified, amenity, price }}
+      filters={{ subtype, district, verified, amenity, price, sort, page }}
       searchPlaceholder="Cari rental mobil, motor, driver, travel, atau area..."
       suggestions={[
         { label: 'Rental Mobil', description: 'Bandingkan provider dan inventory mobil yang tersedia.', href: '/transport?subtype=car_rental' },
