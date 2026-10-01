@@ -1,23 +1,35 @@
 import type { Metadata } from 'next'
-import SimpleLanding from '@/components/SimpleLanding'
+import MarketplaceVertical from '@/components/MarketplaceVertical'
 
 export const metadata: Metadata = {
   title: 'Kuliner Garut: Cafe, Restoran & Oleh-Oleh',
-  description: 'Temukan kuliner Garut, cafe, restoran, makanan khas, dan pusat oleh-oleh lokal.',
+  description: 'Cari cafe, restoran, makanan khas, street food, dan oleh-oleh lokal di Garut berdasarkan area.',
   alternates: { canonical: '/eat' },
 }
 
-export default function EatPage() {
+type EatPageProps = {
+  searchParams: Promise<{ q?: string }>
+}
+
+export default async function EatPage({ searchParams }: EatPageProps) {
+  const { q = '' } = await searchParams
+
   return (
-    <SimpleLanding
+    <MarketplaceVertical
       eyebrow="EAT IN GARUT"
-      title="Makan enak, lebih lokal."
-      description="Direktori kuliner VisitGarut sedang disiapkan untuk membantu kamu menemukan cafe, restoran, street food, dan oleh-oleh di seluruh Garut."
-      cards={[
-        { eyebrow: 'CAFE', title: 'Cafe & Coffee', description: 'Temukan tempat ngopi dari pusat kota sampai area pegunungan.' },
-        { eyebrow: 'LOCAL FOOD', title: 'Kuliner Khas', description: 'Jelajahi makanan khas Garut dan tempat terbaik untuk mencobanya.' },
-        { eyebrow: 'SHOP', title: 'Oleh-Oleh', description: 'Cari dodol, produk lokal, dan pusat oleh-oleh terpercaya.' },
+      title="Temukan rasa lokal, dari kopi sampai oleh-oleh."
+      description="Cari cafe, restoran, makanan khas, street food, dan pusat oleh-oleh. VisitGarut dirancang untuk membantu traveler menemukan tempat makan berdasarkan area dan kebutuhan perjalanan."
+      categorySlug="kuliner"
+      action="/eat"
+      q={q}
+      searchPlaceholder="Cari cafe, restoran, makanan khas, atau oleh-oleh..."
+      suggestions={[
+        { label: 'Cafe & Coffee', description: 'Tempat ngopi dari pusat kota sampai area pegunungan.', href: '/eat?q=cafe' },
+        { label: 'Kuliner Khas', description: 'Cari pengalaman makan dan makanan khas Garut.', href: '/eat?q=Garut' },
+        { label: 'Oleh-Oleh', description: 'Dodol, produk lokal, dan pusat oleh-oleh untuk dibawa pulang.', href: '/eat?q=oleh-oleh' },
       ]}
+      emptyTitle="Direktori kuliner sedang kami isi."
+      emptyDescription="Cafe, restoran, street food, dan toko oleh-oleh nantinya dapat memiliki halaman listing sendiri lengkap dengan lokasi, jam buka, kontak, menu highlight, dan tombol direct inquiry."
     />
   )
 }

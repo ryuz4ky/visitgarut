@@ -1,48 +1,52 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import "./discovery.css";
+import type { Metadata } from 'next'
+import { siteUrl } from '@/lib/site'
+import './globals.css'
+import './discovery.css'
+import './marketplace.css'
+import './trip.css'
+import './vertical.css'
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://visitgarut.com"),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "VisitGarut — Discover Garut Like a Local",
-    template: "%s | VisitGarut",
+    default: 'VisitGarut — Wisata, Stay, Kuliner & Transport Garut',
+    template: '%s | VisitGarut',
   },
   description:
-    "Temukan wisata, kuliner, penginapan, transportasi, event, dan bisnis lokal terbaik di Garut dalam satu platform.",
+    'Temukan wisata, penginapan, rental mobil dan motor, kuliner, event, serta bisnis lokal Garut dalam satu platform discovery dan trip planner.',
   keywords: [
-    "Garut",
-    "wisata Garut",
-    "kuliner Garut",
-    "hotel Garut",
-    "rental motor Garut",
-    "rental mobil Garut",
-    "VisitGarut",
+    'Garut',
+    'wisata Garut',
+    'kuliner Garut',
+    'hotel Garut',
+    'rental motor Garut',
+    'rental mobil Garut',
+    'event Garut',
+    'VisitGarut',
   ],
   openGraph: {
-    title: "VisitGarut — Discover Garut Like a Local",
+    title: 'VisitGarut — Semua kebutuhan perjalanan Garut dalam satu tempat',
     description:
-      "Jelajahi destinasi, kuliner, penginapan, transportasi, dan bisnis lokal Garut.",
-    url: "https://visitgarut.com",
-    siteName: "VisitGarut",
-    locale: "id_ID",
-    type: "website",
+      'Jelajahi destinasi, penginapan, transportasi, kuliner, event, dan bisnis lokal Garut.',
+    url: siteUrl,
+    siteName: 'VisitGarut',
+    locale: 'id_ID',
+    type: 'website',
   },
   twitter: {
-    card: "summary_large_image",
-    title: "VisitGarut — Discover Garut Like a Local",
-    description:
-      "Jelajahi destinasi, kuliner, penginapan, transportasi, dan bisnis lokal Garut.",
+    card: 'summary_large_image',
+    title: 'VisitGarut — Discover Garut Like a Local',
+    description: 'Platform lokal untuk menjelajahi Garut: wisata, stay, rental, kuliner, event, dan map.',
   },
   alternates: {
-    canonical: "/",
+    canonical: '/',
   },
-};
+}
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="id">
       <body>{children}</body>
     </html>
-  );
+  )
 }

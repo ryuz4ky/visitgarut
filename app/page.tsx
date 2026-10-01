@@ -1,6 +1,8 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import {
   BedDouble,
+  Bike,
   CalendarDays,
   Car,
   ChevronRight,
@@ -8,32 +10,59 @@ import {
   Compass,
   Heart,
   MapPin,
-  Menu,
   Mountain,
-  Search,
+  Route,
   ShoppingBag,
   Sparkles,
   Star,
   Store,
   Utensils,
+  WandSparkles,
 } from 'lucide-react'
+import AppHeader from '@/components/AppHeader'
+import MobileBottomNav from '@/components/MobileBottomNav'
+import TravelSearch from '@/components/TravelSearch'
 import { getFeaturedPlaces } from '@/lib/data/places'
 
-const categories = [
-  { label: 'Atraksi Wisata', icon: Mountain, href: '/explore' },
-  { label: 'Cafe & Kuliner', icon: Coffee, href: '/eat' },
-  { label: 'Hotel & Penginapan', icon: BedDouble, href: '/stay' },
-  { label: 'Rental Motor', icon: Compass, href: '/transport' },
-  { label: 'Rental Mobil', icon: Car, href: '/transport' },
-  { label: 'Oleh-Oleh', icon: ShoppingBag, href: '/eat' },
-  { label: 'Event & Aktivitas', icon: CalendarDays, href: '/events' },
+const quickActions = [
+  { label: 'Wisata', description: 'Tempat & aktivitas', href: '/explore', icon: Mountain },
+  { label: 'Hotel & Stay', description: 'Hotel, villa, homestay', href: '/stay', icon: BedDouble },
+  { label: 'Rental Mobil', description: 'Lepas kunci / driver', href: '/transport?vehicle=car', icon: Car },
+  { label: 'Rental Motor', description: 'Praktis keliling Garut', href: '/transport?vehicle=motorbike', icon: Bike },
+  { label: 'Kuliner', description: 'Cafe & makanan lokal', href: '/eat', icon: Utensils },
+  { label: 'Oleh-Oleh', description: 'Produk khas Garut', href: '/eat?type=oleh-oleh', icon: ShoppingBag },
+  { label: 'Event', description: 'Agenda & aktivitas', href: '/events', icon: CalendarDays },
+  { label: 'Near Me', description: 'Cari yang terdekat', href: '/map', icon: MapPin },
 ]
 
-const localBusinesses = [
-  { name: 'Kopi Lokal Garut', type: 'Cafe & Kuliner', rating: '4.6', icon: Coffee },
-  { name: 'Papandayan Homestay', type: 'Penginapan', rating: '4.8', icon: BedDouble },
-  { name: 'Garut Motor Rental', type: 'Transportasi', rating: '4.7', icon: Car },
-  { name: 'Dodol Garut Asli', type: 'Oleh-Oleh', rating: '4.6', icon: ShoppingBag },
+const collections = [
+  {
+    title: 'Weekend di Garut',
+    subtitle: 'Kombinasi alam, kuliner, dan tempat santai untuk 2 hari.',
+    tag: '2D1N GUIDE',
+    href: '/trip',
+    image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=86',
+  },
+  {
+    title: 'Hot Spring Escape',
+    subtitle: 'Cipanas, Darajat, dan pengalaman pegunungan yang hangat.',
+    tag: 'RELAX',
+    href: '/explore?q=Cipanas',
+    image: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1200&q=86',
+  },
+  {
+    title: 'Adventure Garut',
+    subtitle: 'Gunung, trekking, dan lanskap dataran tinggi untuk yang aktif.',
+    tag: 'OUTDOOR',
+    href: '/explore?q=Papandayan',
+    image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=86',
+  },
+]
+
+const tripSteps = [
+  { icon: Compass, title: 'Temukan', text: 'Cari destinasi, stay, kuliner, transportasi, dan event dalam satu tempat.' },
+  { icon: Heart, title: 'Simpan', text: 'Kumpulkan pilihan favorit untuk itinerary kamu.' },
+  { icon: Route, title: 'Susun Trip', text: 'Gabungkan tempat berdasarkan area agar perjalanan lebih efisien.' },
 ]
 
 function formatReviews(value: number) {
@@ -42,80 +71,88 @@ function formatReviews(value: number) {
 }
 
 export default async function Home() {
-  const destinations = await getFeaturedPlaces(4)
+  const destinations = await getFeaturedPlaces(8)
 
   return (
-    <main>
-      <header className="site-header">
-        <Link className="brand" href="/" aria-label="VisitGarut home">
-          <span className="brand-mark">⌃</span>
-          <span>Visit<span>Garut</span></span>
-        </Link>
+    <main className="marketplace-page">
+      <AppHeader />
 
-        <nav className="desktop-nav" aria-label="Main navigation">
-          <Link href="/explore">Explore</Link>
-          <Link href="/stay">Stay</Link>
-          <Link href="/eat">Eat</Link>
-          <Link href="/transport">Transport</Link>
-          <Link href="/events">Events</Link>
-          <a href="#local">Local Business</a>
-        </nav>
-
-        <div className="header-actions">
-          <Link className="icon-button" aria-label="Search" href="/explore"><Search size={19} /></Link>
-          <button className="icon-button desktop-only" aria-label="Saved"><Heart size={19} /></button>
-          <button className="login-button desktop-only">Masuk / Daftar</button>
-          <button className="icon-button mobile-only" aria-label="Menu"><Menu size={21} /></button>
+      <section className="marketplace-hero">
+        <div className="marketplace-hero-overlay" />
+        <div className="marketplace-hero-inner">
+          <div className="marketplace-hero-copy">
+            <span className="marketplace-eyebrow"><Sparkles size={15} /> LOCAL TRAVEL SUPER-APP</span>
+            <h1>Semua yang kamu butuhkan untuk menikmati Garut.</h1>
+            <p>
+              Cari tempat wisata, penginapan, rental, kuliner, event, dan rencana perjalanan lokal dari satu platform.
+            </p>
+          </div>
+          <TravelSearch />
         </div>
-      </header>
-
-      <section className="hero" id="top">
-        <div className="hero-overlay" />
-        <div className="hero-content">
-          <div className="eyebrow"><Sparkles size={16} /> GARUT, WEST JAVA</div>
-          <h1>Discover Garut,<br />Like a Local.</h1>
-          <p>
-            Alam yang menenangkan, kuliner yang menggugah, dan cerita lokal yang selalu terasa istimewa.
-          </p>
-
-          <form className="hero-search" role="search" action="/explore">
-            <Search size={20} />
-            <input name="q" aria-label="Cari di VisitGarut" placeholder="Cari wisata, hotel, kuliner, atau aktivitas..." />
-            <button type="button"><MapPin size={17} /> Garut</button>
-            <button type="submit" className="search-submit" aria-label="Cari"><Search size={19} /></button>
-          </form>
-        </div>
-        <div className="hero-note">Dari gunung sampai pantai,<br />semua ada di Garut.</div>
       </section>
 
-      <section className="category-strip" aria-label="Kategori VisitGarut">
-        {categories.map(({ label, icon: Icon, href }) => (
-          <Link key={label} href={href} className="category-item">
-            <span><Icon size={23} /></span>
-            <strong>{label}</strong>
-          </Link>
-        ))}
+      <section className="marketplace-trust-strip" aria-label="Keunggulan VisitGarut">
+        <span>Fokus 100% Garut</span>
+        <span>Discovery berbasis lokasi</span>
+        <span>Direktori bisnis lokal</span>
+        <span>Map & itinerary ready</span>
       </section>
 
-      <section className="section-shell" id="explore">
-        <div className="section-heading">
+      <section className="marketplace-shell marketplace-quick-section">
+        <div className="marketplace-section-heading compact">
           <div>
-            <span className="kicker">EXPLORE GARUT</span>
-            <h2>Destinasi unggulan di Garut</h2>
-            <p>Temukan tempat-tempat terbaik yang wajib kamu kunjungi.</p>
+            <span className="marketplace-kicker">MAU CARI APA?</span>
+            <h2>Mulai dari kebutuhan perjalananmu.</h2>
+          </div>
+        </div>
+
+        <div className="quick-action-grid">
+          {quickActions.map(({ label, description, href, icon: Icon }) => (
+            <Link className="quick-action-card" href={href} key={label}>
+              <span className="quick-action-icon"><Icon size={24} /></span>
+              <strong>{label}</strong>
+              <small>{description}</small>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="marketplace-shell">
+        <div className="marketplace-section-heading">
+          <div>
+            <span className="marketplace-kicker">TOP PICKS</span>
+            <h2>Destinasi yang sedang jadi pilihan.</h2>
+            <p>Mulai dari tempat ikonik hingga kawasan yang cocok untuk short escape.</p>
           </div>
           <Link href="/explore">Lihat semua <ChevronRight size={17} /></Link>
         </div>
 
-        <div className="destination-grid">
-          {destinations.map((item) => (
-            <article className="destination-card" key={item.slug}>
-              <Link href={`/explore/${item.slug}`} aria-label={`Lihat ${item.name}`}>
-                <div className="destination-image" style={{ backgroundImage: item.cover_image_url ? `url(${item.cover_image_url})` : undefined }} />
-                <div className="destination-body">
-                  <h3>{item.name}</h3>
-                  <p><MapPin size={14} /> {item.district ? `Kec. ${item.district}` : 'Kabupaten Garut'}</p>
-                  <div className="rating"><Star size={14} fill="currentColor" /> {item.rating?.toFixed(1) ?? '—'} <span>({formatReviews(item.review_count)})</span></div>
+        <div className="marketplace-place-grid">
+          {destinations.map((place) => (
+            <article className="marketplace-place-card" key={place.slug}>
+              <Link href={`/explore/${place.slug}`}>
+                <div className="marketplace-place-media">
+                  {place.cover_image_url ? (
+                    <Image
+                      src={place.cover_image_url}
+                      alt={place.name}
+                      fill
+                      sizes="(max-width: 720px) 78vw, (max-width: 1100px) 40vw, 25vw"
+                    />
+                  ) : (
+                    <div className="marketplace-image-fallback" />
+                  )}
+                  <span className="marketplace-place-badge">{place.category?.name || 'Explore'}</span>
+                </div>
+                <div className="marketplace-place-copy">
+                  <h3>{place.name}</h3>
+                  <p><MapPin size={14} /> {place.district || 'Garut'}</p>
+                  {place.short_description ? <small>{place.short_description}</small> : null}
+                  <div className="marketplace-rating">
+                    <Star size={14} fill="currentColor" />
+                    <strong>{place.rating?.toFixed(1) ?? '—'}</strong>
+                    <span>{place.review_count ? `(${formatReviews(place.review_count)})` : 'Local pick'}</span>
+                  </div>
                 </div>
               </Link>
             </article>
@@ -123,80 +160,116 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="map-feature" id="map">
-        <div className="map-copy">
-          <span className="kicker">VISITGARUT MAP</span>
-          <h2>Jelajahi Garut lewat satu peta interaktif.</h2>
-          <p>
-            Temukan wisata, kuliner, penginapan, transportasi, event, dan bisnis lokal berdasarkan area dan jarak terdekat.
-          </p>
-          <Link className="primary-button" href="/map">Buka Peta VisitGarut <ChevronRight size={18} /></Link>
-        </div>
-
-        <div className="map-canvas" aria-label="Mockup peta VisitGarut">
-          <div className="map-grid" />
-          <div className="map-road road-one" />
-          <div className="map-road road-two" />
-          <span className="pin pin-1"><Mountain size={16} /></span>
-          <span className="pin pin-2"><Coffee size={16} /></span>
-          <span className="pin pin-3"><BedDouble size={16} /></span>
-          <span className="pin pin-4"><Utensils size={16} /></span>
-          <span className="pin pin-5"><Store size={16} /></span>
-          <div className="map-label label-papandayan">Papandayan</div>
-          <div className="map-label label-garut">Garut Kota</div>
-          <div className="map-card">
-            <div className="map-card-image" />
-            <div>
-              <strong>Situ Bagendit</strong>
-              <span><Star size={12} fill="currentColor" /> 4.6 · 12 km</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section-shell local-section" id="local">
-        <div className="section-heading">
+      <section className="marketplace-shell">
+        <div className="marketplace-section-heading">
           <div>
-            <span className="kicker">SUPPORT LOCAL</span>
-            <h2>Rekomendasi bisnis lokal</h2>
-            <p>Dukung pelaku usaha lokal dan temukan pengalaman autentik di Garut.</p>
+            <span className="marketplace-kicker">CURATED FOR YOU</span>
+            <h2>Jelajahi Garut berdasarkan mood.</h2>
+            <p>Inspirasi trip yang lebih gampang dipilih daripada mulai dari daftar panjang.</p>
           </div>
-          <Link href="/explore">Lihat semua <ChevronRight size={17} /></Link>
+          <Link href="/trip">Buat itinerary <ChevronRight size={17} /></Link>
         </div>
 
-        <div className="business-grid">
-          {localBusinesses.map(({ name, type, rating, icon: Icon }) => (
-            <article className="business-card" key={name}>
-              <div className="business-icon"><Icon size={24} /></div>
-              <div>
-                <h3>{name}</h3>
-                <p>{type}</p>
-                <span><Star size={13} fill="currentColor" /> {rating}</span>
+        <div className="collection-grid">
+          {collections.map((collection) => (
+            <Link className="collection-card" href={collection.href} key={collection.title}>
+              <Image src={collection.image} alt="" fill sizes="(max-width: 800px) 88vw, 33vw" />
+              <div className="collection-overlay" />
+              <div className="collection-copy">
+                <span>{collection.tag}</span>
+                <h3>{collection.title}</h3>
+                <p>{collection.subtitle}</p>
+                <strong>Explore <ChevronRight size={16} /></strong>
               </div>
-              <Heart size={18} className="business-heart" />
-            </article>
+            </Link>
           ))}
         </div>
       </section>
 
-      <section className="cta-section">
-        <div>
-          <span className="kicker light">MORE THAN A DESTINATION</span>
-          <h2>Explore Garut.<br />Your next story awaits.</h2>
+      <section className="marketplace-shell marketplace-map-panel">
+        <div className="marketplace-map-copy">
+          <span className="marketplace-kicker">NEARBY DISCOVERY</span>
+          <h2>Lihat apa yang menarik di sekitar kamu.</h2>
+          <p>
+            VisitGarut sudah memakai data lokasi untuk membantu mengurutkan tempat berdasarkan jarak. Cocok saat kamu sudah berada di Garut dan ingin menentukan tujuan berikutnya.
+          </p>
+          <div className="marketplace-map-actions">
+            <Link className="marketplace-primary-button" href="/map"><MapPin size={18} /> Cari di dekat saya</Link>
+            <Link className="marketplace-secondary-button" href="/explore">Browse semua tempat</Link>
+          </div>
+          <div className="marketplace-map-stats">
+            <span><strong>1</strong> local map</span>
+            <span><strong>6+</strong> kategori utama</span>
+            <span><strong>1</strong> itinerary layer</span>
+          </div>
         </div>
-        <div className="cta-features">
-          <span><Mountain size={25} /> Destinasi alam</span>
-          <span><Utensils size={25} /> Kuliner lokal</span>
-          <span><BedDouble size={25} /> Stay & transport</span>
-          <span><Store size={25} /> Bisnis lokal</span>
+
+        <div className="marketplace-map-visual" aria-hidden="true">
+          <div className="marketplace-map-grid" />
+          <span className="marketplace-map-route route-a" />
+          <span className="marketplace-map-route route-b" />
+          <span className="marketplace-map-pin pin-a"><Mountain size={16} /></span>
+          <span className="marketplace-map-pin pin-b"><Coffee size={16} /></span>
+          <span className="marketplace-map-pin pin-c"><BedDouble size={16} /></span>
+          <span className="marketplace-map-pin pin-d"><Store size={16} /></span>
+          <div className="marketplace-map-floating-card">
+            <span>Nearby</span>
+            <strong>Cari tempat terdekat</strong>
+            <small>Wisata · Kuliner · Stay · Rental</small>
+          </div>
         </div>
       </section>
 
-      <footer>
-        <Link className="brand footer-brand" href="/"><span className="brand-mark">⌃</span>Visit<span>Garut</span></Link>
-        <p>Independent local discovery platform for Garut, West Java.</p>
-        <p>© {new Date().getFullYear()} VisitGarut. Not affiliated with the Government of Garut Regency.</p>
+      <section className="marketplace-shell marketplace-trip-panel">
+        <div className="marketplace-trip-title">
+          <span className="marketplace-kicker">SMART TRIP PLANNER</span>
+          <h2>Dari “mau ke Garut” sampai itinerary jadi.</h2>
+          <p>VisitGarut akan menjadi lapisan perencanaan lokal: discovery, shortlist, rute, dan partner booking.</p>
+        </div>
+        <div className="marketplace-trip-steps">
+          {tripSteps.map(({ icon: Icon, title, text }, index) => (
+            <article key={title}>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <Icon size={24} />
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </article>
+          ))}
+        </div>
+        <Link className="marketplace-trip-cta" href="/trip"><WandSparkles size={19} /> Mulai rencanakan trip</Link>
+      </section>
+
+      <section className="marketplace-shell marketplace-partner-panel" id="local">
+        <div>
+          <span className="marketplace-kicker">FOR LOCAL BUSINESS</span>
+          <h2>Punya hotel, rental, cafe, atau aktivitas di Garut?</h2>
+          <p>
+            VisitGarut disiapkan sebagai marketplace lokal. Bisnis bisa tampil di direktori, ditemukan lewat map, dan nantinya menerima leads atau booking dari traveler.
+          </p>
+        </div>
+        <div className="marketplace-partner-actions">
+          <Link className="marketplace-primary-button" href="/explore">Lihat direktori</Link>
+          <a className="marketplace-secondary-button" href="https://sorotnamedia.com/contact/">Daftarkan bisnis</a>
+        </div>
+      </section>
+
+      <footer className="marketplace-footer">
+        <div>
+          <Link className="vg-brand footer" href="/"><span className="vg-brand-mark">⌃</span><span>Visit<span>Garut</span></span></Link>
+          <p>Independent local travel discovery platform for Garut, West Java.</p>
+        </div>
+        <div className="marketplace-footer-links">
+          <Link href="/explore">Explore</Link>
+          <Link href="/stay">Stay</Link>
+          <Link href="/transport">Transport</Link>
+          <Link href="/eat">Kuliner</Link>
+          <Link href="/events">Event</Link>
+          <Link href="/map">Map</Link>
+        </div>
+        <p>© {new Date().getFullYear()} VisitGarut. Independent platform; not affiliated with the Government of Garut Regency.</p>
       </footer>
+
+      <MobileBottomNav />
     </main>
   )
 }
