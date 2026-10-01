@@ -1,23 +1,35 @@
 import type { Metadata } from 'next'
-import SimpleLanding from '@/components/SimpleLanding'
+import MarketplaceVertical from '@/components/MarketplaceVertical'
 
 export const metadata: Metadata = {
   title: 'Event Garut: Agenda, Festival & Aktivitas',
-  description: 'Temukan agenda, festival, acara komunitas, dan aktivitas menarik di Garut.',
+  description: 'Cari agenda, festival, acara komunitas, workshop, dan aktivitas menarik di Garut.',
   alternates: { canonical: '/events' },
 }
 
-export default function EventsPage() {
+type EventsPageProps = {
+  searchParams: Promise<{ q?: string }>
+}
+
+export default async function EventsPage({ searchParams }: EventsPageProps) {
+  const { q = '' } = await searchParams
+
   return (
-    <SimpleLanding
+    <MarketplaceVertical
       eyebrow="WHAT'S ON"
-      title="Lihat apa yang sedang terjadi di Garut."
-      description="VisitGarut sedang menyiapkan kalender event lokal untuk festival, aktivitas komunitas, konser, pameran, dan agenda wisata."
-      cards={[
-        { eyebrow: 'FESTIVAL', title: 'Festival & Budaya', description: 'Agenda budaya, tradisi, dan festival lokal yang layak dikunjungi.' },
-        { eyebrow: 'COMMUNITY', title: 'Komunitas', description: 'Temukan acara komunitas, workshop, meetup, dan kegiatan lokal.' },
-        { eyebrow: 'ACTIVITY', title: 'Weekend Activity', description: 'Ide aktivitas untuk akhir pekan dan perjalanan singkat di Garut.' },
+      title="Cari alasan baru untuk datang ke Garut."
+      description="Jelajahi festival, agenda budaya, acara komunitas, workshop, dan aktivitas akhir pekan. Kalender event akan menjadi salah satu discovery layer utama VisitGarut."
+      categorySlug="event"
+      action="/events"
+      q={q}
+      searchPlaceholder="Cari festival, komunitas, workshop, atau aktivitas..."
+      suggestions={[
+        { label: 'Festival & Budaya', description: 'Agenda budaya, tradisi, dan festival lokal.', href: '/events?q=festival' },
+        { label: 'Komunitas', description: 'Meetup, workshop, gathering, dan aktivitas komunitas.', href: '/events?q=komunitas' },
+        { label: 'Weekend Activity', description: 'Aktivitas singkat untuk akhir pekan dan short escape.', href: '/events?q=weekend' },
       ]}
+      emptyTitle="Kalender event sedang kami susun."
+      emptyDescription="Penyelenggara event nantinya dapat mengajukan agenda dengan tanggal, venue, tiket/registrasi, dan kategori. Untuk sekarang, struktur discovery dan pencariannya sudah disiapkan."
     />
   )
 }
