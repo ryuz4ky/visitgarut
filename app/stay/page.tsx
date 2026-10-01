@@ -8,11 +8,11 @@ export const metadata: Metadata = {
 }
 
 type StayPageProps = {
-  searchParams: Promise<{ q?: string; subtype?: string; district?: string; verified?: string; amenity?: string; price?: string }>
+  searchParams: Promise<{ q?: string; subtype?: string; district?: string; verified?: string; amenity?: string; price?: string; sort?: string; page?: string }>
 }
 
 export default async function StayPage({ searchParams }: StayPageProps) {
-  const { q = '', subtype = '', district = '', verified = '', amenity = '', price = '' } = await searchParams
+  const { q = '', subtype = '', district = '', verified = '', amenity = '', price = '', sort = '', page = '' } = await searchParams
 
   return (
     <MarketplaceVertical
@@ -22,7 +22,7 @@ export default async function StayPage({ searchParams }: StayPageProps) {
       categorySlug="penginapan"
       action="/stay"
       q={q}
-      filters={{ subtype, district, verified, amenity, price }}
+      filters={{ subtype, district, verified, amenity, price, sort, page }}
       searchPlaceholder="Cari area, hotel, villa, resort, atau homestay..."
       suggestions={[
         { label: 'Cipanas & Tarogong', description: 'Cocok untuk hot spring, keluarga, dan akses dekat kota.', href: '/stay?district=Tarogong%20Kaler' },
