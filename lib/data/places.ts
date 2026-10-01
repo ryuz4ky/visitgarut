@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { getSupabaseConfig } from '@/lib/supabase/config'
 
 export type PlaceSummary = {
   id?: string
@@ -76,12 +77,9 @@ const fallbackPlaces: PlaceSummary[] = [
 ]
 
 function getPublicClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+  const { url, publishableKey } = getSupabaseConfig()
 
-  if (!url || !key) return null
-
-  return createClient(url, key, {
+  return createClient(url, publishableKey, {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
@@ -165,7 +163,6 @@ function mergeFallbackImage(place: PlaceSummary) {
 
 export async function getFeaturedPlaces(limit = 4): Promise<PlaceSummary[]> {
   const supabase = getPublicClient()
-  if (!supabase) return fallbackPlaces.slice(0, limit)
 
   const { data, error } = await supabase
     .from('places')
@@ -184,7 +181,6 @@ export async function getFeaturedPlaces(limit = 4): Promise<PlaceSummary[]> {
 
 export async function getPublishedPlaces(): Promise<PlaceSummary[]> {
   const supabase = getPublicClient()
-  if (!supabase) return fallbackPlaces
 
   const { data, error } = await supabase
     .from('places')
@@ -208,10 +204,6 @@ export async function getPublishedPlacesByCategory(categorySlug: string): Promis
 export async function getPlaceBySlug(slug: string): Promise<PlaceSummary | null> {
   const supabase = getPublicClient()
 
-  if (!supabase) {
-    return fallbackPlaces.find((place) => place.slug === slug) ?? null
-  }
-
   const { data, error } = await supabase
     .from('places')
     .select(placeSelect)
@@ -228,7 +220,6 @@ export async function getPlaceBySlug(slug: string): Promise<PlaceSummary | null>
 
 export async function getPublishedPlaceSlugs(): Promise<string[]> {
   const supabase = getPublicClient()
-  if (!supabase) return fallbackPlaces.map((place) => place.slug)
 
   const { data, error } = await supabase
     .from('places')
