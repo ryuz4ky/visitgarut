@@ -56,6 +56,12 @@ export type PlaceSource = {
   last_verified_at: string
 }
 
+export type InventoryFacet = {
+  itemCount: number
+  minPrice: number | null
+  itemTypes: string[]
+}
+
 const fallbackPlaces: PlaceSummary[] = [
   { name: 'Gunung Papandayan', slug: 'gunung-papandayan', district: 'Cisurupan', rating: null, review_count: 0, short_description: 'Gunung vulkanik populer dengan kawah, hutan mati, dan jalur trekking yang ramah wisatawan.', cover_image_url: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=85', subtype: 'nature', data_quality: 'unverified', category: { name: 'Wisata', slug: 'wisata' } },
   { name: 'Darajat Pass', slug: 'darajat-pass', district: 'Pasirwangi', rating: null, review_count: 0, short_description: 'Kawasan wisata pegunungan dengan pemandian air panas dan panorama dataran tinggi.', cover_image_url: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=85', subtype: 'attraction', data_quality: 'unverified', category: { name: 'Wisata', slug: 'wisata' } },
@@ -117,6 +123,11 @@ export async function getPublishedPlacesByCategory(categorySlug: string): Promis
   return places.filter((place) => place.category?.slug === categorySlug)
 }
 
+export async function getMapPlaces(): Promise<PlaceSummary[]> {
+  const places = await getPublishedPlaces()
+  return places.filter((place) => place.id && place.latitude != null && place.longitude != null)
+}
+
 export async function getPlaceBySlug(slug: string): Promise<PlaceSummary | null> {
   const { data, error } = await getPublicClient().from('places').select(placeSelect).eq('slug', slug).eq('status', 'published').maybeSingle()
   if (error || !data) return fallbackPlaces.find((place) => place.slug === slug) ?? null
@@ -127,6 +138,28 @@ export async function getPublishedPlaceSlugs(): Promise<string[]> {
   const { data, error } = await getPublicClient().from('places').select('slug').eq('status', 'published')
   if (error || !data?.length) return fallbackPlaces.map((place) => place.slug)
   return data.map((row) => row.slug)
+}
+
+export async function getInventoryFacets(placeIds: string[]): Promise<Record<string, InventoryFacet>> {
+  if (!placeIds.length) return {}
+  const { data, error } = await getPublicClient()
+    .from('inventory_items')
+    .select('place_id,item_type,price_amount')
+    .in('place_id', placeIds)
+    .eq('status', 'published')
+  if (error || !data) return {}
+
+  const index: Record<string, InventoryFacet> = {}
+  for (const row of data) {
+    const placeId = String(row.place_id)
+    const price = row.price_amount == null ? null : Number(row.price_amount)
+    const current = index[placeId] ?? { itemCount: 0, minPrice: null, itemTypes: [] }
+    current.itemCount += 1
+    if (price != null && (current.minPrice == null || price < current.minPrice)) current.minPrice = price
+    if (row.item_type && !current.itemTypes.includes(String(row.item_type))) current.itemTypes.push(String(row.item_type))
+    index[placeId] = current
+  }
+  return index
 }
 
 export async function getPublishedInventoryForPlace(placeId: string): Promise<InventoryItem[]> {
