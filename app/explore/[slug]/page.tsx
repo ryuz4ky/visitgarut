@@ -1,8 +1,12 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ChevronLeft, MapPin, Star } from 'lucide-react'
+import { BadgeCheck, BriefcaseBusiness, ChevronLeft, Clock3, ExternalLink, MapPin, MessageCircle, Navigation, Phone, Route, Star, Tag } from 'lucide-react'
+import AppHeader from '@/components/AppHeader'
+import FavoriteButton from '@/components/FavoriteButton'
+import MobileBottomNav from '@/components/MobileBottomNav'
 import { getPlaceBySlug, getPublishedPlaceSlugs } from '@/lib/data/places'
+import { createClient } from '@/lib/supabase/server'
 import { absoluteUrl } from '@/lib/site'
 
 type PlacePageProps = {
@@ -11,6 +15,22 @@ type PlacePageProps = {
 
 function serializeJsonLd(value: unknown) {
   return JSON.stringify(value).replace(/</g, '\\u003c')
+}
+
+function getAmenities(value: Record<string, unknown> | unknown[] | null | undefined) {
+  if (Array.isArray(value)) return value.map(String).filter(Boolean).slice(0, 10)
+  if (!value || typeof value !== 'object') return []
+  return Object.entries(value)
+    .filter(([, enabled]) => Boolean(enabled))
+    .map(([key]) => key.replace(/[_-]+/g, ' '))
+    .slice(0, 10)
+}
+
+function getOpeningHours(value: Record<string, unknown> | null | undefined) {
+  if (!value) return []
+  return Object.entries(value)
+    .filter(([, hours]) => typeof hours === 'string' && hours.trim())
+    .slice(0, 7) as Array<[string, string]>
 }
 
 export async function generateStaticParams() {
@@ -29,15 +49,13 @@ export async function generateMetadata({ params }: PlacePageProps): Promise<Meta
     }
   }
 
-  const title = place.seo_title || `${place.name}, Garut: Panduan Wisata & Informasi`
+  const title = place.seo_title || `${place.name}, Garut: Panduan & Informasi`
   const description = place.seo_description || place.short_description || `Panduan mengunjungi ${place.name} di Garut.`
 
   return {
     title,
     description,
-    alternates: {
-      canonical: `/explore/${place.slug}`,
-    },
+    alternates: { canonical: `/explore/${place.slug}` },
     openGraph: {
       title: `${title} | VisitGarut`,
       description,
@@ -54,8 +72,35 @@ export default async function PlacePage({ params }: PlacePageProps) {
 
   if (!place) notFound()
 
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  let initialFavorite = false
+  let offers: Array<{ id: string; title: string; description: string | null; promo_code: string | null; price_label: string | null; cta_url: string | null; valid_until: string | null }> = []
+
+  if (place.id) {
+    const queries = await Promise.all([
+      user
+        ? supabase.from('favorites').select('place_id').eq('user_id', user.id).eq('place_id', place.id).maybeSingle()
+        : Promise.resolve({ data: null, error: null }),
+      supabase
+        .from('offers')
+        .select('id, title, description, promo_code, price_label, cta_url, valid_until')
+        .eq('place_id', place.id)
+        .eq('status', 'published')
+        .order('is_featured', { ascending: false })
+        .limit(3),
+    ])
+    initialFavorite = Boolean(queries[0].data)
+    offers = (queries[1].data ?? []) as typeof offers
+  }
+
   const description = place.description || place.short_description || `${place.name} merupakan salah satu tempat yang dapat dijelajahi di Kabupaten Garut.`
   const placeUrl = absoluteUrl(`/explore/${place.slug}`)
+  const amenities = getAmenities(place.amenities)
+  const openingHours = getOpeningHours(place.opening_hours)
+  const whatsappNumber = place.whatsapp?.replace(/\D/g, '')
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': place.category?.slug === 'wisata' ? 'TouristAttraction' : 'Place',
@@ -70,13 +115,7 @@ export default async function PlacePage({ params }: PlacePageProps) {
       addressCountry: 'ID',
     },
     ...(place.latitude != null && place.longitude != null
-      ? {
-          geo: {
-            '@type': 'GeoCoordinates',
-            latitude: place.latitude,
-            longitude: place.longitude,
-          },
-        }
+      ? { geo: { '@type': 'GeoCoordinates', latitude: place.latitude, longitude: place.longitude } }
       : {}),
     ...(place.cover_image_url ? { image: [place.cover_image_url] } : {}),
     ...(place.website_url ? { sameAs: [place.website_url] } : {}),
@@ -93,65 +132,110 @@ export default async function PlacePage({ params }: PlacePageProps) {
   }
 
   return (
-    <main>
+    <main className="marketplace-page place-detail-page">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbLd) }} />
-
-      <header className="detail-header">
-        <Link href="/explore" className="back-link"><ChevronLeft size={18} /> Explore</Link>
-        <Link className="brand" href="/" aria-label="VisitGarut home">
-          <span className="brand-mark">⌃</span>
-          <span>Visit<span>Garut</span></span>
-        </Link>
-      </header>
+      <AppHeader />
 
       <section
-        className="place-hero"
-        style={{ backgroundImage: place.cover_image_url ? `linear-gradient(180deg, rgba(4,35,27,.12), rgba(4,35,27,.74)), url(${place.cover_image_url})` : undefined }}
+        className="place-hero place-hero-rich"
+        style={{ backgroundImage: place.cover_image_url ? `linear-gradient(180deg, rgba(4,35,27,.12), rgba(4,35,27,.76)), url(${place.cover_image_url})` : undefined }}
       >
-        <div className="place-hero-content">
-          <span className="place-category">{place.category?.name || 'Explore Garut'}</span>
+        <div className="place-hero-content rich">
+          <Link href="/explore" className="place-back-link"><ChevronLeft size={17} /> Explore</Link>
+          <div className="place-title-row">
+            <span className="place-category">{place.category?.name || 'Explore Garut'}</span>
+            {place.is_verified ? <span className="verified-badge"><BadgeCheck size={15} /> Verified</span> : null}
+          </div>
           <h1>{place.name}</h1>
           <p><MapPin size={17} /> {place.district ? `${place.district}, Kabupaten Garut` : 'Kabupaten Garut, Jawa Barat'}</p>
         </div>
       </section>
 
-      <section className="place-content-shell">
+      <section className="place-content-shell rich-place-shell">
         <article className="place-main-content">
+          <div className="place-action-bar">
+            {place.id ? <FavoriteButton placeId={place.id} initialFavorite={initialFavorite} loggedIn={Boolean(user)} /> : null}
+            <Link className="place-action-link primary" href={user ? `/trip?place=${encodeURIComponent(place.slug)}` : `/login?next=${encodeURIComponent(`/trip?place=${place.slug}`)}`}><Route size={18} /> Tambah ke trip</Link>
+            {place.google_maps_url ? <a className="place-action-link" href={place.google_maps_url} target="_blank" rel="noreferrer"><Navigation size={18} /> Petunjuk arah</a> : null}
+          </div>
+
           <div className="place-summary-bar">
-            <div>
-              <span>Rating</span>
-              <strong><Star size={17} fill="currentColor" /> {place.rating?.toFixed(1) ?? '—'}</strong>
-            </div>
-            <div>
-              <span>Area</span>
-              <strong>{place.district || 'Garut'}</strong>
-            </div>
-            <div>
-              <span>Kategori</span>
-              <strong>{place.category?.name || 'Tempat'}</strong>
-            </div>
+            <div><span>Rating</span><strong><Star size={17} fill="currentColor" /> {place.rating?.toFixed(1) ?? '—'}</strong></div>
+            <div><span>Area</span><strong>{place.district || 'Garut'}</strong></div>
+            <div><span>Kategori</span><strong>{place.category?.name || 'Tempat'}</strong></div>
+            <div><span>Harga</span><strong>{place.price_label || 'Cek di lokasi'}</strong></div>
           </div>
 
           <div className="place-copy">
-            <span className="kicker">TENTANG TEMPAT INI</span>
+            <span className="marketplace-kicker">TENTANG TEMPAT INI</span>
             <h2>Mengenal {place.name}</h2>
             <p>{description}</p>
-            <p>
-              VisitGarut sedang membangun panduan lokal yang lebih lengkap untuk tempat ini, termasuk rute, jam terbaik untuk berkunjung, biaya, fasilitas, dan rekomendasi di sekitar lokasi.
-            </p>
           </div>
+
+          {amenities.length ? (
+            <div className="place-detail-block">
+              <span className="marketplace-kicker">FASILITAS & FITUR</span>
+              <h2>Yang tersedia</h2>
+              <div className="amenity-chip-grid">{amenities.map((item) => <span key={item}>{item}</span>)}</div>
+            </div>
+          ) : null}
+
+          {place.tags?.length ? (
+            <div className="place-detail-block compact">
+              <span className="marketplace-kicker">TAGS</span>
+              <div className="place-tag-row">{place.tags.map((tag) => <span key={tag}><Tag size={13} /> {tag}</span>)}</div>
+            </div>
+          ) : null}
+
+          {offers.length ? (
+            <div className="place-detail-block">
+              <span className="marketplace-kicker">OFFERS</span>
+              <h2>Promo dari partner</h2>
+              <div className="place-offer-grid">
+                {offers.map((offer) => (
+                  <article key={offer.id}>
+                    <span>LOCAL OFFER</span>
+                    <h3>{offer.title}</h3>
+                    {offer.description ? <p>{offer.description}</p> : null}
+                    {offer.price_label ? <strong>{offer.price_label}</strong> : null}
+                    {offer.promo_code ? <code>{offer.promo_code}</code> : null}
+                    {offer.cta_url ? <a href={offer.cta_url} target="_blank" rel="noreferrer">Lihat penawaran <ExternalLink size={14} /></a> : null}
+                  </article>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </article>
 
-        <aside className="place-sidebar">
-          <div className="info-card">
-            <span className="kicker">PLAN YOUR VISIT</span>
-            <h2>Siapkan perjalananmu.</h2>
-            <p>Gunakan VisitGarut untuk menemukan tempat lain di sekitar area ini.</p>
-            <Link href="/trip" className="primary-button">Tambahkan ke rencana trip</Link>
+        <aside className="place-sidebar rich-sidebar">
+          <div className="info-card place-info-card">
+            <span className="marketplace-kicker">PLAN YOUR VISIT</span>
+            <h2>Informasi praktis</h2>
+            {place.address ? <p><MapPin size={16} /><span>{place.address}</span></p> : null}
+            {place.phone ? <a href={`tel:${place.phone}`}><Phone size={16} /> {place.phone}</a> : null}
+            {whatsappNumber ? <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noreferrer"><MessageCircle size={16} /> Chat WhatsApp</a> : null}
+            {place.website_url ? <a href={place.website_url} target="_blank" rel="noreferrer"><ExternalLink size={16} /> Website</a> : null}
           </div>
+
+          {openingHours.length ? (
+            <div className="info-card opening-hours-card">
+              <span className="marketplace-kicker"><Clock3 size={14} /> JAM BUKA</span>
+              <div>{openingHours.map(([day, hours]) => <p key={day}><span>{day}</span><strong>{hours}</strong></p>)}</div>
+            </div>
+          ) : null}
+
+          {place.id ? (
+            <div className="info-card claim-card">
+              <BriefcaseBusiness size={24} />
+              <h3>Pemilik tempat ini?</h3>
+              <p>Claim listing untuk memperbarui informasi dan menyiapkan offer bisnis.</p>
+              <Link href={user ? `/claim/${place.slug}` : `/login?next=${encodeURIComponent(`/claim/${place.slug}`)}`}>Claim bisnis</Link>
+            </div>
+          ) : null}
         </aside>
       </section>
+      <MobileBottomNav />
     </main>
   )
 }

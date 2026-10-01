@@ -5,6 +5,8 @@ import './discovery.css'
 import './marketplace.css'
 import './trip.css'
 import './vertical.css'
+import './app-features.css'
+import './nearby-enhancements.css'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

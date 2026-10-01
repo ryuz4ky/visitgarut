@@ -3,6 +3,9 @@ import Link from 'next/link'
 import { CalendarDays, MapPin, Route, Sparkles, WandSparkles } from 'lucide-react'
 import AppHeader from '@/components/AppHeader'
 import MobileBottomNav from '@/components/MobileBottomNav'
+import TripPlannerClient from '@/components/TripPlannerClient'
+import { getPlaceBySlug } from '@/lib/data/places'
+import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = {
   title: 'Trip Planner Garut',
@@ -16,7 +19,37 @@ const starterPlans = [
   { label: '3D2N', title: 'Explore Lebih Dalam', text: 'Rute lebih luas untuk pegunungan, kota, dan area air panas.' },
 ]
 
-export default function TripPage() {
+type TripPageProps = {
+  searchParams: Promise<{ place?: string }>
+}
+
+export default async function TripPage({ searchParams }: TripPageProps) {
+  const { place: placeSlug } = await searchParams
+  const selectedPlace = placeSlug ? await getPlaceBySlug(placeSlug) : null
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  let trips: Array<{ id: string; title: string; trip_start: string | null; trip_end: string | null; status: string; item_count: number }> = []
+
+  if (user) {
+    const { data } = await supabase
+      .from('itineraries')
+      .select('id, title, trip_start, trip_end, status, itinerary_items(count)')
+      .eq('user_id', user.id)
+      .order('updated_at', { ascending: false })
+
+    trips = (data ?? []).map((row: Record<string, unknown>) => ({
+      id: String(row.id),
+      title: String(row.title),
+      trip_start: (row.trip_start as string | null) ?? null,
+      trip_end: (row.trip_end as string | null) ?? null,
+      status: String(row.status),
+      item_count: Array.isArray(row.itinerary_items)
+        ? Number((row.itinerary_items[0] as { count?: number } | undefined)?.count ?? 0)
+        : 0,
+    }))
+  }
+
   return (
     <main className="marketplace-page">
       <AppHeader />
@@ -24,32 +57,42 @@ export default function TripPage() {
         <div className="trip-planner-inner">
           <span className="marketplace-eyebrow"><WandSparkles size={15} /> TRIP PLANNER</span>
           <h1>Rencanakan perjalanan Garut tanpa mulai dari nol.</h1>
-          <p>Pilih durasi, area, dan gaya perjalanan. VisitGarut akan menjadi tempat untuk menyusun shortlist dan rute lokal dalam satu itinerary.</p>
+          <p>Pilih durasi, simpan tempat, dan susun rute per hari. Semua tersimpan di akun VisitGarut kamu.</p>
 
-          <div className="trip-planner-form-shell">
-            <div className="trip-planner-field">
-              <span><CalendarDays size={17} /> Durasi</span>
-              <strong>2 hari 1 malam</strong>
+          {!user ? (
+            <div className="trip-planner-form-shell">
+              <div className="trip-planner-field"><span><CalendarDays size={17} /> Durasi</span><strong>Fleksibel</strong></div>
+              <div className="trip-planner-field"><span><MapPin size={17} /> Area awal</span><strong>Garut</strong></div>
+              <div className="trip-planner-field"><span><Sparkles size={17} /> Akun</span><strong>Diperlukan untuk menyimpan</strong></div>
+              <Link className="travel-search-submit" href={`/login?next=${encodeURIComponent(placeSlug ? `/trip?place=${placeSlug}` : '/trip')}`}><Route size={18} /> Masuk untuk membuat trip</Link>
             </div>
-            <div className="trip-planner-field">
-              <span><MapPin size={17} /> Area awal</span>
-              <strong>Garut Kota</strong>
-            </div>
-            <div className="trip-planner-field">
-              <span><Sparkles size={17} /> Gaya trip</span>
-              <strong>Nature + Kuliner</strong>
-            </div>
-            <Link className="travel-search-submit" href="/explore"><Route size={18} /> Mulai dari rekomendasi</Link>
-          </div>
+          ) : null}
         </div>
+      </section>
+
+      <section className="marketplace-shell trip-functional-shell">
+        {user ? (
+          <TripPlannerClient
+            userId={user.id}
+            trips={trips}
+            selectedPlace={selectedPlace?.id ? { id: selectedPlace.id, name: selectedPlace.name, slug: selectedPlace.slug, district: selectedPlace.district } : null}
+          />
+        ) : (
+          <div className="trip-guest-panel">
+            <Route size={34} />
+            <h2>Simpan itinerary lintas perangkat.</h2>
+            <p>Masuk atau daftar gratis untuk menyimpan tempat favorit, itinerary harian, dan rencana perjalanan Garut.</p>
+            <Link href={`/login?next=${encodeURIComponent(placeSlug ? `/trip?place=${placeSlug}` : '/trip')}`}>Masuk / Daftar</Link>
+          </div>
+        )}
       </section>
 
       <section className="marketplace-shell">
         <div className="marketplace-section-heading">
           <div>
             <span className="marketplace-kicker">STARTER ITINERARIES</span>
-            <h2>Pilih template perjalanan.</h2>
-            <p>Versi berikutnya akan memungkinkan drag-and-drop tempat, estimasi jarak, dan penyimpanan itinerary per akun.</p>
+            <h2>Inspirasi untuk mulai.</h2>
+            <p>Gunakan template ini sebagai ide, lalu pilih tempat aktual dari Explore.</p>
           </div>
         </div>
         <div className="trip-template-grid">

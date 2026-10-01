@@ -1,0 +1,95 @@
+.rich-nearby-panel {
+  border-radius: 26px;
+}
+
+.nearby-controls {
+  margin: 18px 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.nearby-filter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.nearby-filter-tabs button {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--vg-line);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: white;
+  color: var(--vg-muted);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.nearby-filter-tabs button.active {
+  background: var(--vg-forest);
+  border-color: var(--vg-forest);
+  color: white;
+}
+
+.nearby-radius-control {
+  min-width: 115px;
+}
+
+.nearby-radius-control span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--vg-muted);
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.nearby-radius-control select {
+  width: 100%;
+  min-height: 36px;
+  border: 1px solid var(--vg-line);
+  border-radius: 10px;
+  padding: 0 9px;
+  background: white;
+  color: var(--vg-forest);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.nearby-card-image {
+  position: relative;
+}
+
+.nearby-category-badge {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.92);
+  color: var(--vg-forest);
+  font-size: 8px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+@media (max-width: 760px) {
+  .nearby-controls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .nearby-filter-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nearby-filter-tabs::-webkit-scrollbar { display: none; }
+  .nearby-filter-tabs button { white-space: nowrap; }
+  .nearby-radius-control { width: 120px; }
+}

@@ -1,11 +1,12 @@
 import Link from 'next/link'
-import { Compass, Home, Map, Route } from 'lucide-react'
+import { Compass, Home, Map, Route, UserRound } from 'lucide-react'
 
 const items = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/explore', label: 'Explore', icon: Compass },
   { href: '/map', label: 'Map', icon: Map },
   { href: '/trip', label: 'Trip', icon: Route },
+  { href: '/account', label: 'Akun', icon: UserRound },
 ]
 
 export default function MobileBottomNav() {

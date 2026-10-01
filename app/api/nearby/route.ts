@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getNearbyPlaces } from '@/lib/data/nearby'
 
+const allowedCategories = new Set(['wisata', 'kuliner', 'penginapan', 'transportasi', 'event', 'bisnis-lokal'])
+
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams
   const latParam = params.get('lat')
@@ -14,6 +16,8 @@ export async function GET(request: NextRequest) {
   const lng = Number(lngParam)
   const radiusInput = Number(params.get('radius') || 10000)
   const limitInput = Number(params.get('limit') || 20)
+  const requestedCategory = params.get('category')
+  const category = requestedCategory && allowedCategories.has(requestedCategory) ? requestedCategory : null
   const radius = Number.isFinite(radiusInput) ? Math.min(Math.max(radiusInput, 500), 50000) : 10000
   const limit = Number.isFinite(limitInput) ? Math.min(Math.max(Math.round(limitInput), 1), 50) : 20
 
@@ -25,14 +29,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid longitude' }, { status: 400 })
   }
 
-  const places = await getNearbyPlaces(lat, lng, radius, limit)
+  const places = await getNearbyPlaces(lat, lng, radius, limit, category)
 
   return NextResponse.json(
-    { places, meta: { radius, limit } },
-    {
-      headers: {
-        'Cache-Control': 'private, no-store',
-      },
-    }
+    { places, meta: { radius, limit, category } },
+    { headers: { 'Cache-Control': 'private, no-store' } }
   )
 }
