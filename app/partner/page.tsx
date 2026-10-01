@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = {
   title: 'Partner Center',
-  description: 'Kelola listing, offer, dan inquiry traveler untuk partner VisitGarut.',
+  description: 'Kelola listing, inventory, offer, dan inquiry traveler untuk partner VisitGarut.',
   robots: { index: false, follow: true },
 }
 
@@ -30,55 +30,31 @@ export default async function PartnerPage() {
     return (
       <main className="marketplace-page partner-page">
         <AppHeader />
-        <section className="partner-hero">
-          <div>
-            <span className="marketplace-eyebrow">VISITGARUT PARTNER CENTER</span>
-            <h1>Kelola bisnis lokalmu di VisitGarut.</h1>
-            <p>Partner Center tersedia setelah claim listing diverifikasi dan disetujui.</p>
-          </div>
-        </section>
-        <section className="marketplace-shell partner-access-state">
-          <h2>Belum ada listing yang disetujui.</h2>
-          <p>Ajukan claim dari halaman listing bisnis atau destinasi yang kamu kelola. Setelah approved, dashboard partner akan aktif otomatis.</p>
-          <a href="/explore">Cari listing untuk di-claim</a>
-        </section>
+        <section className="partner-hero"><div><span className="marketplace-eyebrow">VISITGARUT PARTNER CENTER</span><h1>Kelola bisnis lokalmu di VisitGarut.</h1><p>Partner Center tersedia setelah claim listing diverifikasi dan disetujui.</p></div></section>
+        <section className="marketplace-shell partner-access-state"><h2>Belum ada listing yang disetujui.</h2><p>Ajukan claim dari halaman listing bisnis atau destinasi yang kamu kelola. Setelah approved, dashboard partner akan aktif otomatis.</p><a href="/explore">Cari listing untuk di-claim</a></section>
         <MobileBottomNav />
       </main>
     )
   }
 
   const placeIds = places.map((place) => place.id)
-  const [offersResult, leadsResult] = await Promise.all([
-    supabase
-      .from('offers')
-      .select('id, place_id, title, description, promo_code, price_label, cta_url, valid_until, status, is_featured')
-      .in('place_id', placeIds)
-      .order('created_at', { ascending: false }),
-    supabase
-      .from('booking_leads')
-      .select('id, place_id, source, intent, full_name, email, phone, message, status, created_at')
-      .in('place_id', placeIds)
-      .order('created_at', { ascending: false })
-      .limit(100),
+  const [offersResult, leadsResult, inventoryResult] = await Promise.all([
+    supabase.from('offers').select('id, place_id, title, description, promo_code, price_label, cta_url, valid_until, status, is_featured').in('place_id', placeIds).order('created_at', { ascending: false }),
+    supabase.from('booking_leads').select('id, place_id, source, intent, full_name, email, phone, message, status, created_at').in('place_id', placeIds).order('created_at', { ascending: false }).limit(100),
+    supabase.from('inventory_items').select('id, place_id, item_type, name, description, price_amount, currency, price_unit, booking_url, status').in('place_id', placeIds).order('created_at', { ascending: false }),
   ])
+
+  const inventory = (inventoryResult.data ?? []).map((row: Record<string, unknown>) => ({
+    ...row,
+    price_amount: row.price_amount == null ? null : Number(row.price_amount),
+  }))
 
   return (
     <main className="marketplace-page partner-page">
       <AppHeader />
-      <section className="partner-hero">
-        <div>
-          <span className="marketplace-eyebrow">VISITGARUT PARTNER CENTER</span>
-          <h1>Listing, promo, dan inquiry dalam satu dashboard.</h1>
-          <p>Kelola inventory lokal, publikasikan offer yang valid, dan tindak lanjuti traveler yang sudah menunjukkan intent.</p>
-        </div>
-      </section>
+      <section className="partner-hero"><div><span className="marketplace-eyebrow">VISITGARUT PARTNER CENTER</span><h1>Listing, inventory, promo, dan inquiry dalam satu dashboard.</h1><p>Kelola room, kendaraan, produk, paket, offer, dan traveler intent dari satu tempat.</p></div></section>
       <div className="marketplace-shell partner-shell">
-        <PartnerDashboard
-          userId={user.id}
-          places={places}
-          offers={(offersResult.data ?? []) as never}
-          leads={(leadsResult.data ?? []) as never}
-        />
+        <PartnerDashboard userId={user.id} places={places} offers={(offersResult.data ?? []) as never} leads={(leadsResult.data ?? []) as never} inventory={inventory as never} />
       </div>
       <MobileBottomNav />
     </main>
