@@ -11,13 +11,16 @@ export type NearbyPlace = {
   latitude: number
   longitude: number
   distance_meters: number
+  category_name: string | null
+  category_slug: string | null
 }
 
 export async function getNearbyPlaces(
   latitude: number,
   longitude: number,
   radiusMeters = 10000,
-  limit = 30
+  limit = 30,
+  categorySlug?: string | null
 ): Promise<NearbyPlace[]> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
@@ -32,11 +35,12 @@ export async function getNearbyPlaces(
     },
   })
 
-  const { data, error } = await supabase.rpc('find_nearby_places', {
+  const { data, error } = await supabase.rpc('find_nearby_places_filtered', {
     lat: latitude,
     lng: longitude,
     radius_meters: radiusMeters,
     result_limit: limit,
+    category_slug: categorySlug || null,
   })
 
   if (error || !data) return []
@@ -52,5 +56,7 @@ export async function getNearbyPlaces(
     latitude: Number(row.latitude),
     longitude: Number(row.longitude),
     distance_meters: Number(row.distance_meters),
+    category_name: (row.category_name as string | null) ?? null,
+    category_slug: (row.category_slug_out as string | null) ?? null,
   }))
 }
