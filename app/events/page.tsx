@@ -8,28 +8,29 @@ export const metadata: Metadata = {
 }
 
 type EventsPageProps = {
-  searchParams: Promise<{ q?: string }>
+  searchParams: Promise<{ q?: string; subtype?: string; district?: string; verified?: string; amenity?: string; price?: string; sort?: string; page?: string }>
 }
 
 export default async function EventsPage({ searchParams }: EventsPageProps) {
-  const { q = '' } = await searchParams
+  const { q = '', subtype = '', district = '', verified = '', amenity = '', price = '', sort = '', page = '' } = await searchParams
 
   return (
     <MarketplaceVertical
       eyebrow="WHAT'S ON"
       title="Cari alasan baru untuk datang ke Garut."
-      description="Jelajahi festival, agenda budaya, acara komunitas, workshop, dan aktivitas akhir pekan. Kalender event akan menjadi salah satu discovery layer utama VisitGarut."
+      description="Jelajahi festival, agenda budaya, acara komunitas, workshop, dan aktivitas akhir pekan dengan filter lokasi serta tipe agenda."
       categorySlug="event"
       action="/events"
       q={q}
+      filters={{ subtype, district, verified, amenity, price, sort, page }}
       searchPlaceholder="Cari festival, komunitas, workshop, atau aktivitas..."
       suggestions={[
         { label: 'Festival & Budaya', description: 'Agenda budaya, tradisi, dan festival lokal.', href: '/events?q=festival' },
         { label: 'Komunitas', description: 'Meetup, workshop, gathering, dan aktivitas komunitas.', href: '/events?q=komunitas' },
-        { label: 'Weekend Activity', description: 'Aktivitas singkat untuk akhir pekan dan short escape.', href: '/events?q=weekend' },
+        { label: 'Verified Agenda', description: 'Prioritaskan agenda dengan sumber informasi yang dapat dilacak.', href: '/events?verified=1' },
       ]}
-      emptyTitle="Kalender event sedang kami susun."
-      emptyDescription="Penyelenggara event nantinya dapat mengajukan agenda dengan tanggal, venue, tiket/registrasi, dan kategori. Untuk sekarang, struktur discovery dan pencariannya sudah disiapkan."
+      emptyTitle="Belum ada event yang cocok."
+      emptyDescription="Penyelenggara dapat mengajukan agenda dengan tanggal, venue, tiket/registrasi, kategori, dan sumber informasi yang jelas."
     />
   )
 }

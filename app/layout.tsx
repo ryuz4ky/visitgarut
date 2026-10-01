@@ -10,6 +10,7 @@ import './nearby-enhancements.css'
 import './transaction-partner.css'
 import './admin.css'
 import './catalog.css'
+import './search-map.css'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
