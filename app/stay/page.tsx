@@ -8,28 +8,29 @@ export const metadata: Metadata = {
 }
 
 type StayPageProps = {
-  searchParams: Promise<{ q?: string }>
+  searchParams: Promise<{ q?: string; subtype?: string; district?: string; verified?: string; amenity?: string; price?: string }>
 }
 
 export default async function StayPage({ searchParams }: StayPageProps) {
-  const { q = '' } = await searchParams
+  const { q = '', subtype = '', district = '', verified = '', amenity = '', price = '' } = await searchParams
 
   return (
     <MarketplaceVertical
       eyebrow="STAY IN GARUT"
       title="Cari tempat menginap yang cocok dengan trip kamu."
-      description="Jelajahi hotel, villa, resort, dan homestay lokal berdasarkan area. VisitGarut disiapkan untuk menghubungkan discovery dengan partner booking atau direct lead."
+      description="Jelajahi hotel, villa, resort, dan homestay lokal berdasarkan area. VisitGarut menghubungkan discovery dengan inventory, direct inquiry, atau partner booking."
       categorySlug="penginapan"
       action="/stay"
       q={q}
+      filters={{ subtype, district, verified, amenity, price }}
       searchPlaceholder="Cari area, hotel, villa, resort, atau homestay..."
       suggestions={[
-        { label: 'Cipanas & Tarogong', description: 'Cocok untuk hot spring, keluarga, dan akses dekat kota.', href: '/stay?q=Cipanas' },
-        { label: 'Dekat Pegunungan', description: 'Untuk suasana alam, udara sejuk, dan aktivitas outdoor.', href: '/stay?q=Papandayan' },
-        { label: 'Garut Kota', description: 'Praktis untuk bisnis, kuliner, transit, dan akses transportasi.', href: '/stay?q=Garut' },
+        { label: 'Cipanas & Tarogong', description: 'Cocok untuk hot spring, keluarga, dan akses dekat kota.', href: '/stay?district=Tarogong%20Kaler' },
+        { label: 'Hotel', description: 'Bandingkan hotel berdasarkan lokasi, inventory, dan fasilitas.', href: '/stay?subtype=hotel' },
+        { label: 'Source Verified', description: 'Listing yang sudah punya sumber data yang dapat dilacak.', href: '/stay?verified=1' },
       ]}
-      emptyTitle="Listing penginapan sedang kami kurasi."
-      emptyDescription="Struktur marketplace-nya sudah siap. Selanjutnya hotel, villa, resort, dan homestay lokal akan masuk sebagai listing terverifikasi dengan lokasi, fasilitas, kontak, dan opsi booking/lead."
+      emptyTitle="Belum ada penginapan yang cocok."
+      emptyDescription="Hotel, villa, resort, dan homestay akan terus ditambahkan sebagai listing dengan sumber data, fasilitas, inventory, dan jalur booking yang jelas."
     />
   )
 }
