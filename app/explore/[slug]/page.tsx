@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ChevronLeft, MapPin, Star } from 'lucide-react'
 import { getPlaceBySlug, getPublishedPlaceSlugs } from '@/lib/data/places'
+import { absoluteUrl } from '@/lib/site'
 
 type PlacePageProps = {
   params: Promise<{ slug: string }>
@@ -41,6 +42,7 @@ export async function generateMetadata({ params }: PlacePageProps): Promise<Meta
       title: `${title} | VisitGarut`,
       description,
       type: 'article',
+      url: absoluteUrl(`/explore/${place.slug}`),
       images: place.cover_image_url ? [{ url: place.cover_image_url }] : undefined,
     },
   }
@@ -53,12 +55,13 @@ export default async function PlacePage({ params }: PlacePageProps) {
   if (!place) notFound()
 
   const description = place.description || place.short_description || `${place.name} merupakan salah satu tempat yang dapat dijelajahi di Kabupaten Garut.`
+  const placeUrl = absoluteUrl(`/explore/${place.slug}`)
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': place.category?.slug === 'wisata' ? 'TouristAttraction' : 'Place',
     name: place.name,
     description,
-    url: `https://visitgarut.com/explore/${place.slug}`,
+    url: placeUrl,
     address: {
       '@type': 'PostalAddress',
       ...(place.address ? { streetAddress: place.address } : {}),
@@ -83,9 +86,9 @@ export default async function PlacePage({ params }: PlacePageProps) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'VisitGarut', item: 'https://visitgarut.com/' },
-      { '@type': 'ListItem', position: 2, name: 'Explore', item: 'https://visitgarut.com/explore' },
-      { '@type': 'ListItem', position: 3, name: place.name, item: `https://visitgarut.com/explore/${place.slug}` },
+      { '@type': 'ListItem', position: 1, name: 'VisitGarut', item: absoluteUrl('/') },
+      { '@type': 'ListItem', position: 2, name: 'Explore', item: absoluteUrl('/explore') },
+      { '@type': 'ListItem', position: 3, name: place.name, item: placeUrl },
     ],
   }
 
@@ -145,7 +148,7 @@ export default async function PlacePage({ params }: PlacePageProps) {
             <span className="kicker">PLAN YOUR VISIT</span>
             <h2>Siapkan perjalananmu.</h2>
             <p>Gunakan VisitGarut untuk menemukan tempat lain di sekitar area ini.</p>
-            <Link href="/explore" className="primary-button">Cari destinasi lain</Link>
+            <Link href="/trip" className="primary-button">Tambahkan ke rencana trip</Link>
           </div>
         </aside>
       </section>
