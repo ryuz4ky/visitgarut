@@ -28,6 +28,12 @@ function formatSubtype(value?: string | null) {
   return value.replace(/_/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase())
 }
 
+function bookingHref(placeSlug: string, itemId: string, startDate: string, endDate: string | undefined, guests: number) {
+  const params = new URLSearchParams({ item: itemId, start: startDate, guests: String(Math.max(1, guests)) })
+  if (endDate) params.set('end', endDate)
+  return `/explore/${placeSlug}?${params.toString()}#booking`
+}
+
 export default async function AvailabilitySearchPanel({
   action,
   categorySlug,
@@ -107,7 +113,7 @@ export default async function AvailabilitySearchPanel({
                   </div>
                   <div className="availability-result-actions">
                     {item.effective_price != null ? <strong>{formatPrice(item.effective_price, item.currency)}{item.price_unit ? ` / ${item.price_unit.replace(/_/g, ' ')}` : ''}</strong> : <strong>Cek harga partner</strong>}
-                    <Link href={`/explore/${item.place_slug}`}>Lihat listing</Link>
+                    <Link href={bookingHref(item.place_slug, item.inventory_item_id, startDate, mode === 'range' ? endDate || undefined : undefined, guests)}>Pilih & inquiry</Link>
                     {item.booking_url ? <a href={item.booking_url} target="_blank" rel="noreferrer">Booking partner <ExternalLink size={13} /></a> : null}
                   </div>
                 </article>
