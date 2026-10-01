@@ -131,6 +131,14 @@ const placeSelect = `
   category:categories(name, slug)
 `
 
+function mergeFallbackImage(place: PlaceSummary) {
+  const fallback = fallbackPlaces.find((item) => item.slug === place.slug)
+  return {
+    ...place,
+    cover_image_url: place.cover_image_url || fallback?.cover_image_url || null,
+  }
+}
+
 export async function getFeaturedPlaces(limit = 4): Promise<PlaceSummary[]> {
   const supabase = getPublicClient()
   if (!supabase) return fallbackPlaces.slice(0, limit)
@@ -145,14 +153,9 @@ export async function getFeaturedPlaces(limit = 4): Promise<PlaceSummary[]> {
 
   if (error || !data?.length) return fallbackPlaces.slice(0, limit)
 
-  return data.map((row) => {
-    const normalized = normalizePlace(row as unknown as Record<string, unknown>)
-    const fallback = fallbackPlaces.find((item) => item.slug === normalized.slug)
-    return {
-      ...normalized,
-      cover_image_url: normalized.cover_image_url || fallback?.cover_image_url || null,
-    }
-  })
+  return data
+    .map((row) => normalizePlace(row as unknown as Record<string, unknown>))
+    .map(mergeFallbackImage)
 }
 
 export async function getPublishedPlaces(): Promise<PlaceSummary[]> {
@@ -168,14 +171,14 @@ export async function getPublishedPlaces(): Promise<PlaceSummary[]> {
 
   if (error || !data?.length) return fallbackPlaces
 
-  return data.map((row) => {
-    const normalized = normalizePlace(row as unknown as Record<string, unknown>)
-    const fallback = fallbackPlaces.find((item) => item.slug === normalized.slug)
-    return {
-      ...normalized,
-      cover_image_url: normalized.cover_image_url || fallback?.cover_image_url || null,
-    }
-  })
+  return data
+    .map((row) => normalizePlace(row as unknown as Record<string, unknown>))
+    .map(mergeFallbackImage)
+}
+
+export async function getPublishedPlacesByCategory(categorySlug: string): Promise<PlaceSummary[]> {
+  const places = await getPublishedPlaces()
+  return places.filter((place) => place.category?.slug === categorySlug)
 }
 
 export async function getPlaceBySlug(slug: string): Promise<PlaceSummary | null> {
@@ -196,13 +199,7 @@ export async function getPlaceBySlug(slug: string): Promise<PlaceSummary | null>
     return fallbackPlaces.find((place) => place.slug === slug) ?? null
   }
 
-  const normalized = normalizePlace(data as unknown as Record<string, unknown>)
-  const fallback = fallbackPlaces.find((item) => item.slug === normalized.slug)
-
-  return {
-    ...normalized,
-    cover_image_url: normalized.cover_image_url || fallback?.cover_image_url || null,
-  }
+  return mergeFallbackImage(normalizePlace(data as unknown as Record<string, unknown>))
 }
 
 export async function getPublishedPlaceSlugs(): Promise<string[]> {
