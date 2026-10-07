@@ -1,0 +1,7 @@
+// Run after the app supervisor. Deletes raw API data before its retention limit.
+const fs=require('node:fs'),path=require('node:path');
+const envFile=path.join(process.env.HOME,'visitgarut.env');
+if(!fs.existsSync(envFile))process.exit(0);
+const env={};for(const line of fs.readFileSync(envFile,'utf8').split('\n')){const i=line.indexOf('=');if(i>0&&!line.startsWith('#'))env[line.slice(0,i)]=line.slice(i+1)}
+const {Client}=require('pg');const client=new Client({connectionString:env.DATABASE_URL,connectionTimeoutMillis:5000,query_timeout:15000});
+(async()=>{await client.connect();await client.query('BEGIN');const deleted=await client.query("DELETE FROM vg_social_mentions WHERE (rights_basis='youtube_api' AND expires_at<=now()) OR (status IN ('pending','rejected','spam') AND created_at<now()-interval '90 days') RETURNING place_id");if(deleted.rowCount)await client.query('DELETE FROM vg_place_insights WHERE place_id=ANY($1::int[])',[[...new Set(deleted.rows.map(r=>r.place_id))]]);await client.query("DELETE FROM vg_pulse_reports WHERE created_at<now()-interval '90 days'");await client.query('DELETE FROM vg_pulse_limits WHERE resets_at<now()');await client.query('COMMIT')})().catch(async()=>{try{await client.query('ROLLBACK')}catch{};console.error('Community Pulse maintenance failed');process.exitCode=1}).finally(()=>client.end());

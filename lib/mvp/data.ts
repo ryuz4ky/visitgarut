@@ -9,7 +9,7 @@ export const categories = [
   { slug: 'transportasi', name: 'Transportasi', icon: 'Car', description: 'Pilihan transportasi dan rental untuk menjelajahi Garut.' },
   { slug: 'paket-wisata', name: 'Paket wisata', icon: 'Compass', description: 'Pilihan perjalanan bersama penyedia lokal.' },
 ]
-export type Place = { id: number; slug: string; name: string; category: string; district: string; address: string; excerpt: string; content: string; image_url: string; image_credit: string; latitude: number | null; longitude: number | null; website: string; whatsapp: string; source_url: string; status: string; updated_at: Date }
+export type Place = {google_place_id?:string; id: number; slug: string; name: string; category: string; district: string; address: string; excerpt: string; content: string; image_url: string; image_credit: string; latitude: number | null; longitude: number | null; website: string; whatsapp: string; source_url: string; status: string; updated_at: Date }
 export type Article = { id: number; slug: string; title: string; excerpt: string; content: string; author: string; status: string; published_at: Date | null; updated_at: Date }
 export type Event = { id: number; slug: string; title: string; excerpt: string; content: string; address: string; starts_at: Date; ends_at: Date | null; source_url: string; status: string; updated_at: Date }
 export async function places(options: { category?: string; query?: string; district?: string } = {}): Promise<Place[]> {

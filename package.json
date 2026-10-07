@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test:pulse": "tsc lib/pulse/core.ts --target ES2022 --module commonjs --skipLibCheck --outDir .pulse-test && node scripts/pulse-tests.cjs .pulse-test/core.js"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",

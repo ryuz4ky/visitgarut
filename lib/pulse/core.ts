@@ -1,0 +1,40 @@
+export const platforms = {google:'Google Maps',youtube:'YouTube',instagram:'Instagram',tiktok:'TikTok',threads:'Threads',x:'X',visitgarut:'VisitGarut'} as const
+export type Platform = keyof typeof platforms
+export const topics = {pemandangan:'Pemandangan',aktivitas:'Aktivitas & spot foto',keluarga:'Pengalaman bersama keluarga',pelayanan:'Pelayanan',harga:'Harga & nilai',akses:'Jalan & akses',parkir:'Parkir',kebersihan:'Kebersihan',fasilitas:'Fasilitas & toilet',keramaian:'Keramaian & antrean',keamanan:'Penawaran tiket / biaya di luar kanal resmi & keamanan'} as const
+export type Topic = keyof typeof topics
+export type Sentiment = 'positive'|'neutral'|'negative'|'mixed'
+export const sentimentNames = {positive:'Positif',neutral:'Netral',negative:'Negatif',mixed:'Campuran'} as const
+export const sensitivePattern = /\b(preman|calo|pungli|pemerasan|penipuan|pelecehan|kecelakaan|kriminal|scam|extortion|harassment|fraud|ilegal)\b/i
+export type Mention = {id:number;platform:Platform;original_text:string;display_name:string;source_url:string;published_at:string;experience_date:string|null;sentiment:Sentiment|'unclassified';status:string;rights_basis:string;analysis_allowed:boolean;independence_key:string|null;is_sensitive:boolean;verification_reference:string;engagement_count:number;expires_at:string|null;topics:{topic:Topic;sentiment:Sentiment}[];reviewed_at:string|null}
+export type Evidence = Pick<Mention,'id'|'platform'|'original_text'|'display_name'|'source_url'|'published_at'|'experience_date'|'sentiment'|'engagement_count'|'topics'>
+export type Insight = {topic:Topic;label:string;summary:string;count:number;positive:number;neutral:number;negative:number;mixed:number;sourceCount:number;platformCount:number;confidence:'rendah'|'sedang'|'tinggi';trend:'naik'|'turun'|'stabil'|'belum cukup data';current30:number;previous30:number;sensitive:boolean;evidenceIds:number[]}
+export type Pulse = {insights:Insight[];evidence:Evidence[];classified:number;positivePercent:number|null;lastUpdated:string|null;windowDays:number;limited:boolean}
+const DAY=86400000
+function validTime(value:string){const n=Date.parse(value);return Number.isFinite(n)?n:null}
+function eligible(m:Mention,now:number){const t=validTime(m.published_at);const expiry=m.expires_at?validTime(m.expires_at):null;return m.status==='approved'&&t!==null&&t<=now&&t>=now-90*DAY&&(!m.expires_at||(expiry!==null&&expiry>now))&&(!m.experience_date||Date.parse(m.experience_date)>=now-90*DAY)}
+function canAnalyze(m:Mention,youtubeApproved:boolean){return m.analysis_allowed&&!!m.independence_key&&m.platform!=='google'&&(m.rights_basis!=='youtube_api'||youtubeApproved)}
+function sourceIdentity(value:string){try{const u=new URL(value);if(u.hostname.endsWith('youtube.com'))return u.origin+u.pathname+'?v='+(u.searchParams.get('v')||'');return u.origin+u.pathname+u.hash}catch{return value}}
+function publicEvidence(m:Mention):Evidence{return {id:m.id,platform:m.platform,original_text:m.original_text,display_name:m.display_name,source_url:m.source_url,published_at:m.published_at,experience_date:m.experience_date,sentiment:m.sentiment,engagement_count:m.engagement_count,topics:m.topics}}
+function independent(rows:Mention[]){const sorted=[...rows].sort((a,b)=>Date.parse(b.published_at)-Date.parse(a.published_at));return [...new Map(sorted.map(m=>[m.independence_key,m] as const).reverse()).values()]}
+export function calculatePulse(input:Mention[],now=Date.now(),youtubeApproved=false):Pulse {
+ const available=input.filter(m=>m.platform!=='google'&&eligible(m,now));const analyzed=available.filter(m=>canAnalyze(m,youtubeApproved));const insights:Insight[]=[]
+ for(const [key,label] of Object.entries(topics)){const topic=key as Topic;const rows=analyzed.filter(m=>m.topics.some(t=>t.topic===topic));const authors=independent(rows);const sensitive=topic==='keamanan'||rows.some(m=>m.is_sensitive||sensitivePattern.test(m.original_text));const sources=new Set(authors.map(m=>sourceIdentity(m.source_url)));
+  if(authors.length<(sensitive?6:3))continue
+  if(sensitive&&(sources.size<2||authors.some(m=>!m.verification_reference||!m.reviewed_at)))continue
+  const counts={positive:0,neutral:0,negative:0,mixed:0};for(const m of authors){const s=m.topics.find(t=>t.topic===topic)!.sentiment;counts[s]++}
+  const current=independent(rows.filter(m=>Date.parse(m.published_at)>=now-30*DAY)).length;const previous=independent(rows.filter(m=>Date.parse(m.published_at)<now-30*DAY&&Date.parse(m.published_at)>=now-60*DAY)).length
+  const platformCount=new Set(authors.map(m=>m.platform)).size;const confidence=authors.length>=15&&platformCount>=2&&current>=3?'tinggi':authors.length>=6?'sedang':'rendah'
+  const trend=current>=3&&previous>=3?current>=previous*1.3?'naik':current<=previous*.7?'turun':'stabil':'belum cukup data'
+  const summary=sensitive?'Sejumlah kontribusi menyebut penawaran, biaya, atau pengalaman keamanan yang perlu diperiksa konteksnya. Laporan komunitas; bukan temuan pelanggaran oleh VisitGarut.':counts.positive>counts.negative+counts.mixed?'Lebih banyak kontribusi dalam sampel ini memberi pengalaman positif tentang topik ini.':counts.negative>counts.positive?'Lebih banyak kontribusi dalam sampel ini menyebut kendala tentang topik ini.':'Pengalaman dalam sampel ini beragam. Baca konteks setiap kontribusi sebelum menyimpulkan.'
+  insights.push({topic,label,summary,count:authors.length,...counts,sourceCount:sources.size,platformCount,confidence,trend,current30:current,previous30:previous,sensitive,evidenceIds:authors.map(m=>m.id)})
+ }
+ const allowedSensitive=new Set(insights.filter(i=>i.sensitive).flatMap(i=>i.evidenceIds));const visible=available.filter(m=>!(m.is_sensitive||sensitivePattern.test(m.original_text)||m.topics.some(t=>t.topic==='keamanan'))||allowedSensitive.has(m.id));
+ const overall=independent(analyzed.filter(m=>m.sentiment!=='unclassified'&&visible.some(v=>v.id===m.id)));const last=visible.map(m=>m.reviewed_at||m.published_at).sort().at(-1)||null
+ return {insights:insights.sort((a,b)=>b.count-a.count),evidence:visible.map(publicEvidence),classified:overall.length,positivePercent:overall.length>=10?Math.round(overall.filter(m=>m.sentiment==='positive').length/overall.length*100):null,lastUpdated:last,windowDays:90,limited:input.length>=1000}
+}
+export function normalizeSocialUrl(value:string,platform:Platform){const u=new URL(value);if(u.protocol!=='https:'||u.username||u.password||u.port)throw new Error('Gunakan URL publik https tanpa kredensial.');const host=u.hostname.toLowerCase().replace(/^www\./,'');let id='',url=''
+ if(platform==='youtube'){if(host==='youtu.be')id=u.pathname.slice(1);else if(['youtube.com','m.youtube.com'].includes(host)){id=u.searchParams.get('v')||u.pathname.match(/^\/(shorts|embed)\/([\w-]+)/)?.[2]||''}if(!/^[\w-]{11}$/.test(id))throw new Error('URL video YouTube tidak valid.');url='https://www.youtube.com/watch?v='+id}
+ else if(platform==='tiktok'){if(host!=='tiktok.com')throw new Error('Gunakan URL TikTok lengkap, bukan tautan pendek.');const match=u.pathname.match(/^\/@[\w.-]+\/video\/(\d{15,25})\/?$/);if(!match)throw new Error('URL video TikTok tidak valid.');id=match[1];url='https://www.tiktok.com'+u.pathname.replace(/\/$/,'')}
+ else{const hosts:Record<string,string[]>={instagram:['instagram.com'],threads:['threads.net','threads.com'],x:['x.com','twitter.com'],google:['google.com','maps.google.com'],visitgarut:['visitgarut.com']};if(!hosts[platform]?.includes(host))throw new Error('Domain tidak sesuai platform.');if(platform==='instagram'&&!/^\/(p|reel)\/[\w-]+\/?$/.test(u.pathname))throw new Error('Gunakan URL post atau reel Instagram.');if(platform==='x'&&!/^\/[\w]+\/status\/\d+\/?$/.test(u.pathname))throw new Error('Gunakan URL post X.');if(platform==='threads'&&!/^\/@[\w.]+\/post\/[\w-]+\/?$/.test(u.pathname))throw new Error('Gunakan URL post Threads.');if(platform==='google'&&!u.pathname.startsWith('/maps'))throw new Error('Gunakan URL Google Maps.');url=u.origin+u.pathname+(platform==='google'?u.search:'');id=u.pathname.split('/').filter(Boolean).at(-1)||''}
+ return {url,id}
+}
