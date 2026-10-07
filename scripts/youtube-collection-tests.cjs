@@ -18,6 +18,14 @@ const {locationQueries,YoutubeCollectionApi}=require('../.youtube-worker/youtube
  console.log('PASS Failed page import preserves raw rows and cursor for retry');
  await reserveYoutubeCall(client,'search',new Date('2026-10-07T06:59:00Z'));await query("UPDATE vg_youtube_usage SET calls=80 WHERE bucket='search'");await assert.rejects(()=>reserveYoutubeCall(client,'search',new Date('2026-10-07T06:59:00Z')),e=>e.code==='youtube_daily_budget');await reserveYoutubeCall(client,'search',new Date('2026-10-07T07:00:00Z'));assert.equal((await query('SELECT count(*)::int AS n FROM vg_youtube_usage')).rows[0].n,2);
  console.log('PASS Quota is reserved atomically and resets on Pacific calendar day');
+ const today=new Date().toLocaleDateString('en-CA',{timeZone:'America/Los_Angeles'});
+ await query("INSERT INTO vg_youtube_usage(quota_day,bucket,calls) VALUES($1,'search',80) ON CONFLICT(quota_day,bucket) DO UPDATE SET calls=80",[today]);
+ await query("UPDATE vg_youtube_places SET search_done=false,next_task='search',last_error='youtube_daily_budget',last_run_at=now() WHERE place_id=$1",[p.id]);
+ await query("UPDATE vg_youtube_videos SET threads_done=false,next_page='thread2' WHERE video_id='aaaaaaaaaaa'");
+ const searchBefore=searchCalls;const continued=await collectYoutubeStep(client,api,p.id);assert.equal(continued.task,'threads');assert.equal(searchCalls,searchBefore);assert.equal((await query('SELECT last_error FROM vg_youtube_places')).rows[0].last_error,'');
+ await query("INSERT INTO vg_youtube_usage(quota_day,bucket,calls) VALUES($1,'data',3000) ON CONFLICT(quota_day,bucket) DO UPDATE SET calls=3000",[today]);
+ assert.equal(await collectYoutubeStep(client,api,p.id),null);
+ console.log('PASS Exhausted search budget continues comments without search calls or backoff; both exhausted makes no call');
  const before=calls.length;await query('UPDATE vg_youtube_places SET enabled=false WHERE place_id=$1',[p.id]);assert.equal(await collectYoutubeStep(client,api,p.id),null);assert.equal(calls.length,before);
  await query('UPDATE vg_youtube_videos SET expires_at=now()-interval \'1 second\'');await query('DELETE FROM vg_youtube_videos WHERE expires_at<=now()');assert.equal((await query('SELECT count(*)::int AS n FROM vg_youtube_comments')).rows[0].n,0);assert.equal((await query('SELECT count(*)::int AS n FROM vg_youtube_replies')).rows[0].n,0);
  console.log('PASS Paused place makes no API calls and expired video cascades raw data cleanup');

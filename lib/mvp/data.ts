@@ -12,13 +12,15 @@ export const categories = [
 export type Place = {google_place_id?:string; id: number; slug: string; name: string; category: string; district: string; address: string; excerpt: string; content: string; image_url: string; image_credit: string; latitude: number | null; longitude: number | null; website: string; whatsapp: string; source_url: string; status: string; updated_at: Date }
 export type Article = { id: number; slug: string; title: string; excerpt: string; content: string; author: string; status: string; published_at: Date | null; updated_at: Date }
 export type Event = { id: number; slug: string; title: string; excerpt: string; content: string; address: string; starts_at: Date; ends_at: Date | null; source_url: string; status: string; updated_at: Date }
-export async function places(options: { category?: string; query?: string; district?: string } = {}): Promise<Place[]> {
+export async function places(options: { category?: string; query?: string; district?: string; sort?: string } = {}): Promise<Place[]> {
   if (!process.env.DATABASE_URL) return []
   const values: string[] = []; const conditions = ["status='published'"]
   if (options.category) { values.push(options.category); conditions.push(`category=$${values.length}`) }
   if (options.district) { values.push(options.district); conditions.push(`district=$${values.length}`) }
   if (options.query?.trim()) { values.push(options.query.trim().slice(0,120)); const n=values.length; conditions.push(`(search_vector @@ plainto_tsquery('simple',$${n}) OR name ILIKE '%' || $${n} || '%' OR district ILIKE '%' || $${n} || '%')`) }
-  return (await db().query<Place>(`SELECT * FROM vg_places WHERE ${conditions.join(' AND ')} ORDER BY name LIMIT 100`, values)).rows
+  const n = values.length
+  const order = options.sort === 'latest' ? 'updated_at DESC, name' : options.sort === 'name' || !options.query?.trim() ? 'name' : `CASE WHEN lower(name)=lower($${n}) THEN 0 WHEN name ILIKE $${n} || '%' THEN 1 ELSE 2 END, ts_rank(search_vector,plainto_tsquery('simple',$${n})) DESC, name`
+  return (await db().query<Place>(`SELECT * FROM vg_places WHERE ${conditions.join(' AND ')} ORDER BY ${order} LIMIT 100`, values)).rows
 }
 export async function place(slug: string, category?: string): Promise<Place | undefined> {
   if (!process.env.DATABASE_URL) return undefined
