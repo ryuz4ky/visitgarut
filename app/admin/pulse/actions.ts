@@ -8,6 +8,7 @@ import { absoluteUrl } from '@/lib/site'
 import { topics,platforms,normalizeSocialUrl,sensitivePattern,type Platform,type Sentiment } from '@/lib/pulse/core'
 import { pulseForPlace } from '@/lib/pulse/data'
 import { fetchYoutubeComments } from '@/lib/pulse/youtube'
+import { YoutubeImportError,type YoutubeImportCode } from '@/lib/pulse/youtube-core'
 const str=(f:FormData,k:string,max=4000)=>String(f.get(k)||'').trim().slice(0,max)
 const hash=(s:string)=>createHash('sha256').update(s).digest('hex')
 function status(f:FormData){const value=str(f,'status',20);return ['pending','approved','rejected','withdrawn','spam'].includes(value)?value:'pending'}
@@ -19,6 +20,24 @@ export async function saveMention(f:FormData){await requireAdmin();let client;tr
  }catch{if(client)await client.query('ROLLBACK');redirect('/admin/pulse?error=save')}finally{client?.release()}redirect('/admin/pulse?saved=1')}
 export async function recalculateInsights(f:FormData){await requireAdmin();const id=Number(f.get('place_id'));const data=await pulseForPlace(id,true);await db().query('INSERT INTO vg_place_insights(place_id,payload) VALUES($1,$2::jsonb) ON CONFLICT(place_id) DO UPDATE SET payload=EXCLUDED.payload,calculated_at=now()',[id,JSON.stringify({insights:data.pulse.insights,classified:data.pulse.classified,positivePercent:data.pulse.positivePercent})]);revalidatePath('/','layout');redirect('/admin/pulse?saved=1')}
 export async function resolveReport(f:FormData){await requireAdmin();const id=Number(f.get('id'));const report=(await db().query('SELECT * FROM vg_pulse_reports WHERE id=$1',[id])).rows[0];if(report){if(f.get('withdraw')==='yes'&&report.mention_id)await db().query("UPDATE vg_social_mentions SET status='withdrawn' WHERE id=$1",[report.mention_id]);await db().query("UPDATE vg_pulse_reports SET status='resolved' WHERE id=$1",[id]);await refresh(report.place_id)}redirect('/admin/pulse?tab=reports&saved=1')}
-export async function syncYoutube(f:FormData){await requireAdmin();try{if(f.get('api_consent')!=='yes')throw new Error('Persetujuan diperlukan.');const c=(await db().query("SELECT * FROM vg_social_contents WHERE id=$1 AND platform='youtube' AND status='approved'",[Number(f.get('content_id'))])).rows[0];if(!c)throw new Error('Video belum disetujui.');const comments=await fetchYoutubeComments(c.source_post_id);for(const m of comments){const result=await db().query(`INSERT INTO vg_social_mentions(place_id,content_id,platform,source_url,source_key,display_name,original_text,independence_key,fingerprint,published_at,rights_basis,analysis_allowed,expires_at,is_sensitive,engagement_count) VALUES($1,$2,'youtube',$3,$4,$5,$6,$7,$8,$9,'youtube_api',false,now()+interval '29 days',$10,$11) ON CONFLICT(place_id,platform,source_key) DO UPDATE SET original_text=EXCLUDED.original_text,display_name=EXCLUDED.display_name,published_at=EXCLUDED.published_at,engagement_count=EXCLUDED.engagement_count,expires_at=EXCLUDED.expires_at,status='pending',analysis_allowed=false,is_sensitive=EXCLUDED.is_sensitive,reviewed_at=NULL,verification_reference='' RETURNING id`,[c.place_id,c.id,m.sourceUrl,m.id,m.author,m.text,m.authorId?hash('youtube:'+m.authorId):null,hash('youtube:'+m.id),new Date(m.publishedAt),sensitivePattern.test(m.text),m.likes]);await db().query('DELETE FROM vg_mention_topics WHERE mention_id=$1',[result.rows[0].id])}await refresh(c.place_id)}catch{redirect('/admin/pulse?tab=content&error=youtube')}redirect('/admin/pulse?synced=1')}
+export async function syncYoutube(f:FormData){
+ await requireAdmin();let client;let errorCode:YoutubeImportCode|undefined;let imported=0
+ try{
+  if(f.get('api_consent')!=='yes')throw new YoutubeImportError('youtube_consent')
+  const c=(await db().query("SELECT * FROM vg_social_contents WHERE id=$1 AND platform='youtube' AND status='approved'",[Number(f.get('content_id'))])).rows[0]
+  if(!c)throw new YoutubeImportError('youtube_content')
+  const comments=await fetchYoutubeComments(c.source_post_id)
+  if(!comments.length)throw new YoutubeImportError('youtube_empty')
+  client=await db().connect();await client.query('BEGIN')
+  for(const m of comments){
+   const result=await client.query(`INSERT INTO vg_social_mentions(place_id,content_id,platform,source_url,source_key,display_name,original_text,independence_key,fingerprint,published_at,rights_basis,analysis_allowed,expires_at,is_sensitive,engagement_count) VALUES($1,$2,'youtube',$3,$4,$5,$6,$7,$8,$9,'youtube_api',false,now()+interval '29 days',$10,$11) ON CONFLICT(place_id,platform,source_key) DO UPDATE SET original_text=EXCLUDED.original_text,display_name=EXCLUDED.display_name,published_at=EXCLUDED.published_at,engagement_count=EXCLUDED.engagement_count,expires_at=EXCLUDED.expires_at,status='pending',analysis_allowed=false,is_sensitive=EXCLUDED.is_sensitive,reviewed_at=NULL,verification_reference='' RETURNING id`,[c.place_id,c.id,m.sourceUrl,m.id,m.author,m.text,m.authorId?hash('youtube:'+m.authorId):null,hash('youtube:'+m.id),new Date(m.publishedAt),sensitivePattern.test(m.text),m.likes])
+   await client.query('DELETE FROM vg_mention_topics WHERE mention_id=$1',[result.rows[0].id])
+  }
+  await client.query('DELETE FROM vg_place_insights WHERE place_id=$1',[c.place_id])
+  await client.query('COMMIT');imported=comments.length
+ }catch(error){if(client)await client.query('ROLLBACK');errorCode=error instanceof YoutubeImportError?error.code:'youtube_storage'}finally{client?.release()}
+ if(errorCode)redirect('/admin/pulse?tab=content&error='+errorCode)
+ revalidatePath('/','layout');redirect('/admin/pulse?synced='+imported)
+}
 
 export async function savePlaceSources(f:FormData){await requireAdmin();const id=Number(f.get('place_id'));const google=str(f,'google_place_id',255);if(google&&!/^[\w-]+$/.test(google))redirect('/admin/pulse?error=save');const aliases=str(f,'aliases',1000).split('\n').map(a=>a.trim()).filter(Boolean).slice(0,10);await db().query('UPDATE vg_places SET google_place_id=$1,aliases=$2 WHERE id=$3',[google,aliases,id]);await refresh(id);redirect('/admin/pulse?tab=content&saved=1')}

@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint .",
     "test:pulse": "tsc lib/pulse/core.ts --target ES2022 --module commonjs --skipLibCheck --outDir .pulse-test && node scripts/pulse-tests.cjs .pulse-test/core.js",
-    "test:research": "node scripts/research-tests.cjs"
+    "test:research": "node scripts/research-tests.cjs",
+    "test:youtube": "node scripts/youtube-tests.cjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",
