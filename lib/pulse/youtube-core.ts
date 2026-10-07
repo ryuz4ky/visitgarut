@@ -5,6 +5,7 @@ export const youtubeImportMessages={
  youtube_comments_disabled:'Komentar dinonaktifkan oleh pemilik video. Pilih video lain yang komentarnya terbuka.',
  youtube_video_unavailable:'Video tidak ditemukan atau tidak dapat diakses melalui API. Periksa tautan video.',
  youtube_access:'Akses YouTube API ditolak. Periksa aktivasi API dan pembatasan API key di Google Cloud.',
+ youtube_daily_budget:'Batas pengumpulan harian VisitGarut tercapai. Antrean akan dilanjutkan pada hari kuota berikutnya.',
  youtube_quota:'Kuota YouTube API habis atau batas permintaan tercapai. Coba kembali setelah kuota tersedia.',
  youtube_connection:'Koneksi ke YouTube belum berhasil. Coba kembali beberapa saat.',
  youtube_consent:'Baca dan centang persetujuan sebelum mengimpor komentar.',
