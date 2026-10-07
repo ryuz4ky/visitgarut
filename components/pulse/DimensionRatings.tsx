@@ -1,0 +1,11 @@
+'use client'
+import { useRef,useState } from 'react'
+import type { Pulse,DimensionSummary } from '@/lib/pulse/core'
+import { ReportForm } from './ContributionForm'
+const date=(v:string)=>new Date(v).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Jakarta'})
+export default function DimensionRatings({pulse,placeId}:{pulse:Pulse;placeId:number}){
+ const [selected,setSelected]=useState<DimensionSummary|null>(null),dialog=useRef<HTMLDialogElement>(null),trigger=useRef<HTMLButtonElement|null>(null)
+ if(!pulse.ratings.length)return null
+ return <div><h4>Penilaian per aspek</h4><p className="pulse-disclosure">Nilai yang diberikan sendiri oleh pengunjung VisitGarut, dalam 90 hari terakhir. Minimal 3 sumber identitas yang telah diperiksa per aspek. Klik nilai untuk membaca cerita pendukungnya.</p><div className="pulse-ratings">{pulse.ratings.map(r=><article key={r.dimension}><span>{r.label}</span><button className="pulse-rating-button" onClick={e=>{trigger.current=e.currentTarget;setSelected(r);dialog.current?.showModal()}}><strong>{r.average.toLocaleString('id-ID')} <small>/ 5</small></strong><span>{r.count} penilai · baca cerita ↗</span></button></article>)}</div>
+ <dialog className="pulse-dialog" ref={dialog} aria-labelledby="dimension-dialog-title" onClose={()=>{setSelected(null);trigger.current?.focus()}}><header><div><span className="vg-eyebrow">PENILAIAN VISITGARUT</span><h2 id="dimension-dialog-title">{selected?.label}</h2></div><button aria-label="Tutup penilaian" onClick={()=>dialog.current?.close()}>✕</button></header>{selected&&<><p>Rata-rata {selected.average.toLocaleString('id-ID')} dari 5 · {selected.count} sumber identitas yang diperiksa · 90 hari. Penilaian dari sampel ini tidak mewakili semua pengunjung.</p>{pulse.evidence.filter(e=>selected.evidenceIds.includes(e.id)).map(e=><article className="pulse-evidence" key={e.id}><strong>{e.display_name||'Pengunjung anonim'} · {e.ratings?.find(r=>r.dimension===selected.dimension)?.rating} / 5</strong><small>{date(e.published_at)}{e.experience_date?' · kunjungan '+date(e.experience_date):''}</small><p>{e.original_text}</p><ReportForm placeId={placeId} mentionId={e.id}/></article>)}</>}</dialog></div>
+}

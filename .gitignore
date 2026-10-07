@@ -38,3 +38,5 @@ next-env.d.ts
 
 /.youtube-worker/
 /.directory-test/
+
+.pulse-activation-test/

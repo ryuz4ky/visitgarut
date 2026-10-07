@@ -34,3 +34,14 @@ Source URLs, website links, WhatsApp and image credits belong to each place. Pho
 ## Later
 
 User accounts, favorites, reviews, AI itinerary, merchant claims, payments/booking. GA4/Search Console/Clarity need the owner's properties/IDs before activation.
+
+
+### Community Pulse activation
+
+Public Community Pulse has a place browser at `/community-pulse`, source cards on each place, and a separate methodology at `/community-pulse/metode`. The original YouTube comment reader is `/api/community/youtube`; only reviewed, unexpired videos and comments can be returned. Replies require a published parent. Displaying original comments does not create visitor evidence or inferred sentiment. Changing an original comment returns it to moderation; closing comments or withdrawing the parent prevents public access.
+
+Visitors can optionally submit their own 1–5 ratings for nine dimensions. Submission is transactional and pending; a supplied public profile is a private lead for the moderator, never automatic proof of identity. Ratings require independent identities checked by the moderator, and are never inferred from platform comments. Existing evidence thresholds and YouTube analytics approval remain in place.
+
+`db/006-pulse-activation.sql` is backward compatible. The staged deployment runs the idempotent Community Pulse migrations before building. The collection worker prefers reviewed videos, carries pagination/replies forward, and preserves the 29-day API retention limit. Source metadata is refreshed through the official API when an admin approves a video. Search uses a quoted place/provider name plus Garut and its aliases.
+
+Checks: `npm run test:pulse`, `npm run test:pulse-activation`, `npm run test:youtube-collection`, `npm run test:youtube`, `npx tsc --noEmit`, and `npm run build`. No test reviews should be published to the live visitor sample.

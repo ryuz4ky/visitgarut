@@ -11,6 +11,7 @@ trap 'rm -rf "$VG_STAGE"' EXIT
 git archive "$VG_REVISION" | tar -x -C "$VG_STAGE"
 cd "$VG_STAGE"
 npm ci --no-audit --no-fund
+node scripts/pulse-migrate.cjs
 npm run build
 cp -r public .next/standalone/
 mkdir -p .next/standalone/.next

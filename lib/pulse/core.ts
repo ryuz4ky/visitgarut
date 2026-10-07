@@ -1,3 +1,4 @@
+import { ratingDimensions,type DimensionRating,type RatingDimension } from './contribution'
 export const platforms = {google:'Google Maps',youtube:'YouTube',instagram:'Instagram',tiktok:'TikTok',threads:'Threads',x:'X',visitgarut:'VisitGarut'} as const
 export type Platform = keyof typeof platforms
 export const topics = {pemandangan:'Pemandangan',aktivitas:'Aktivitas & spot foto',keluarga:'Pengalaman bersama keluarga',pelayanan:'Pelayanan',harga:'Harga & nilai',akses:'Jalan & akses',parkir:'Parkir',kebersihan:'Kebersihan',fasilitas:'Fasilitas & toilet',keramaian:'Keramaian & antrean',keamanan:'Penawaran tiket / biaya di luar kanal resmi & keamanan'} as const
@@ -5,16 +6,17 @@ export type Topic = keyof typeof topics
 export type Sentiment = 'positive'|'neutral'|'negative'|'mixed'
 export const sentimentNames = {positive:'Positif',neutral:'Netral',negative:'Negatif',mixed:'Campuran'} as const
 export const sensitivePattern = /\b(preman|calo|pungli|pemerasan|penipuan|pelecehan|kecelakaan|kriminal|scam|extortion|harassment|fraud|ilegal)\b/i
-export type Mention = {id:number;platform:Platform;original_text:string;display_name:string;source_url:string;published_at:string;experience_date:string|null;sentiment:Sentiment|'unclassified';status:string;rights_basis:string;analysis_allowed:boolean;independence_key:string|null;is_sensitive:boolean;verification_reference:string;engagement_count:number;expires_at:string|null;topics:{topic:Topic;sentiment:Sentiment}[];reviewed_at:string|null}
-export type Evidence = Pick<Mention,'id'|'platform'|'original_text'|'display_name'|'source_url'|'published_at'|'experience_date'|'sentiment'|'engagement_count'|'topics'>
+export type Mention = {ratings?:DimensionRating[];id:number;platform:Platform;original_text:string;display_name:string;source_url:string;published_at:string;experience_date:string|null;sentiment:Sentiment|'unclassified';status:string;rights_basis:string;analysis_allowed:boolean;independence_key:string|null;is_sensitive:boolean;verification_reference:string;engagement_count:number;expires_at:string|null;topics:{topic:Topic;sentiment:Sentiment}[];reviewed_at:string|null}
+export type Evidence = Pick<Mention,'id'|'platform'|'original_text'|'display_name'|'source_url'|'published_at'|'experience_date'|'sentiment'|'engagement_count'|'topics'|'ratings'>
 export type Insight = {topic:Topic;label:string;summary:string;count:number;positive:number;neutral:number;negative:number;mixed:number;sourceCount:number;platformCount:number;confidence:'rendah'|'sedang'|'tinggi';trend:'naik'|'turun'|'stabil'|'belum cukup data';current30:number;previous30:number;sensitive:boolean;evidenceIds:number[]}
-export type Pulse = {insights:Insight[];evidence:Evidence[];classified:number;positivePercent:number|null;lastUpdated:string|null;windowDays:number;limited:boolean}
+export type DimensionSummary={dimension:RatingDimension;label:string;average:number;count:number;evidenceIds:number[]}
+export type Pulse = {ratings:DimensionSummary[];insights:Insight[];evidence:Evidence[];classified:number;positivePercent:number|null;lastUpdated:string|null;windowDays:number;limited:boolean}
 const DAY=86400000
 function validTime(value:string){const n=Date.parse(value);return Number.isFinite(n)?n:null}
 function eligible(m:Mention,now:number){const t=validTime(m.published_at);const expiry=m.expires_at?validTime(m.expires_at):null;return m.status==='approved'&&t!==null&&t<=now&&t>=now-90*DAY&&(!m.expires_at||(expiry!==null&&expiry>now))&&(!m.experience_date||Date.parse(m.experience_date)>=now-90*DAY)}
 function canAnalyze(m:Mention,youtubeApproved:boolean){return m.analysis_allowed&&!!m.independence_key&&m.platform!=='google'&&(m.rights_basis!=='youtube_api'||youtubeApproved)}
 function sourceIdentity(value:string){try{const u=new URL(value);if(u.hostname.endsWith('youtube.com'))return u.origin+u.pathname+'?v='+(u.searchParams.get('v')||'');return u.origin+u.pathname+u.hash}catch{return value}}
-function publicEvidence(m:Mention):Evidence{return {id:m.id,platform:m.platform,original_text:m.original_text,display_name:m.display_name,source_url:m.source_url,published_at:m.published_at,experience_date:m.experience_date,sentiment:m.sentiment,engagement_count:m.engagement_count,topics:m.topics}}
+function publicEvidence(m:Mention):Evidence{return {id:m.id,platform:m.platform,original_text:m.original_text,display_name:m.display_name,source_url:m.source_url,published_at:m.published_at,experience_date:m.experience_date,sentiment:m.sentiment,engagement_count:m.engagement_count,topics:m.topics,ratings:m.platform==='visitgarut'?m.ratings||[]:[]}}
 function independent(rows:Mention[]){const sorted=[...rows].sort((a,b)=>Date.parse(b.published_at)-Date.parse(a.published_at));return [...new Map(sorted.map(m=>[m.independence_key,m] as const).reverse()).values()]}
 export function calculatePulse(input:Mention[],now=Date.now(),youtubeApproved=false):Pulse {
  const available=input.filter(m=>m.platform!=='google'&&eligible(m,now));const analyzed=available.filter(m=>canAnalyze(m,youtubeApproved));const insights:Insight[]=[]
@@ -29,8 +31,10 @@ export function calculatePulse(input:Mention[],now=Date.now(),youtubeApproved=fa
   insights.push({topic,label,summary,count:authors.length,...counts,sourceCount:sources.size,platformCount,confidence,trend,current30:current,previous30:previous,sensitive,evidenceIds:authors.map(m=>m.id)})
  }
  const allowedSensitive=new Set(insights.filter(i=>i.sensitive).flatMap(i=>i.evidenceIds));const visible=available.filter(m=>!(m.is_sensitive||sensitivePattern.test(m.original_text)||m.topics.some(t=>t.topic==='keamanan'))||allowedSensitive.has(m.id));
+ const ratings:DimensionSummary[]=[]
+ for(const [key,label] of Object.entries(ratingDimensions)){const dimension=key as RatingDimension;const authors=independent(analyzed.filter(m=>m.platform==='visitgarut'&&visible.some(v=>v.id===m.id)&&m.ratings?.some(r=>r.dimension===dimension)));if(authors.length<(dimension==='keamanan'?6:3))continue;if(dimension==='keamanan'&&authors.some(m=>!m.verification_reference||!m.reviewed_at))continue;ratings.push({dimension,label,count:authors.length,average:Math.round(authors.reduce((sum,m)=>sum+m.ratings!.find(r=>r.dimension===dimension)!.rating,0)/authors.length*10)/10,evidenceIds:authors.map(m=>m.id)})}
  const overall=independent(analyzed.filter(m=>m.sentiment!=='unclassified'&&visible.some(v=>v.id===m.id)));const last=visible.map(m=>m.reviewed_at||m.published_at).sort().at(-1)||null
- return {insights:insights.sort((a,b)=>b.count-a.count),evidence:visible.map(publicEvidence),classified:overall.length,positivePercent:overall.length>=10?Math.round(overall.filter(m=>m.sentiment==='positive').length/overall.length*100):null,lastUpdated:last,windowDays:90,limited:input.length>=1000}
+ return {ratings,insights:insights.sort((a,b)=>b.count-a.count),evidence:visible.map(publicEvidence),classified:overall.length,positivePercent:overall.length>=10?Math.round(overall.filter(m=>m.sentiment==='positive').length/overall.length*100):null,lastUpdated:last,windowDays:90,limited:input.length>=1000}
 }
 export function normalizeSocialUrl(value:string,platform:Platform){const u=new URL(value);if(u.protocol!=='https:'||u.username||u.password||u.port)throw new Error('Gunakan URL publik https tanpa kredensial.');const host=u.hostname.toLowerCase().replace(/^www\./,'');let id='',url=''
  if(platform==='youtube'){if(host==='youtu.be')id=u.pathname.slice(1);else if(['youtube.com','m.youtube.com'].includes(host)){id=u.searchParams.get('v')||u.pathname.match(/^\/(shorts|embed)\/([\w-]+)/)?.[2]||''}if(!/^[\w-]{11}$/.test(id))throw new Error('URL video YouTube tidak valid.');url='https://www.youtube.com/watch?v='+id}

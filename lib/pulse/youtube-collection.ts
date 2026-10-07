@@ -8,9 +8,10 @@ export type ThreadPage={items:ThreadResult[];next:string}
 export type ReplyPage={items:RawComment[];next:string}
 export interface CollectionApi{search(query:SearchQuery,page:string):Promise<VideoPage>;threads(video:string,page:string):Promise<ThreadPage>;replies(parent:string,page:string):Promise<ReplyPage>}
 export function locationQueries(name:string,aliases:string[]=[]):SearchQuery[]{
- const short=name.replace(/^(Gunung|Pantai|Curug|Situ|Desa Wisata|Taman Air)\s+/i,'')
- const terms=[...new Set([name,short,...aliases].map(s=>s.trim().replace(/["|]/g,'')).filter(s=>s.length>=4))].slice(0,4)
- return terms.flatMap(term=>{const q='"'+term+'"';return [{q,order:'relevance' as const},{q,order:'date' as const}]})
+ const canonical=name.split(/\s+[–—]\s+/)[0].trim()
+ const short=canonical.replace(/^(Gunung|Pantai|Curug|Situ|Desa Wisata|Taman Air)\s+/i,'')
+ const terms=[...new Set([canonical,short,...aliases].map(s=>s.trim().replace(/["|]/g,'')).filter(s=>s.length>=4&&!/^(rental|sewa)\s+(mobil|motor)\s+garut$/i.test(s)))].slice(0,4)
+ return terms.flatMap(term=>{const q='"'+term+'"'+(/\bgarut\b/i.test(term)?'':' Garut');return [{q,order:'relevance' as const},{q,order:'date' as const}]})
 }
 function rawComment(c:{id:string;snippet:{parentId?:string;authorDisplayName:string;authorChannelId?:{value:string};textOriginal?:string;textDisplay:string;publishedAt:string;likeCount:number}}):RawComment{
  const s=c.snippet;return {id:c.id,parentId:s.parentId||null,author:s.authorDisplayName,authorId:s.authorChannelId?.value||'',text:s.textOriginal??s.textDisplay,publishedAt:s.publishedAt,likes:s.likeCount||0}
