@@ -45,3 +45,7 @@ Visitors can optionally submit their own 1–5 ratings for nine dimensions. Subm
 `db/006-pulse-activation.sql` is backward compatible. The staged deployment runs the idempotent Community Pulse migrations before building. The collection worker prefers reviewed videos, carries pagination/replies forward, and preserves the 29-day API retention limit. Source metadata is refreshed through the official API when an admin approves a video. Search uses a quoted place/provider name plus Garut and its aliases.
 
 Checks: `npm run test:pulse`, `npm run test:pulse-activation`, `npm run test:youtube-collection`, `npm run test:youtube`, `npx tsc --noEmit`, and `npm run build`. No test reviews should be published to the live visitor sample.
+
+### Community Pulse insight table
+
+Place pages show a three-column insight table before curated videos: topic, distinct reviewed contributors, and confidence. Every topic opens its evidence panel, even when the sample is empty. Ordinary topics remain insufficient below three independent contributors. Sensitive report counts and texts stay withheld until six identities, two content sources, and complete review checks are satisfied. Traffic and unofficial-ticket reports have separate moderation topics in migration 007. Existing YouTube original comments remain separate from derived metrics until the required approval is configured.

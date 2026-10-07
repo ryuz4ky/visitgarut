@@ -6,7 +6,7 @@ import { ratingDimensions } from '@/lib/pulse/contribution'
 const initial={ok:false,message:''}
 export function ContributionForm({placeId,rental=false}:{placeId:number;rental?:boolean}){
  const [state,action,pending]=useActionState(submitExperience,initial)
- return <details className="pulse-contribute"><summary>{rental?'Bagikan pengalaman menyewamu':'Bagikan pengalaman kunjunganmu'}</summary><p>Ceritakan pengalaman sendiri beserta konteksnya. Hindari nomor telepon, alamat pribadi, dan identitas orang lain. Semua kontribusi diperiksa sebelum tampil.</p>
+ return <details className="pulse-contribute" id={'pengalaman-form-'+placeId}><summary>{rental?'Bagikan pengalaman menyewamu':'Bagikan pengalaman kunjunganmu'}</summary><p>Ceritakan pengalaman sendiri beserta konteksnya. Hindari nomor telepon, alamat pribadi, dan identitas orang lain. Semua kontribusi diperiksa sebelum tampil.</p>
  <form action={action}><input type="hidden" name="place_id" value={placeId}/>
  <label>Nama tampilan atau pseudonim (opsional)<input name="display_name" maxLength={120}/></label>
  <label>{rental?'Tanggal sewa':'Tanggal kunjungan'}<input type="date" name="experience_date" required/></label>
