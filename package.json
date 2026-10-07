@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "test:pulse": "tsc lib/pulse/core.ts --target ES2022 --module commonjs --skipLibCheck --outDir .pulse-test && node scripts/pulse-tests.cjs .pulse-test/core.js",
     "test:research": "node scripts/research-tests.cjs",
+    "test:directory": "tsc lib/mvp/search.ts --target ES2022 --module commonjs --skipLibCheck --outDir .directory-test && node scripts/directory-tests.cjs",
     "test:youtube": "node scripts/youtube-tests.cjs",
     "build:youtube-worker": "tsc lib/pulse/youtube-pipeline.ts --target ES2022 --module commonjs --skipLibCheck --outDir .youtube-worker",
     "test:youtube-collection": "npm run build:youtube-worker && node scripts/youtube-collection-tests.cjs"

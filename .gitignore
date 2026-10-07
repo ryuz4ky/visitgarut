@@ -37,3 +37,4 @@ next-env.d.ts
 /.pulse-test/
 
 /.youtube-worker/
+/.directory-test/

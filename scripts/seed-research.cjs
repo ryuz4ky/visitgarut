@@ -22,5 +22,5 @@ function buildResearchSQL(data){
 }
 module.exports={buildResearchSQL};
 if(require.main===module){
- (async()=>{if(!process.env.DATABASE_URL)throw new Error('DATABASE_URL required');const {Client}=require('pg');const client=new Client({connectionString:process.env.DATABASE_URL});await client.connect();try{await client.query(fs.readFileSync(path.join(__dirname,'../db/004-place-research.sql'),'utf8'));await client.query(buildResearchSQL(JSON.parse(fs.readFileSync(path.join(__dirname,'../data/researched-places-2026-10-07.json'),'utf8'))));console.log('Research imported; existing entries preserved.')}finally{await client.end()}})().catch(e=>{console.error(e.message);process.exitCode=1});
+ (async()=>{if(!process.env.DATABASE_URL)throw new Error('DATABASE_URL required');const {Client}=require('pg');const client=new Client({connectionString:process.env.DATABASE_URL});await client.connect();try{await client.query(fs.readFileSync(path.join(__dirname,'../db/004-place-research.sql'),'utf8'));const source=process.argv[2]?path.resolve(process.argv[2]):path.join(__dirname,'../data/researched-places-2026-10-07.json');await client.query(buildResearchSQL(JSON.parse(fs.readFileSync(source,'utf8'))));console.log('Research imported; existing entries preserved.')}finally{await client.end()}})().catch(e=>{console.error(e.message);process.exitCode=1});
 }
