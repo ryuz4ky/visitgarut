@@ -14,3 +14,4 @@ if [ -f /home/visitgar/.visitgarut.pid ]; then
   rm /home/visitgar/.visitgarut.pid
 fi
 node scripts/daemon.cjs
+git rev-parse HEAD > /home/visitgar/.visitgarut-deployed-sha

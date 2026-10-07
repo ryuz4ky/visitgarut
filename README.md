@@ -17,9 +17,9 @@ Next.js 15, React 19, TypeScript, PostgreSQL 16, node-postgres, Leaflet. Product
 
 ## Production
 
-Runtime: Node 24.21.0. PostgreSQL: `visitgar_mvp`, user `visitgar_app`. Never commit credentials. Production environment lives outside docroot at `/home/visitgar/visitgarut.env`, permissions 0600. App binds only to 127.0.0.1:3187. Apache/LiteSpeed proxies HTTPS requests through `.htaccess`. A cPanel cron supervises the process every minute. `scripts/deploy.sh` installs, builds, copies assets and restarts this app. Do not use `npm run dev` in production.
+Runtime: Node 24.21.0. PostgreSQL: `visitgar_mvp`, user `visitgar_app`. Never commit credentials. Production environment lives outside docroot at `/home/visitgar/visitgarut.env`, permissions 0600. App binds only to 127.0.0.1:3187. Apache/LiteSpeed proxies HTTPS requests through `.htaccess`. A cPanel cron supervises the process every 7 minutes (the hosting minimum). `scripts/deploy.sh` installs, builds, copies assets and restarts this app. Do not use `npm run dev` in production.
 
-A Git Deploy Manager deployment tracks main. Build memory can exceed the host budget; if necessary upload a locally verified standalone build produced from the same GitHub commit, then copy its public/static assets.
+A Git Deploy Manager deployment tracks main. The cron compares HEAD to `/home/visitgar/.visitgarut-deployed-sha`; it builds a changed revision and supervises an unchanged revision. Trigger Git Deploy Manager after pushing main; the next cron run applies the build. Build memory can exceed the host budget; if necessary upload a locally verified standalone build produced from the same GitHub commit, then copy its public/static assets.
 
 ## CMS
 
