@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd /home/visitgar/public_html
+VG_REVISION=$(git rev-parse HEAD)
 export PATH="/home/visitgar/.local/share/mise/installs/node/24.21.0/bin:$PATH"
 export NEXT_TELEMETRY_DISABLED=1
 npm ci --no-audit --no-fund
@@ -14,4 +15,4 @@ if [ -f /home/visitgar/.visitgarut.pid ]; then
   rm /home/visitgar/.visitgarut.pid
 fi
 node scripts/daemon.cjs
-git rev-parse HEAD > /home/visitgar/.visitgarut-deployed-sha
+printf '%s\n' "$VG_REVISION" > /home/visitgar/.visitgarut-deployed-sha
