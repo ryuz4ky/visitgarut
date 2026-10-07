@@ -1,0 +1,1040 @@
+{
+  "researched_at": "2026-10-07T02:22:13Z",
+  "method": "Riset sumber daring dan parafrasa editorial. Tidak memuat salinan ulasan, rating, foto, identitas pengunjung, atau metrik sentimen platform.",
+  "new_places": [
+    {
+      "slug": "candi-cangkuang",
+      "name": "Candi Cangkuang",
+      "category": "wisata",
+      "district": "Leles",
+      "address": "Kawasan Situs Candi Cangkuang, Kecamatan Leles, Garut",
+      "excerpt": "Situs budaya di Leles untuk mengenal peninggalan sejarah Garut.",
+      "content": "Situs budaya di Leles untuk mengenal peninggalan sejarah Garut.\n\nRilis Pemkab mencatat kegiatan pendidikan di Situs Candi Cangkuang pada Agustus 2024. Tempat ini dapat menjadi titik awal perjalanan bertema sejarah dan budaya. Lokasi yang dikonfirmasi dalam rilis berada di Kecamatan Leles. Saran VisitGarut: cari rute dengan nama situs lengkap dan tanyakan akses masuk kepada petugas setempat.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://api.garutkab.go.id/news/balai-besar-guru-penggerak-jawa-barat-gelar-kareta-sobat-nganjang-ka-situs-budaya-cangkuang-di-garut",
+      "website": "",
+      "whatsapp": "",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "aktivitas",
+          "title": "Kunjungan dengan konteks budaya",
+          "summary": "Rilis Pemkab mencatat kegiatan pendidikan di Situs Candi Cangkuang pada Agustus 2024. Tempat ini dapat menjadi titik awal perjalanan bertema sejarah dan budaya.",
+          "source_url": "https://api.garutkab.go.id/news/balai-besar-guru-penggerak-jawa-barat-gelar-kareta-sobat-nganjang-ka-situs-budaya-cangkuang-di-garut",
+          "publisher": "Pemerintah Kabupaten Garut",
+          "source_kind": "authority",
+          "source_published_at": "2024-08-14",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        },
+        {
+          "topic": "akses",
+          "title": "Pastikan pintu masuk situs",
+          "summary": "Lokasi yang dikonfirmasi dalam rilis berada di Kecamatan Leles. Saran VisitGarut: cari rute dengan nama situs lengkap dan tanyakan akses masuk kepada petugas setempat.",
+          "source_url": "https://api.garutkab.go.id/news/balai-besar-guru-penggerak-jawa-barat-gelar-kareta-sobat-nganjang-ka-situs-budaya-cangkuang-di-garut",
+          "publisher": "Pemerintah Kabupaten Garut",
+          "source_kind": "authority",
+          "source_published_at": "2024-08-14",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "darajat-pass",
+      "name": "Darajat Pass",
+      "category": "wisata",
+      "district": "Pasirwangi",
+      "address": "Jl. Darajat KM 14, Kecamatan Pasirwangi, Garut",
+      "excerpt": "Destinasi rekreasi di kawasan Darajat dengan kanal kontak pengelola untuk merencanakan kunjungan.",
+      "content": "Destinasi rekreasi di kawasan Darajat dengan kanal kontak pengelola untuk merencanakan kunjungan.\n\nHalaman kontak Darajat Pass mencantumkan Jalan Darajat KM 14, Pasirwangi. Gunakan alamat ini saat mengatur kendaraan dan rute menuju kawasan Darajat. Pengelola menyediakan nomor telepon dan WhatsApp pada halaman kontak. Saran VisitGarut: tanyakan tarif, layanan yang termasuk tiket, serta ketersediaan penginapan melalui kanal tersebut.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://darajatpass.com/kontak/",
+      "website": "https://darajatpass.com/",
+      "whatsapp": "6285223165252",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "akses",
+          "title": "Alamat pengelola di Pasirwangi",
+          "summary": "Halaman kontak Darajat Pass mencantumkan Jalan Darajat KM 14, Pasirwangi. Gunakan alamat ini saat mengatur kendaraan dan rute menuju kawasan Darajat.",
+          "source_url": "https://darajatpass.com/kontak/",
+          "publisher": "Darajat Pass",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi pengelola bersifat promosi; ketersediaan fasilitas perlu dikonfirmasi.",
+          "status": "approved"
+        },
+        {
+          "topic": "pelayanan",
+          "title": "Konfirmasi langsung sebelum berangkat",
+          "summary": "Pengelola menyediakan nomor telepon dan WhatsApp pada halaman kontak. Saran VisitGarut: tanyakan tarif, layanan yang termasuk tiket, serta ketersediaan penginapan melalui kanal tersebut.",
+          "source_url": "https://darajatpass.com/kontak/",
+          "publisher": "Darajat Pass",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi pengelola bersifat promosi; ketersediaan fasilitas perlu dikonfirmasi.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "taman-air-sabda-alam",
+      "name": "Taman Air Sabda Alam",
+      "category": "wisata",
+      "district": "Tarogong Kaler",
+      "address": "Jl. Raya Cipanas No. 3, Rancabango, Tarogong Kaler, Garut",
+      "excerpt": "Taman air di Cipanas dengan kolam anak, kolam ombak, dan wahana seluncuran.",
+      "content": "Taman air di Cipanas dengan kolam anak, kolam ombak, dan wahana seluncuran.\n\nHalaman pengelola menampilkan kolam anak, kolam ombak, seluncuran, dan kolam busa. Periksa aturan usia, kedalaman, serta perlengkapan wajib pada wahana yang dipilih. Pengelola menandai tiket tambahan untuk Taman Sabda Alam dan menyediakan layanan sewa perlengkapan. Saran VisitGarut: tanyakan total tiket, sewa ban, dan loker sebelum membeli.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://www.sabdaalam-garut.com/taman-air",
+      "website": "https://www.sabdaalam-garut.com/taman-air",
+      "whatsapp": "62811343168",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "keluarga",
+          "title": "Pilihan wahana untuk keluarga",
+          "summary": "Halaman pengelola menampilkan kolam anak, kolam ombak, seluncuran, dan kolam busa. Periksa aturan usia, kedalaman, serta perlengkapan wajib pada wahana yang dipilih.",
+          "source_url": "https://www.sabdaalam-garut.com/taman-air",
+          "publisher": "Sabda Alam",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi pengelola bersifat promosi; ketersediaan fasilitas perlu dikonfirmasi.",
+          "status": "approved"
+        },
+        {
+          "topic": "harga",
+          "title": "Periksa komponen biaya kunjungan",
+          "summary": "Pengelola menandai tiket tambahan untuk Taman Sabda Alam dan menyediakan layanan sewa perlengkapan. Saran VisitGarut: tanyakan total tiket, sewa ban, dan loker sebelum membeli.",
+          "source_url": "https://www.sabdaalam-garut.com/taman-air",
+          "publisher": "Sabda Alam",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi pengelola bersifat promosi; ketersediaan fasilitas perlu dikonfirmasi.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "kamojang-ecopark",
+      "name": "Kamojang Ecopark",
+      "category": "wisata",
+      "district": "Samarang",
+      "address": "Kawasan Kamojang, Kecamatan Samarang, Garut",
+      "excerpt": "Atraksi rekreasi di kawasan Kamojang yang tercatat dalam profil pariwisata Sisparnas.",
+      "content": "Atraksi rekreasi di kawasan Kamojang yang tercatat dalam profil pariwisata Sisparnas.\n\nProfil Sisparnas mencatat toilet umum, toilet untuk disabilitas dan lansia, tempat ibadah, serta pusat informasi. Ketersediaan dan akses penggunaannya perlu dikonfirmasi kepada pengelola. Sisparnas mencantumkan pemesanan langsung di lokasi dan pembayaran tunai. Saran VisitGarut: konfirmasikan metode pembayaran serta harga terbaru; angka tiket pada profil tidak cukup jelas untuk dipakai sebagai tarif.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://sisparnas.kemenpar.go.id/p/70488",
+      "website": "",
+      "whatsapp": "",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "fasilitas",
+          "title": "Fasilitas yang tercatat di Sisparnas",
+          "summary": "Profil Sisparnas mencatat toilet umum, toilet untuk disabilitas dan lansia, tempat ibadah, serta pusat informasi. Ketersediaan dan akses penggunaannya perlu dikonfirmasi kepada pengelola.",
+          "source_url": "https://sisparnas.kemenpar.go.id/p/70488",
+          "publisher": "Sisparnas Kementerian Pariwisata",
+          "source_kind": "authority",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        },
+        {
+          "topic": "harga",
+          "title": "Profil mencatat pembelian di lokasi",
+          "summary": "Sisparnas mencantumkan pemesanan langsung di lokasi dan pembayaran tunai. Saran VisitGarut: konfirmasikan metode pembayaran serta harga terbaru; angka tiket pada profil tidak cukup jelas untuk dipakai sebagai tarif.",
+          "source_url": "https://sisparnas.kemenpar.go.id/p/70488",
+          "publisher": "Sisparnas Kementerian Pariwisata",
+          "source_kind": "authority",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "karacak-valley",
+      "name": "Karacak Valley",
+      "category": "wisata",
+      "district": "Garut Kota",
+      "address": "Jl. Karacak Valley, Kampung Pakuwon, Sukanegla, Garut Kota, Garut",
+      "excerpt": "Kawasan hutan pinus dan perbukitan di Sukanegla untuk berjalan kaki atau merencanakan kemah.",
+      "content": "Kawasan hutan pinus dan perbukitan di Sukanegla untuk berjalan kaki atau merencanakan kemah.\n\nLiputan November 2024 menggambarkan hutan pinus, perkebunan kopi, dan panorama perbukitan. Deskripsi ini menjadi konteks destinasi, bukan jaminan cuaca atau kondisi jalur saat kunjungan. Liputan mencatat aktivitas trekking dan area berkemah. Saran VisitGarut: tanyakan kondisi jalur, izin bermalam, serta perlengkapan dan layanan sewa yang tersedia sebelum memutuskan menginap.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://www.sukabumiupdate.com/food-travel/150194/wisata-alam-karacak-valley-menikmati-keindahan-hutan-pinus-dan-curug-di-garut-kota",
+      "website": "",
+      "whatsapp": "",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "pemandangan",
+          "title": "Hutan pinus sebagai daya tarik",
+          "summary": "Liputan November 2024 menggambarkan hutan pinus, perkebunan kopi, dan panorama perbukitan. Deskripsi ini menjadi konteks destinasi, bukan jaminan cuaca atau kondisi jalur saat kunjungan.",
+          "source_url": "https://www.sukabumiupdate.com/food-travel/150194/wisata-alam-karacak-valley-menikmati-keindahan-hutan-pinus-dan-curug-di-garut-kota",
+          "publisher": "Sukabumiupdate",
+          "source_kind": "report",
+          "source_published_at": "2024-11-22",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        },
+        {
+          "topic": "aktivitas",
+          "title": "Rencanakan trekking atau kemah",
+          "summary": "Liputan mencatat aktivitas trekking dan area berkemah. Saran VisitGarut: tanyakan kondisi jalur, izin bermalam, serta perlengkapan dan layanan sewa yang tersedia sebelum memutuskan menginap.",
+          "source_url": "https://www.sukabumiupdate.com/food-travel/150194/wisata-alam-karacak-valley-menikmati-keindahan-hutan-pinus-dan-curug-di-garut-kota",
+          "publisher": "Sukabumiupdate",
+          "source_kind": "report",
+          "source_published_at": "2024-11-22",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "curug-orok",
+      "name": "Curug Orok",
+      "category": "wisata",
+      "district": "Cikajang",
+      "address": "Desa Cikandang, Kecamatan Cikajang, Garut",
+      "excerpt": "Air terjun di Desa Cikandang, Kecamatan Cikajang, dengan lanskap alam sebagai tujuan kunjungan. ",
+      "content": "Air terjun di Desa Cikandang, Kecamatan Cikajang, dengan lanskap alam sebagai tujuan kunjungan. \n\nPemkab mencatat kunjungan ke Curug Orok di Desa Cikandang, Cikajang, pada Juni 2024. Air terjun menjadi daya tarik alam utama dalam laporan tersebut. Rilis 2024 membahas dorongan pengembangan destinasi. Saran VisitGarut: tanyakan kondisi jalan dan fasilitas terkini sebelum datang; rencana pengembangan tidak membuktikan pekerjaan sudah selesai.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://www.garutkab.go.id/berita/pj-bupati-garut-dorong-pengembangan-wisata-curug-orok",
+      "website": "",
+      "whatsapp": "",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "pemandangan",
+          "title": "Destinasi air terjun di Cikandang",
+          "summary": "Pemkab mencatat kunjungan ke Curug Orok di Desa Cikandang, Cikajang, pada Juni 2024. Air terjun menjadi daya tarik alam utama dalam laporan tersebut.",
+          "source_url": "https://www.garutkab.go.id/berita/pj-bupati-garut-dorong-pengembangan-wisata-curug-orok",
+          "publisher": "Pemerintah Kabupaten Garut",
+          "source_kind": "authority",
+          "source_published_at": "2024-06-19",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        },
+        {
+          "topic": "akses",
+          "title": "Konfirmasi akses dan fasilitas terbaru",
+          "summary": "Rilis 2024 membahas dorongan pengembangan destinasi. Saran VisitGarut: tanyakan kondisi jalan dan fasilitas terkini sebelum datang; rencana pengembangan tidak membuktikan pekerjaan sudah selesai.",
+          "source_url": "https://www.garutkab.go.id/berita/pj-bupati-garut-dorong-pengembangan-wisata-curug-orok",
+          "publisher": "Pemerintah Kabupaten Garut",
+          "source_kind": "authority",
+          "source_published_at": "2024-06-19",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "curug-sanghyang-taraje",
+      "name": "Curug Sanghyang Taraje",
+      "category": "wisata",
+      "district": "Pamulihan",
+      "address": "Kawasan Curug Sanghyang Taraje, Kecamatan Pamulihan, Garut",
+      "excerpt": "Destinasi air terjun di Kecamatan Pamulihan yang menjadi perhatian pengembangan wisata Garut pada 2026.",
+      "content": "Destinasi air terjun di Kecamatan Pamulihan yang menjadi perhatian pengembangan wisata Garut pada 2026.\n\nRilis 2 Agustus 2026 menempatkan Curug Sanghyang Taraje di Kecamatan Pamulihan. Gunakan nama kecamatan ini saat menelusuri rute dan merencanakan perjalanan. Pada Agustus 2026, pengelola dalam rilis Pemkab mengusulkan pembenahan akses sekitar 2,5 km dan penerangan. Saran VisitGarut: tanyakan kondisi terbaru, kendaraan yang sesuai, serta waktu perjalanan sebelum berangkat.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://www.garutkab.go.id/berita/curug-sanghyang-taraje-diproyeksikan-jadi-destinasi-unggulan-garut",
+      "website": "",
+      "whatsapp": "",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "pemandangan",
+          "title": "Lokasi yang dikonfirmasi Pemkab",
+          "summary": "Rilis 2 Agustus 2026 menempatkan Curug Sanghyang Taraje di Kecamatan Pamulihan. Gunakan nama kecamatan ini saat menelusuri rute dan merencanakan perjalanan.",
+          "source_url": "https://www.garutkab.go.id/berita/curug-sanghyang-taraje-diproyeksikan-jadi-destinasi-unggulan-garut",
+          "publisher": "Pemerintah Kabupaten Garut",
+          "source_kind": "authority",
+          "source_published_at": "2026-08-02",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        },
+        {
+          "topic": "akses",
+          "title": "Tanyakan kondisi ruas akses terakhir",
+          "summary": "Pada Agustus 2026, pengelola dalam rilis Pemkab mengusulkan pembenahan akses sekitar 2,5 km dan penerangan. Saran VisitGarut: tanyakan kondisi terbaru, kendaraan yang sesuai, serta waktu perjalanan sebelum berangkat.",
+          "source_url": "https://www.garutkab.go.id/berita/curug-sanghyang-taraje-diproyeksikan-jadi-destinasi-unggulan-garut",
+          "publisher": "Pemerintah Kabupaten Garut",
+          "source_kind": "authority",
+          "source_published_at": "2026-08-02",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "pantai-santolo",
+      "name": "Pantai Santolo",
+      "category": "wisata",
+      "district": "Cikelet",
+      "address": "Desa Pamalayan, Kecamatan Cikelet, Garut",
+      "excerpt": "Destinasi pesisir selatan Garut di Desa Pamalayan, Kecamatan Cikelet.",
+      "content": "Destinasi pesisir selatan Garut di Desa Pamalayan, Kecamatan Cikelet.\n\nRilis Pemkab Februari 2026 menyebut Pantai Santolo dalam konteks dialog bersama warga Desa Pamalayan, Kecamatan Cikelet. Bedakan lokasi ini dari Kecamatan Pameungpeuk saat mencari rute. Rilis 24 Februari 2026 membahas evaluasi pengelolaan dan prosedur tiket. Saran VisitGarut: tanyakan kanal pembayaran resmi serta rincian biaya terbaru. Rilis ini tidak menetapkan kondisi pelayanan hari ini.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://www.garutkab.go.id/berita/tindak-lanjuti-keluhan-warga-bupati-garut-evaluasi-pengelolaan-wisata-pantai-santolo",
+      "website": "",
+      "whatsapp": "",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "akses",
+          "title": "Pantai Santolo berada di Cikelet",
+          "summary": "Rilis Pemkab Februari 2026 menyebut Pantai Santolo dalam konteks dialog bersama warga Desa Pamalayan, Kecamatan Cikelet. Bedakan lokasi ini dari Kecamatan Pameungpeuk saat mencari rute.",
+          "source_url": "https://www.garutkab.go.id/berita/tindak-lanjuti-keluhan-warga-bupati-garut-evaluasi-pengelolaan-wisata-pantai-santolo",
+          "publisher": "Pemerintah Kabupaten Garut",
+          "source_kind": "authority",
+          "source_published_at": "2026-02-24",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        },
+        {
+          "topic": "harga",
+          "title": "Konfirmasi prosedur tiket terbaru",
+          "summary": "Rilis 24 Februari 2026 membahas evaluasi pengelolaan dan prosedur tiket. Saran VisitGarut: tanyakan kanal pembayaran resmi serta rincian biaya terbaru. Rilis ini tidak menetapkan kondisi pelayanan hari ini.",
+          "source_url": "https://www.garutkab.go.id/berita/tindak-lanjuti-keluhan-warga-bupati-garut-evaluasi-pengelolaan-wisata-pantai-santolo",
+          "publisher": "Pemerintah Kabupaten Garut",
+          "source_kind": "authority",
+          "source_published_at": "2026-02-24",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "pantai-sayang-heulang",
+      "name": "Pantai Sayang Heulang",
+      "category": "wisata",
+      "district": "Pameungpeuk",
+      "address": "Desa Mancagahar, Kecamatan Pameungpeuk, Garut",
+      "excerpt": "Pantai di Mancagahar, Kecamatan Pameungpeuk, sebagai salah satu tujuan menjelajahi Garut Selatan.",
+      "content": "Pantai di Mancagahar, Kecamatan Pameungpeuk, sebagai salah satu tujuan menjelajahi Garut Selatan.\n\nPanduan Traveloka menempatkan Pantai Sayang Heulang di Desa Mancagahar, Kecamatan Pameungpeuk. Saran VisitGarut: gunakan nama pantai lengkap dan konfirmasikan titik parkir atau pintu masuk. Panduan menyebut Bukit Teletubbies sebagai penanda rute menuju kawasan pantai. Saran VisitGarut: sisihkan waktu perjalanan yang cukup dan cek kondisi cuaca sebelum menyusun kunjungan ke pesisir.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://www.traveloka.com/id-id/explore/destination/pesona-pantai-sayang-heulang-dan-rekomendasi-hotel-sekitarnya-acc/1000875",
+      "website": "",
+      "whatsapp": "",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "akses",
+          "title": "Lokasi di Mancagahar",
+          "summary": "Panduan Traveloka menempatkan Pantai Sayang Heulang di Desa Mancagahar, Kecamatan Pameungpeuk. Saran VisitGarut: gunakan nama pantai lengkap dan konfirmasikan titik parkir atau pintu masuk.",
+          "source_url": "https://www.traveloka.com/id-id/explore/destination/pesona-pantai-sayang-heulang-dan-rekomendasi-hotel-sekitarnya-acc/1000875",
+          "publisher": "Traveloka",
+          "source_kind": "directory",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Profil direktori, bukan pemeriksaan lapangan atau ringkasan ulasan tamu.",
+          "status": "approved"
+        },
+        {
+          "topic": "aktivitas",
+          "title": "Susun kunjungan pesisir secara fleksibel",
+          "summary": "Panduan menyebut Bukit Teletubbies sebagai penanda rute menuju kawasan pantai. Saran VisitGarut: sisihkan waktu perjalanan yang cukup dan cek kondisi cuaca sebelum menyusun kunjungan ke pesisir.",
+          "source_url": "https://www.traveloka.com/id-id/explore/destination/pesona-pantai-sayang-heulang-dan-rekomendasi-hotel-sekitarnya-acc/1000875",
+          "publisher": "Traveloka",
+          "source_kind": "directory",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Profil direktori, bukan pemeriksaan lapangan atau ringkasan ulasan tamu.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "pantai-rancabuaya",
+      "name": "Pantai Rancabuaya",
+      "category": "wisata",
+      "district": "Caringin",
+      "address": "Kawasan Pantai Rancabuaya, Kecamatan Caringin, Garut",
+      "excerpt": "Kawasan pesisir dan aktivitas nelayan di Kecamatan Caringin, Garut Selatan.",
+      "content": "Kawasan pesisir dan aktivitas nelayan di Kecamatan Caringin, Garut Selatan.\n\nPemkab melaporkan kegiatan Hajat Laut nelayan Rancabuaya pada Juni 2025 di Kecamatan Caringin. Kegiatan tersebut merupakan konteks budaya kawasan, bukan jadwal acara yang sedang berlangsung. Rilis mengajak masyarakat menjaga kebersihan kawasan pantai. Saran VisitGarut: bawa wadah sampah sendiri dan ikuti arahan petugas setempat selama berkunjung.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://www.garutkab.go.id/berita/hadir-di-pembukaan-hajat-laut-nelayan-rancabuaya-bupati-garut-ajak-warga-jaga-kondusifitas-dan-kebersihan-pantai",
+      "website": "",
+      "whatsapp": "",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "aktivitas",
+          "title": "Konteks budaya nelayan",
+          "summary": "Pemkab melaporkan kegiatan Hajat Laut nelayan Rancabuaya pada Juni 2025 di Kecamatan Caringin. Kegiatan tersebut merupakan konteks budaya kawasan, bukan jadwal acara yang sedang berlangsung.",
+          "source_url": "https://www.garutkab.go.id/berita/hadir-di-pembukaan-hajat-laut-nelayan-rancabuaya-bupati-garut-ajak-warga-jaga-kondusifitas-dan-kebersihan-pantai",
+          "publisher": "Pemerintah Kabupaten Garut",
+          "source_kind": "authority",
+          "source_published_at": "2025-06-27",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        },
+        {
+          "topic": "kebersihan",
+          "title": "Persiapan untuk kunjungan pesisir",
+          "summary": "Rilis mengajak masyarakat menjaga kebersihan kawasan pantai. Saran VisitGarut: bawa wadah sampah sendiri dan ikuti arahan petugas setempat selama berkunjung.",
+          "source_url": "https://www.garutkab.go.id/berita/hadir-di-pembukaan-hajat-laut-nelayan-rancabuaya-bupati-garut-ajak-warga-jaga-kondusifitas-dan-kebersihan-pantai",
+          "publisher": "Pemerintah Kabupaten Garut",
+          "source_kind": "authority",
+          "source_published_at": "2025-06-27",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "pantai-karang-paranje",
+      "name": "Pantai Karang Paranje",
+      "category": "wisata",
+      "district": "Cibalong",
+      "address": "Kawasan Pantai Karang Paranje, Kecamatan Cibalong, Garut",
+      "excerpt": "Pantai di Kecamatan Cibalong yang juga tercatat sebagai lokasi kegiatan konservasi mangrove.",
+      "content": "Pantai di Kecamatan Cibalong yang juga tercatat sebagai lokasi kegiatan konservasi mangrove.\n\nRilis Pemkab Mei 2023 menempatkan Pantai Karang Paranje di Kecamatan Cibalong. Saran VisitGarut: konfirmasikan rute terakhir dan lokasi parkir sebelum mengatur perjalanan. Pemkab mencatat penanaman mangrove di kawasan pantai pada Mei 2023. Ini adalah catatan kegiatan historis, bukan konfirmasi kondisi vegetasi atau fasilitas wisata saat ini.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://www.garutkab.go.id/berita/sekda-garut-hadiri-puncak-penanaman-pohon-mangrove-nasional-di-pantai-karang-paranje",
+      "website": "",
+      "whatsapp": "",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "akses",
+          "title": "Pantai di wilayah Cibalong",
+          "summary": "Rilis Pemkab Mei 2023 menempatkan Pantai Karang Paranje di Kecamatan Cibalong. Saran VisitGarut: konfirmasikan rute terakhir dan lokasi parkir sebelum mengatur perjalanan.",
+          "source_url": "https://www.garutkab.go.id/berita/sekda-garut-hadiri-puncak-penanaman-pohon-mangrove-nasional-di-pantai-karang-paranje",
+          "publisher": "Pemerintah Kabupaten Garut",
+          "source_kind": "authority",
+          "source_published_at": "2023-05-16",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        },
+        {
+          "topic": "aktivitas",
+          "title": "Latar kegiatan konservasi mangrove",
+          "summary": "Pemkab mencatat penanaman mangrove di kawasan pantai pada Mei 2023. Ini adalah catatan kegiatan historis, bukan konfirmasi kondisi vegetasi atau fasilitas wisata saat ini.",
+          "source_url": "https://www.garutkab.go.id/berita/sekda-garut-hadiri-puncak-penanaman-pohon-mangrove-nasional-di-pantai-karang-paranje",
+          "publisher": "Pemerintah Kabupaten Garut",
+          "source_kind": "authority",
+          "source_published_at": "2023-05-16",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "pantai-taman-manalusu",
+      "name": "Pantai Taman Manalusu",
+      "category": "wisata",
+      "district": "Cikelet",
+      "address": "Desa Cigadog, Kecamatan Cikelet, Garut",
+      "excerpt": "Pantai di Desa Cigadog dengan bentang pasir dan batuan karang di kawasan pesisir Garut Selatan.",
+      "content": "Pantai di Desa Cigadog dengan bentang pasir dan batuan karang di kawasan pesisir Garut Selatan.\n\nProfil wisata Kecamatan Cikelet menggambarkan pantai berpasir dengan pohon pesisir dan gugusan karang. Gunakan deskripsi ini untuk mengenal lanskap, bukan untuk menyimpulkan kondisi ombak atau keamanan berenang. Profil kecamatan menempatkan Pantai Taman Manalusu di Desa Cigadog, Kecamatan Cikelet. Saran VisitGarut: rencanakan perjalanan terpisah dari wisata sekitar pusat kota dan cek kondisi rute terkini.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://kec-cikelet.garutkab.go.id/pantai-manalusu",
+      "website": "",
+      "whatsapp": "",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "pemandangan",
+          "title": "Bentang pasir dan batuan karang",
+          "summary": "Profil wisata Kecamatan Cikelet menggambarkan pantai berpasir dengan pohon pesisir dan gugusan karang. Gunakan deskripsi ini untuk mengenal lanskap, bukan untuk menyimpulkan kondisi ombak atau keamanan berenang.",
+          "source_url": "https://kec-cikelet.garutkab.go.id/pantai-manalusu",
+          "publisher": "Pemerintah Kecamatan Cikelet",
+          "source_kind": "authority",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        },
+        {
+          "topic": "akses",
+          "title": "Lokasi di Desa Cigadog",
+          "summary": "Profil kecamatan menempatkan Pantai Taman Manalusu di Desa Cigadog, Kecamatan Cikelet. Saran VisitGarut: rencanakan perjalanan terpisah dari wisata sekitar pusat kota dan cek kondisi rute terkini.",
+          "source_url": "https://kec-cikelet.garutkab.go.id/pantai-manalusu",
+          "publisher": "Pemerintah Kecamatan Cikelet",
+          "source_kind": "authority",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "leuwi-jurig",
+      "name": "Leuwi Jurig",
+      "category": "wisata",
+      "district": "Bungbulang",
+      "address": "Kawasan Leuwi Jurig, Kecamatan Bungbulang, Garut",
+      "excerpt": "Bentang sungai dan tebing batu di Bungbulang untuk mengenal lanskap alam Garut Selatan.",
+      "content": "Bentang sungai dan tebing batu di Bungbulang untuk mengenal lanskap alam Garut Selatan.\n\nLiputan RRI Agustus 2026 menggambarkan aliran sungai dan kolam alami di antara tebing batu. Warna dan kejernihan air bergantung kondisi lapangan; deskripsi tidak membuktikan lokasi aman untuk berenang. RRI pada 20 Agustus 2026 melaporkan keterbatasan jalan serta fasilitas dasar. Saran VisitGarut: konfirmasikan akses kendaraan, toilet, dan tempat parkir kepada pihak setempat sebelum merencanakan kunjungan.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://rri.co.id/bandung/wisata/2665057/pesona-destinasi-wisata-leuwi-jurig-garut",
+      "website": "",
+      "whatsapp": "",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "pemandangan",
+          "title": "Sungai di antara tebing batu",
+          "summary": "Liputan RRI Agustus 2026 menggambarkan aliran sungai dan kolam alami di antara tebing batu. Warna dan kejernihan air bergantung kondisi lapangan; deskripsi tidak membuktikan lokasi aman untuk berenang.",
+          "source_url": "https://rri.co.id/bandung/wisata/2665057/pesona-destinasi-wisata-leuwi-jurig-garut",
+          "publisher": "LPP RRI Bandung",
+          "source_kind": "report",
+          "source_published_at": "2026-08-20",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        },
+        {
+          "topic": "akses",
+          "title": "Periksa akses dan fasilitas sebelum datang",
+          "summary": "RRI pada 20 Agustus 2026 melaporkan keterbatasan jalan serta fasilitas dasar. Saran VisitGarut: konfirmasikan akses kendaraan, toilet, dan tempat parkir kepada pihak setempat sebelum merencanakan kunjungan.",
+          "source_url": "https://rri.co.id/bandung/wisata/2665057/pesona-destinasi-wisata-leuwi-jurig-garut",
+          "publisher": "LPP RRI Bandung",
+          "source_kind": "report",
+          "source_published_at": "2026-08-20",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "leuweung-oko",
+      "name": "Leuweung Oko",
+      "category": "wisata",
+      "district": "Selaawi",
+      "address": "Desa Cirapuhan, Kecamatan Selaawi, Garut",
+      "excerpt": "Kawasan wisata alam di Desa Cirapuhan, Kecamatan Selaawi, yang tercatat dalam publikasi Perhutani.",
+      "content": "Kawasan wisata alam di Desa Cirapuhan, Kecamatan Selaawi, yang tercatat dalam publikasi Perhutani.\n\nPerhutani mencatat Leuweung Oko berada di Desa Cirapuhan, Kecamatan Selaawi. Keterangan RPH Limbangan dan BKPH Leles adalah wilayah pengelolaan hutan, bukan kecamatan lokasi destinasi. Publikasi Juli 2022 mencatat kerja sama Perhutani dan BUMDes Cirapuhan untuk kawasan wisata alam ini. Saran VisitGarut: tanyakan pengelola dan kegiatan yang tersedia sekarang; masa berlaku kerja sama terkini belum dikonfirmasi.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://www.perhutani.co.id/perhutani-bersama-bumdes-cirapuhan-lakukan-perpanjangan-pks-wisata-alam-leuweung-oko-di-garut-2/",
+      "website": "",
+      "whatsapp": "",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "akses",
+          "title": "Lokasi administratif di Selaawi",
+          "summary": "Perhutani mencatat Leuweung Oko berada di Desa Cirapuhan, Kecamatan Selaawi. Keterangan RPH Limbangan dan BKPH Leles adalah wilayah pengelolaan hutan, bukan kecamatan lokasi destinasi.",
+          "source_url": "https://www.perhutani.co.id/perhutani-bersama-bumdes-cirapuhan-lakukan-perpanjangan-pks-wisata-alam-leuweung-oko-di-garut-2/",
+          "publisher": "Perhutani",
+          "source_kind": "authority",
+          "source_published_at": "2022-07-01",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        },
+        {
+          "topic": "aktivitas",
+          "title": "Wisata alam dengan konteks pengelolaan",
+          "summary": "Publikasi Juli 2022 mencatat kerja sama Perhutani dan BUMDes Cirapuhan untuk kawasan wisata alam ini. Saran VisitGarut: tanyakan pengelola dan kegiatan yang tersedia sekarang; masa berlaku kerja sama terkini belum dikonfirmasi.",
+          "source_url": "https://www.perhutani.co.id/perhutani-bersama-bumdes-cirapuhan-lakukan-perpanjangan-pks-wisata-alam-leuweung-oko-di-garut-2/",
+          "publisher": "Perhutani",
+          "source_kind": "authority",
+          "source_published_at": "2022-07-01",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Konteks sesuai tanggal sumber; bukan konfirmasi kondisi lapangan hari ini.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "desa-wisata-saung-ciburial",
+      "name": "Desa Wisata Saung Ciburial",
+      "category": "wisata",
+      "district": "Samarang",
+      "address": "Desa Sukalaksana, Kecamatan Samarang, Garut",
+      "excerpt": "Desa wisata berbasis edukasi, kehidupan warga, dan budaya lokal di Sukalaksana, Samarang.",
+      "content": "Desa wisata berbasis edukasi, kehidupan warga, dan budaya lokal di Sukalaksana, Samarang.\n\nProfil Jadesta menampilkan belajar membatik, jelajah desa, bertani, dan kegiatan budaya. Saran VisitGarut: tanyakan durasi, jumlah peserta, serta kegiatan yang benar-benar tersedia pada tanggal kunjungan. Profil menyebut penginapan, homestay warga, parkir, kamar mandi umum, mushola, dan tempat makan. Ketersediaan tidak bersifat waktu nyata; konfirmasikan kebutuhan rombongan sebelum reservasi.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://jadesta.kemenpar.go.id/desa/31144",
+      "website": "https://jadesta.kemenpar.go.id/desa/31144",
+      "whatsapp": "",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "aktivitas",
+          "title": "Pilihan pengalaman edukasi desa",
+          "summary": "Profil Jadesta menampilkan belajar membatik, jelajah desa, bertani, dan kegiatan budaya. Saran VisitGarut: tanyakan durasi, jumlah peserta, serta kegiatan yang benar-benar tersedia pada tanggal kunjungan.",
+          "source_url": "https://jadesta.kemenpar.go.id/desa/31144",
+          "publisher": "Jadesta Kementerian Pariwisata",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi pengelola bersifat promosi; ketersediaan fasilitas perlu dikonfirmasi.",
+          "status": "approved"
+        },
+        {
+          "topic": "fasilitas",
+          "title": "Fasilitas dan opsi menginap pada profil",
+          "summary": "Profil menyebut penginapan, homestay warga, parkir, kamar mandi umum, mushola, dan tempat makan. Ketersediaan tidak bersifat waktu nyata; konfirmasikan kebutuhan rombongan sebelum reservasi.",
+          "source_url": "https://jadesta.kemenpar.go.id/desa/31144",
+          "publisher": "Jadesta Kementerian Pariwisata",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi pengelola bersifat promosi; ketersediaan fasilitas perlu dikonfirmasi.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "kebun-mawar-situhapa",
+      "name": "Kebun Mawar Situhapa",
+      "category": "wisata",
+      "district": "Samarang",
+      "address": "Jl. Raya Kamojang KM 5, Sukakarya, Kecamatan Samarang, Garut",
+      "excerpt": "Kebun bunga di Sukakarya dengan pilihan restoran dan vila untuk menyusun kunjungan santai.",
+      "content": "Kebun bunga di Sukakarya dengan pilihan restoran dan vila untuk menyusun kunjungan santai.\n\nSitus pengelola menampilkan kebun bunga, restoran, dan beberapa jenis vila. Saran VisitGarut: tentukan apakah tujuanmu kunjungan kebun, makan, atau menginap agar reservasi dan biaya sesuai. Pengelola mencantumkan alamat di Jalan Raya Kamojang KM 5, Sukakarya, Samarang. Kanal WhatsApp yang tercantum dapat dipakai untuk menanyakan jam layanan dan ketersediaan vila.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://www.kebunmawar.com/",
+      "website": "https://www.kebunmawar.com/",
+      "whatsapp": "62811247057",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "aktivitas",
+          "title": "Kebun, restoran, dan vila",
+          "summary": "Situs pengelola menampilkan kebun bunga, restoran, dan beberapa jenis vila. Saran VisitGarut: tentukan apakah tujuanmu kunjungan kebun, makan, atau menginap agar reservasi dan biaya sesuai.",
+          "source_url": "https://www.kebunmawar.com/",
+          "publisher": "Kebun Mawar Situhapa",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi pengelola bersifat promosi; ketersediaan fasilitas perlu dikonfirmasi.",
+          "status": "approved"
+        },
+        {
+          "topic": "akses",
+          "title": "Alamat resmi di Jalan Kamojang KM 5",
+          "summary": "Pengelola mencantumkan alamat di Jalan Raya Kamojang KM 5, Sukakarya, Samarang. Kanal WhatsApp yang tercantum dapat dipakai untuk menanyakan jam layanan dan ketersediaan vila.",
+          "source_url": "https://www.kebunmawar.com/",
+          "publisher": "Kebun Mawar Situhapa",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi pengelola bersifat promosi; ketersediaan fasilitas perlu dikonfirmasi.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "hotel-santika-premiere-garut",
+      "name": "Hotel Santika Premiere Garut",
+      "category": "hotel",
+      "district": "Tarogong Kaler",
+      "address": "Jl. Cipanas Baru Tanjung Kamuning, Tarogong Kaler, Garut",
+      "excerpt": "Hotel jaringan Santika di Cipanas Baru, Tarogong Kaler, dengan fasilitas kolam renang dan restoran.",
+      "content": "Hotel jaringan Santika di Cipanas Baru, Tarogong Kaler, dengan fasilitas kolam renang dan restoran.\n\nMySantika menampilkan kolam renang luar ruang, kolam anak, restoran, ruang pertemuan, dan WiFi. Saran VisitGarut: tanyakan fasilitas yang masuk paket kamar dan yang memerlukan biaya tambahan. Situs pengelola membedakan tarif yang bisa dibatalkan dan yang tidak bisa dibatalkan. Saran VisitGarut: periksa ketentuan pada paket dan tanggal pilihanmu sebelum menyelesaikan reservasi.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://www.mysantika.com/indonesia/garut/hotel-santika-garut",
+      "website": "https://www.mysantika.com/indonesia/garut/hotel-santika-garut",
+      "whatsapp": "",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "fasilitas",
+          "title": "Fasilitas pada situs pengelola",
+          "summary": "MySantika menampilkan kolam renang luar ruang, kolam anak, restoran, ruang pertemuan, dan WiFi. Saran VisitGarut: tanyakan fasilitas yang masuk paket kamar dan yang memerlukan biaya tambahan.",
+          "source_url": "https://www.mysantika.com/indonesia/garut/hotel-santika-garut",
+          "publisher": "MySantika",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi pengelola bersifat promosi; ketersediaan fasilitas perlu dikonfirmasi.",
+          "status": "approved"
+        },
+        {
+          "topic": "pelayanan",
+          "title": "Cek jenis tarif sebelum memesan",
+          "summary": "Situs pengelola membedakan tarif yang bisa dibatalkan dan yang tidak bisa dibatalkan. Saran VisitGarut: periksa ketentuan pada paket dan tanggal pilihanmu sebelum menyelesaikan reservasi.",
+          "source_url": "https://www.mysantika.com/indonesia/garut/hotel-santika-garut",
+          "publisher": "MySantika",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi pengelola bersifat promosi; ketersediaan fasilitas perlu dikonfirmasi.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "favehotel-cimanuk-garut",
+      "name": "favehotel Cimanuk Garut",
+      "category": "hotel",
+      "district": "Tarogong Kidul",
+      "address": "Jl. Cimanuk No. 338, Tarogong Kidul, Garut",
+      "excerpt": "Hotel di Jalan Cimanuk, Tarogong Kidul, dengan fasilitas menginap yang tercatat pada direktori Traveloka.",
+      "content": "Hotel di Jalan Cimanuk, Tarogong Kidul, dengan fasilitas menginap yang tercatat pada direktori Traveloka.\n\nDirektori Traveloka mencantumkan Jalan Cimanuk No. 338, Tarogong Kidul. Saran VisitGarut: gunakan nama properti lengkap saat mencari rute dan memesan kamar. Traveloka menampilkan restoran, kolam renang, resepsionis, parkir, WiFi, dan lift. Saran VisitGarut: konfirmasikan ketersediaan fasilitas dan manfaat paket kamar pada tanggal menginap.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://www.traveloka.com/id-id/hotel/indonesia/favehotel-cimanuk-garut-1000000467714",
+      "website": "",
+      "whatsapp": "",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "akses",
+          "title": "Alamat di Jalan Cimanuk",
+          "summary": "Direktori Traveloka mencantumkan Jalan Cimanuk No. 338, Tarogong Kidul. Saran VisitGarut: gunakan nama properti lengkap saat mencari rute dan memesan kamar.",
+          "source_url": "https://www.traveloka.com/id-id/hotel/indonesia/favehotel-cimanuk-garut-1000000467714",
+          "publisher": "Traveloka",
+          "source_kind": "directory",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Profil direktori, bukan pemeriksaan lapangan atau ringkasan ulasan tamu.",
+          "status": "approved"
+        },
+        {
+          "topic": "fasilitas",
+          "title": "Fasilitas yang tercatat di direktori",
+          "summary": "Traveloka menampilkan restoran, kolam renang, resepsionis, parkir, WiFi, dan lift. Saran VisitGarut: konfirmasikan ketersediaan fasilitas dan manfaat paket kamar pada tanggal menginap.",
+          "source_url": "https://www.traveloka.com/id-id/hotel/indonesia/favehotel-cimanuk-garut-1000000467714",
+          "publisher": "Traveloka",
+          "source_kind": "directory",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Profil direktori, bukan pemeriksaan lapangan atau ringkasan ulasan tamu.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "hotel-harmoni-garut",
+      "name": "Hotel Harmoni Garut",
+      "category": "hotel",
+      "district": "Tarogong Kaler",
+      "address": "Jl. Cipanas Baru No. 78, Pananjung, Tarogong Kaler, Garut",
+      "excerpt": "Hotel di kawasan Cipanas Baru, Pananjung, dengan profil fasilitas pada direktori tiket.com.",
+      "content": "Hotel di kawasan Cipanas Baru, Pananjung, dengan profil fasilitas pada direktori tiket.com.\n\nProfil tiket.com mencantumkan Jalan Cipanas Baru No. 78, Pananjung, Tarogong Kaler. Saran VisitGarut: periksa nama dan alamat properti pada konfirmasi reservasi agar rute tidak tertukar. Direktori menampilkan kolam renang, restoran, WiFi, lift, serta fasilitas aksesibilitas. Saran VisitGarut: hubungi properti untuk memastikan kebutuhan akses kamar dan aturan penggunaan kolam sebelum reservasi.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://www.tiket.com/id-id/hotel/indonesia/hotel-harmoni-garut-202001549517230932",
+      "website": "",
+      "whatsapp": "",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "akses",
+          "title": "Alamat properti di Cipanas Baru",
+          "summary": "Profil tiket.com mencantumkan Jalan Cipanas Baru No. 78, Pananjung, Tarogong Kaler. Saran VisitGarut: periksa nama dan alamat properti pada konfirmasi reservasi agar rute tidak tertukar.",
+          "source_url": "https://www.tiket.com/id-id/hotel/indonesia/hotel-harmoni-garut-202001549517230932",
+          "publisher": "tiket.com",
+          "source_kind": "directory",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Profil direktori, bukan pemeriksaan lapangan atau ringkasan ulasan tamu.",
+          "status": "approved"
+        },
+        {
+          "topic": "fasilitas",
+          "title": "Kolam, restoran, dan akses kamar",
+          "summary": "Direktori menampilkan kolam renang, restoran, WiFi, lift, serta fasilitas aksesibilitas. Saran VisitGarut: hubungi properti untuk memastikan kebutuhan akses kamar dan aturan penggunaan kolam sebelum reservasi.",
+          "source_url": "https://www.tiket.com/id-id/hotel/indonesia/hotel-harmoni-garut-202001549517230932",
+          "publisher": "tiket.com",
+          "source_kind": "directory",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Profil direktori, bukan pemeriksaan lapangan atau ringkasan ulasan tamu.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "tirtagangga-hot-spring-resort",
+      "name": "Tirtagangga Hot Spring Resort",
+      "category": "hotel",
+      "district": "Tarogong Kaler",
+      "address": "Jl. Raya Cipanas No. 130, Tarogong Kaler, Garut",
+      "excerpt": "Resor di Cipanas dengan beberapa tipe kamar dan fasilitas air panas yang dijelaskan pada situs pengelola.",
+      "content": "Resor di Cipanas dengan beberapa tipe kamar dan fasilitas air panas yang dijelaskan pada situs pengelola.\n\nSitus pengelola membedakan Dharani Studio dengan shower dan beberapa tipe lain dengan bathtub. Saran VisitGarut: jangan mengasumsikan semua kamar mempunyai fasilitas mandi yang sama. Kanal Book and Link yang ditautkan situs pengelola mencantumkan Jalan Raya Cipanas No. 130. Saran VisitGarut: cocokkan alamat dan nama tipe kamar sebelum menyelesaikan pemesanan.\n\nInformasi dirangkum dari sumber yang ditautkan. Konfirmasikan jam operasional, tarif, ketersediaan layanan, serta kondisi akses sebelum berangkat.",
+      "source_url": "https://tirtaganggaresort.com/",
+      "website": "https://tirtaganggaresort.com/",
+      "whatsapp": "",
+      "latitude": null,
+      "longitude": null,
+      "aliases": [],
+      "status": "published",
+      "research": [
+        {
+          "topic": "fasilitas",
+          "title": "Fasilitas kamar berbeda menurut tipe",
+          "summary": "Situs pengelola membedakan Dharani Studio dengan shower dan beberapa tipe lain dengan bathtub. Saran VisitGarut: jangan mengasumsikan semua kamar mempunyai fasilitas mandi yang sama.",
+          "source_url": "https://tirtaganggaresort.com/",
+          "publisher": "Tirtagangga Hot Spring Resort",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi pengelola bersifat promosi; ketersediaan fasilitas perlu dikonfirmasi.",
+          "status": "approved"
+        },
+        {
+          "topic": "akses",
+          "title": "Alamat pada kanal reservasi resmi",
+          "summary": "Kanal Book and Link yang ditautkan situs pengelola mencantumkan Jalan Raya Cipanas No. 130. Saran VisitGarut: cocokkan alamat dan nama tipe kamar sebelum menyelesaikan pemesanan.",
+          "source_url": "https://bookingku.bookandlink.com/booking-page.php?id=tirtagangga-hot-spring-resort",
+          "publisher": "Tirtagangga Hot Spring Resort",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi pengelola bersifat promosi; ketersediaan fasilitas perlu dikonfirmasi.",
+          "status": "approved"
+        }
+      ]
+    }
+  ],
+  "existing_place_research": [
+    {
+      "slug": "gunung-papandayan",
+      "research": [
+        {
+          "topic": "aktivitas",
+          "title": "TWA Papandayan dalam agenda pengembangan",
+          "summary": "Pemkab melaporkan pembahasan pengembangan TWA Papandayan bersama PT Asri Indah Lestari pada Juli 2026. Informasi ini menjadi konteks pengelolaan, bukan daftar fasilitas yang sudah selesai dibangun.",
+          "source_url": "https://www.garutkab.go.id/berita/bupati-garut-bahas-pengembangan-twa-papandayan-bersama-pt-asri-indah-lestari",
+          "publisher": "Pemerintah Kabupaten Garut",
+          "source_kind": "authority",
+          "source_published_at": "2026-07-29",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi mengikuti konteks sumber. Tanggal pemeriksaan adalah pemeriksaan sumber daring, bukan kunjungan lapangan.",
+          "status": "approved"
+        },
+        {
+          "topic": "akses",
+          "title": "Rencanakan kunjungan sesuai layanan terbaru",
+          "summary": "Saran VisitGarut berdasarkan konteks pengembangan kawasan: konfirmasikan aturan kunjungan, jalur yang dibuka, tiket, dan kebutuhan bermalam langsung kepada pengelola sebelum berangkat.",
+          "source_url": "https://www.garutkab.go.id/berita/bupati-garut-bahas-pengembangan-twa-papandayan-bersama-pt-asri-indah-lestari",
+          "publisher": "Pemerintah Kabupaten Garut",
+          "source_kind": "authority",
+          "source_published_at": "2026-07-29",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi mengikuti konteks sumber. Tanggal pemeriksaan adalah pemeriksaan sumber daring, bukan kunjungan lapangan.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "situ-bagendit",
+      "research": [
+        {
+          "topic": "aktivitas",
+          "title": "Danau, rakit, dan kegiatan rekreasi",
+          "summary": "Panduan Indonesia.travel menyebut rekreasi danau, rakit, sepeda air, serta area bermain. Saran VisitGarut: periksa wahana yang sedang beroperasi dan ketentuan penggunaannya saat datang.",
+          "source_url": "https://www.indonesia.travel/id/id/travel-ideas/adventure/situ-bagendit",
+          "publisher": "Indonesia.travel Kementerian Pariwisata",
+          "source_kind": "authority",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi mengikuti konteks sumber. Tanggal pemeriksaan adalah pemeriksaan sumber daring, bukan kunjungan lapangan.",
+          "status": "approved"
+        },
+        {
+          "topic": "harga",
+          "title": "Bedakan tiket kawasan dan aktivitas",
+          "summary": "Panduan membedakan tiket masuk kawasan dari beberapa area dan sewa aktivitas. Saran VisitGarut: tanyakan total biaya sesuai rencana kunjungan, termasuk parkir dan sewa, pada kanal resmi.",
+          "source_url": "https://www.indonesia.travel/id/id/travel-ideas/adventure/situ-bagendit",
+          "publisher": "Indonesia.travel Kementerian Pariwisata",
+          "source_kind": "authority",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi mengikuti konteks sumber. Tanggal pemeriksaan adalah pemeriksaan sumber daring, bukan kunjungan lapangan.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "talaga-bodas",
+      "research": [
+        {
+          "topic": "pemandangan",
+          "title": "Danau vulkanik dan pemandian terpisah",
+          "summary": "Rilis Januari 2026 menggambarkan danau vulkanik berwarna putih serta fasilitas berendam. Saran VisitGarut: tanyakan area yang boleh dikunjungi; jangan menyamakan kawasan danau dengan lokasi pemandian.",
+          "source_url": "https://www.garutkab.go.id/berita/pantau-twa-talaga-bodas-bupati-garut-ajak-wisatawan-nikmati-keindahan-danau-putih-dan-khasiat-air-belerang",
+          "publisher": "Pemerintah Kabupaten Garut",
+          "source_kind": "authority",
+          "source_published_at": "2026-01-05",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi mengikuti konteks sumber. Tanggal pemeriksaan adalah pemeriksaan sumber daring, bukan kunjungan lapangan.",
+          "status": "approved"
+        },
+        {
+          "topic": "akses",
+          "title": "Konfirmasi jalan menuju kawasan",
+          "summary": "Rilis memuat harapan perbaikan jalan menuju Talaga Bodas. Saran VisitGarut: tanyakan kondisi jalan dan pilihan transportasi terakhir sebelum berangkat; harapan dalam berita tidak membuktikan proyek telah selesai.",
+          "source_url": "https://www.garutkab.go.id/berita/pantau-twa-talaga-bodas-bupati-garut-ajak-wisatawan-nikmati-keindahan-danau-putih-dan-khasiat-air-belerang",
+          "publisher": "Pemerintah Kabupaten Garut",
+          "source_kind": "authority",
+          "source_published_at": "2026-01-05",
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi mengikuti konteks sumber. Tanggal pemeriksaan adalah pemeriksaan sumber daring, bukan kunjungan lapangan.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "kampung-sampireun",
+      "research": [
+        {
+          "topic": "fasilitas",
+          "title": "Pilihan bungalow dan aktivitas resor",
+          "summary": "Situs pengelola menjelaskan bungalow, danau, restoran, kolam renang, spa, serta paket aktivitas. Saran VisitGarut: pilih tipe kamar dan paket sesuai jumlah tamu serta kebutuhan kunjungan.",
+          "source_url": "https://kampungsampireun.com/",
+          "publisher": "Kampung Sampireun Resort & Spa",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi mengikuti konteks sumber. Tanggal pemeriksaan adalah pemeriksaan sumber daring, bukan kunjungan lapangan.",
+          "status": "approved"
+        },
+        {
+          "topic": "harga",
+          "title": "Paket kamar mempunyai manfaat berbeda",
+          "summary": "Situs membedakan penawaran Room Only dan Room Breakfast. Saran VisitGarut: periksa sarapan, kegiatan, tambahan tamu, dan pembatalan pada tarif yang dipilih sebelum membayar.",
+          "source_url": "https://kampungsampireun.com/",
+          "publisher": "Kampung Sampireun Resort & Spa",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi mengikuti konteks sumber. Tanggal pemeriksaan adalah pemeriksaan sumber daring, bukan kunjungan lapangan.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "bale-tingtrim-resto",
+      "research": [
+        {
+          "topic": "aktivitas",
+          "title": "Menu dan kegiatan di restoran",
+          "summary": "Situs pengelola menampilkan menu khas Sunda, menu Nusantara, serta layanan pertemuan dan acara. Saran VisitGarut: cek menu dan jenis layanan yang tersedia untuk kunjunganmu.",
+          "source_url": "https://www.baletingtrimresto.com/",
+          "publisher": "Bale Tingtrim Resto",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi mengikuti konteks sumber. Tanggal pemeriksaan adalah pemeriksaan sumber daring, bukan kunjungan lapangan.",
+          "status": "approved"
+        },
+        {
+          "topic": "pelayanan",
+          "title": "Reservasi untuk kebutuhan rombongan",
+          "summary": "Pengelola menyediakan kanal reservasi dan informasi gathering serta layanan acara. Saran VisitGarut: konfirmasikan kapasitas, waktu kedatangan, menu, dan kebutuhan rombongan sebelum datang.",
+          "source_url": "https://www.baletingtrimresto.com/",
+          "publisher": "Bale Tingtrim Resto",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi mengikuti konteks sumber. Tanggal pemeriksaan adalah pemeriksaan sumber daring, bukan kunjungan lapangan.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "qq-cafe-garut",
+      "research": [
+        {
+          "topic": "akses",
+          "title": "Alamat yang tercantum pada kanal kafe",
+          "summary": "Linktree QQ Cafe Garut mencantumkan Jalan Cipanas Baru No. 48 serta kawasan Pananjung, Tarogong Kaler. Saran VisitGarut: gunakan alamat itu dan periksa rute sebelum datang.",
+          "source_url": "https://linktr.ee/qqcafegarut",
+          "publisher": "QQ Cafe Garut",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi mengikuti konteks sumber. Tanggal pemeriksaan adalah pemeriksaan sumber daring, bukan kunjungan lapangan.",
+          "status": "approved"
+        },
+        {
+          "topic": "harga",
+          "title": "Telusuri menu melalui kanal kafe",
+          "summary": "Kanal Linktree menautkan menu kafe dan akun Instagram. Saran VisitGarut: buka menu melalui tautan pengelola dan konfirmasikan harga, stok, serta jam layanan terkini sebelum berkunjung.",
+          "source_url": "https://linktr.ee/qqcafegarut",
+          "publisher": "QQ Cafe Garut",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-07T02:22:13Z",
+          "limitations": "Informasi mengikuti konteks sumber. Tanggal pemeriksaan adalah pemeriksaan sumber daring, bukan kunjungan lapangan.",
+          "status": "approved"
+        }
+      ]
+    }
+  ],
+  "social_contents": [
+    {
+      "slug": "gunung-papandayan",
+      "platform": "youtube",
+      "source_url": "https://www.youtube.com/watch?v=pchsLOsOlD4",
+      "source_post_id": "pchsLOsOlD4",
+      "title": "Perjalanan mendaki Papandayan: konteks video pengunjung",
+      "creator": ""
+    },
+    {
+      "slug": "pantai-sayang-heulang",
+      "platform": "youtube",
+      "source_url": "https://www.youtube.com/watch?v=-3w7yswekjM",
+      "source_post_id": "-3w7yswekjM",
+      "title": "Melihat kawasan Pantai Sayang Heulang melalui video",
+      "creator": ""
+    }
+  ]
+}
