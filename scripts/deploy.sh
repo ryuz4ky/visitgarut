@@ -4,6 +4,7 @@ cd /home/visitgar/public_html
 VG_REVISION=$(git rev-parse HEAD)
 export PATH="/home/visitgar/.local/share/mise/installs/node/24.21.0/bin:$PATH"
 export NEXT_TELEMETRY_DISABLED=1
+export NODE_OPTIONS="--max-old-space-size=384"
 npm ci --no-audit --no-fund
 npm run build
 cp -r public .next/standalone/
