@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Mountain,MapPin,Search,ArrowUpRight,BedDouble,Utensils,Coffee,Car,Compass } from 'lucide-react'
+import { Mountain,MapPin,Search,ArrowUpRight,BedDouble,Utensils,Coffee,Car,Bike,Compass } from 'lucide-react'
 import { categories,type Place,type Article } from '@/lib/mvp/data'
 import { categoryHref, type DirectoryFilters } from '@/lib/mvp/categories'
 import { absoluteUrl } from '@/lib/site'
@@ -10,7 +10,7 @@ export function CategoryNav({active='',...filters}:{active?:string}&DirectoryFil
 export function SearchForm({query='',category='',district=''}:{query?:string;category?:string;district?:string}){return <form className="vg-search" action="/search"><Search size={22}/><label className="sr-only" htmlFor="search-query">Cari nama tempat, layanan, atau daerah</label><input id="search-query" name="q" defaultValue={query} placeholder={category==='transportasi'?'Cari rental mobil, motor, atau penyedia…':'Cari tempat, rental, atau daerah…'} maxLength={120}/>{category&&<input type="hidden" name="category" value={category}/>}{district&&<input type="hidden" name="district" value={district}/>}<button type="submit">Cari</button></form>}
 export function PlaceCard({place}:{place:Place}) {
   const cat=categories.find(c=>c.slug===place.category)
-  const Icon=({wisata:Mountain,hotel:BedDouble,kuliner:Utensils,cafe:Coffee,transportasi:Car,'paket-wisata':Compass})[place.category]||MapPin
+  const Icon=place.category==='transportasi'&&/\bmotor\b/i.test(place.name)?Bike:({wisata:Mountain,hotel:BedDouble,kuliner:Utensils,cafe:Coffee,transportasi:Car,'paket-wisata':Compass})[place.category]||MapPin
   const rental=place.category==='transportasi'
   return <Link className={`vg-card${rental&&!place.image_url?' vg-card-service':''}`} href={`/${place.category}/${place.slug}`}>
     <div className={`vg-card-image cat-${place.category}`}>

@@ -3,7 +3,7 @@ export const categories = [
   { slug: 'hotel', name: 'Hotel', shortName: 'Hotel', icon: 'BedDouble', unit: 'tempat', description: 'Temukan penginapan untuk perjalananmu.' },
   { slug: 'kuliner', name: 'Kuliner', shortName: 'Kuliner', icon: 'Utensils', unit: 'tempat', description: 'Jelajahi tempat makan dan cita rasa lokal Garut.' },
   { slug: 'cafe', name: 'Cafe', shortName: 'Cafe', icon: 'Coffee', unit: 'tempat', description: 'Cari tempat untuk ngopi dan beristirahat.' },
-  { slug: 'transportasi', name: 'Rental kendaraan', shortName: 'Rental', icon: 'Car', unit: 'penyedia', description: 'Cari rental mobil, motor, dan kendaraan rombongan. Baca layanan dan sumbernya, lalu konfirmasi langsung kepada penyedia.' },
+  { slug: 'transportasi', name: 'Rental kendaraan', shortName: 'Rental', icon: 'Car', unit: 'penyedia', description: 'Rental mobil, motor, dan kendaraan rombongan di Garut. Hubungi penyedia untuk tarif dan ketersediaan.' },
   { slug: 'paket-wisata', name: 'Paket wisata', shortName: 'Paket wisata', icon: 'Compass', unit: 'pilihan', description: 'Pilihan perjalanan bersama penyedia lokal.' },
 ]
 
