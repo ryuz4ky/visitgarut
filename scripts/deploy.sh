@@ -15,4 +15,17 @@ if [ -f /home/visitgar/.visitgarut.pid ]; then
   rm /home/visitgar/.visitgarut.pid
 fi
 node scripts/daemon.cjs
+node - <<'NODE'
+(async () => {
+  for (let attempt = 0; attempt < 30; attempt++) {
+    try {
+      const response = await fetch('http://127.0.0.1:3187/api/health');
+      if (response.ok && (await response.json()).database === 'connected') return;
+    } catch {}
+    await new Promise(resolve => setTimeout(resolve, 500));
+  }
+  console.error('Application did not become healthy after restart');
+  process.exitCode = 1;
+})();
+NODE
 printf '%s\n' "$VG_REVISION" > /home/visitgar/.visitgarut-deployed-sha
