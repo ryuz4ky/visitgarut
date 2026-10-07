@@ -1,0 +1,4 @@
+---
+deployment:
+  tasks:
+    - /bin/bash /home/visitgar/public_html/scripts/deploy.sh

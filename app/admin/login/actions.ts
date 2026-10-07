@@ -1,0 +1,6 @@
+'use server'
+import { redirect } from 'next/navigation'
+import { db } from '@/lib/mvp/db'
+import { hashPassword,verifyPassword,tokenMatches,startSession,allowLogin } from '@/lib/mvp/auth'
+export async function login(form:FormData){const password=String(form.get('password')||'');if(password.length>200)redirect('/admin/login?error=invalid');if(!await allowLogin('admin'))redirect('/admin/login?error=limit');const row=(await db().query('SELECT password_hash FROM vg_admin WHERE id=1')).rows[0];if(!row||!verifyPassword(password,row.password_hash))redirect('/admin/login?error=invalid');await startSession(row.password_hash);redirect('/admin')}
+export async function setup(form:FormData){const token=String(form.get('token')||'');const password=String(form.get('password')||'');if(!process.env.ADMIN_SETUP_TOKEN||!tokenMatches(token,process.env.ADMIN_SETUP_TOKEN))redirect('/admin/login?error=invalid');if(password.length<12||password.length>200)redirect('/admin/login?error=password');const hash=hashPassword(password);const result=await db().query('INSERT INTO vg_admin(id,password_hash) VALUES(1,$1) ON CONFLICT(id) DO NOTHING RETURNING id',[hash]);if(!result.rowCount)redirect('/admin/login');await startSession(hash);redirect('/admin')}

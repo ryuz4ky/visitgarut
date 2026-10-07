@@ -1,4 +1,4 @@
-const fallbackSiteUrl = 'https://visitgarut.sorotnamedia.com'
+const fallbackSiteUrl = 'https://visitgarut.com'
 
 export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || fallbackSiteUrl).replace(/\/$/, '')
 

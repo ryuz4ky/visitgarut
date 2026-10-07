@@ -1,0 +1,8 @@
+import { Shell } from '@/components/mvp/Shell'
+import { db } from '@/lib/mvp/db'
+import { isAdmin,tokenMatches } from '@/lib/mvp/auth'
+import { redirect } from 'next/navigation'
+import { login,setup } from './actions'
+export const dynamic='force-dynamic'
+export const metadata={title:'Masuk Admin',robots:{index:false,follow:false}}
+export default async function Login({searchParams}:{searchParams:Promise<Record<string,string|undefined>>}){if(await isAdmin())redirect('/admin');const p=await searchParams;const exists=Boolean((await db().query('SELECT id FROM vg_admin WHERE id=1')).rowCount);const canSetup=!exists&&Boolean(p.setup&&process.env.ADMIN_SETUP_TOKEN&&tokenMatches(p.setup,process.env.ADMIN_SETUP_TOKEN));return <Shell><section className="vg-wrap vg-section"><div className="vg-login"><span className="vg-eyebrow">KELOLA VISITGARUT</span><h1>{canSetup?'Buat password admin':'Masuk admin'}</h1>{p.error&&<p className="vg-alert" role="alert">{p.error==='limit'?'Terlalu banyak percobaan. Coba lagi dalam 15 menit.':p.error==='password'?'Password minimal 12 karakter.':'Password atau akses tidak valid.'}</p>}{!exists&&!canSetup?<p>Gunakan tautan aktivasi yang diberikan untuk membuat password admin pertama.</p>:<form action={canSetup?setup:login}>{canSetup&&<input type="hidden" name="token" value={p.setup}/>}<label>Password<input name="password" type="password" required minLength={canSetup?12:1} maxLength={200} autoComplete={canSetup?'new-password':'current-password'}/></label>{canSetup&&<p>Gunakan password minimal 12 karakter dan simpan di tempat aman.</p>}<button className="vg-button" type="submit">{canSetup?'Aktifkan admin':'Masuk'}</button></form>}</div></section></Shell>}
