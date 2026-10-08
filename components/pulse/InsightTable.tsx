@@ -16,6 +16,7 @@ export default function InsightTable({pulse,placeId,rental=false,hasSources=fals
  const [selectedTopic,setSelectedTopic]=useState<Topic|null>(null)
  const [sentiment,setSentiment]=useState(''),[platform,setPlatform]=useState(''),[sort,setSort]=useState('newest')
  const dialog=useRef<HTMLDialogElement>(null),trigger=useRef<HTMLButtonElement|null>(null)
+ const lastExternalToken=useRef<number|null>(null)
  const main=rental?rentalPriority:priority
  const rows=pulse.topicStatuses.filter(s=>main.includes(s.topic)||(s.count??0)>0||pulse.insights.some(i=>i.topic===s.topic))
   .sort((a,b)=>Number(a.missing!==null)-Number(b.missing!==null)||(b.count??0)-(a.count??0)||(main.indexOf(a.topic)<0?99:main.indexOf(a.topic))-(main.indexOf(b.topic)<0?99:main.indexOf(b.topic)))
@@ -30,7 +31,8 @@ export default function InsightTable({pulse,placeId,rental=false,hasSources=fals
  // Globe requests open the existing evidence dialog, preserving filters, source
  // rights, sensitive-topic withholding and keyboard focus-return behavior.
  useEffect(()=>{
-  if(!openRequest)return
+  if(!openRequest||lastExternalToken.current===openRequest.token)return
+  lastExternalToken.current=openRequest.token
   const status=pulse.topicStatuses.find(s=>s.topic===openRequest.topic)
   if(!status||status.missing!==null||!pulse.insights.some(i=>i.topic===status.topic))return
   trigger.current=openRequest.trigger
