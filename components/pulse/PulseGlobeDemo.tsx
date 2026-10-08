@@ -1,5 +1,6 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
+import EvidencePanel, { type EvidenceOpenRequest } from './EvidencePanel'
 import PulseGlobe from '@/components/pulse/PulseGlobe'
 import type { Pulse, Topic, Insight, Evidence, TopicStatus } from '@/lib/pulse/core'
 
@@ -31,10 +32,20 @@ const topicStatuses: TopicStatus[]=insights.map(i=>({
   topic:i.topic,label:i.label,count:i.count,confidence:i.confidence,
   sensitive:false,evidenceIds:i.evidenceIds,missing:null,
 }))
+const channels = ['youtube','instagram','tiktok','threads','x','visitgarut'] as const
+const sampleTexts = [
+ 'SIMULASI — View dari atasnya bagus sekali, banyak spot untuk foto.',
+ 'SIMULASI — Jalan menuju lokasi agak menanjak, siapkan kendaraan.',
+ 'SIMULASI — Suasananya sejuk dan nyaman untuk bersantai.',
+ 'SIMULASI — Fasilitasnya lumayan, tetapi masih bisa diperbaiki.',
+ 'SIMULASI — Kalau ramai lebih baik datang lebih pagi.',
+ 'SIMULASI — Pemandangannya benar-benar menarik saat cuaca cerah.',
+]
 const evidence: Evidence[]=insights.flatMap(i=>i.evidenceIds.map(id=>({
-  id,platform:'visitgarut' as const, original_text:'CONTOH SAJA: bukti simulasi, bukan komentar pengunjung asli.',
-  display_name:'Data Demo',source_url:'',published_at:'2026-10-08T12:00:00+07:00',
-  experience_date:null,sentiment:'mixed' as const,engagement_count:0,
+  id,platform:channels[id % channels.length],original_text:sampleTexts[id % sampleTexts.length],
+  display_name:'Akun demo '+id,source_url:'',
+  published_at:'2026-10-08T12:00:00+07:00',experience_date:null,
+  sentiment:'mixed' as const,engagement_count:0,
   topics:[{topic:i.topic,sentiment:'mixed' as const}],ratings:[],
 })))
 const pulse: Pulse={
@@ -43,24 +54,24 @@ const pulse: Pulse={
 }
 
 export default function PulseGlobeDemo(){
-  const [selected,setSelected]=useState<Topic|null>(null)
-  const dialog=useRef<HTMLDialogElement>(null),trigger=useRef<HTMLButtonElement|null>(null)
-  const item=insights.find(i=>i.topic===selected)
+  const [request,setRequest]=useState<EvidenceOpenRequest|null>(null)
+  const [open,setOpen]=useState(false)
+  function openEvidence(topic:Topic|null,trigger:HTMLButtonElement,evidenceId?:number){
+    setOpen(true)
+    setRequest(previous=>({token:(previous?.token||0)+1,topic,trigger,evidenceId}))
+  }
   return <>
     <div role="note" className="vg-alert" style={{marginBottom:20}}>
       <strong>DEMO VISUAL — DATA FIKTIF</strong>
-      <p>Semua topik, angka, dan kecenderungan pada halaman ini dibuat khusus untuk menguji desain. Bukan analisis tempat wisata nyata.</p>
+      <p>Semua topik, akun, komentar, sumber, dan angka pada halaman ini simulasi UI. Tidak mencerminkan pengunjung wisata sebenarnya.</p>
     </div>
-    <PulseGlobe pulse={pulse} onOpenTopic={(topic,button)=>{
-      trigger.current=button;setSelected(topic);if(!dialog.current?.open)dialog.current?.showModal()
-    }}/>
-    <dialog className="pulse-dialog" ref={dialog} aria-labelledby="pulse-demo-dialog-title"
-      onClose={()=>{setSelected(null);trigger.current?.focus()}}>
-      <header><div><span className="vg-eyebrow">PREVIEW INTERAKSI — SIMULASI</span>
-        <h2 id="pulse-demo-dialog-title">{item?.label||'Topik contoh'}</h2></div>
-        <button type="button" aria-label="Tutup dialog" onClick={()=>dialog.current?.close()}>✕</button></header>
-      {item&&<><p>{item.summary}</p><p>{item.count} kontributor ilustratif. Detail bukti asli sengaja tidak ditampilkan pada demo ini.</p>
-        <p>Di halaman destinasi asli, panel ini menggunakan dialog evidence Community Pulse yang sama dengan tabel insight.</p></>}
-    </dialog>
+    <PulseGlobe pulse={pulse} onOpenEvidence={openEvidence} dialogOpen={open}/>
+    <div className="pulse-all-evidence-cta">
+      <p>Globe hanya menampilkan sejumlah cuplikan. Seluruh komentar dalam dataset demo dapat dibaca melalui panel yang sama.</p>
+      <button className="vg-button" type="button" onClick={e=>openEvidence(null,e.currentTarget)}>
+        Lihat semua {pulse.evidence.length} komentar simulasi
+      </button>
+    </div>
+    <EvidencePanel pulse={pulse} placeId={999999} request={request} onDismiss={()=>setOpen(false)}/>
   </>
 }
