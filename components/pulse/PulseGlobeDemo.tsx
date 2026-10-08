@@ -72,6 +72,6 @@ export default function PulseGlobeDemo(){
         Lihat semua {pulse.evidence.length} komentar simulasi
       </button>
     </div>
-    <EvidencePanel pulse={pulse} placeId={999999} request={request} onDismiss={()=>setOpen(false)}/>
+    <EvidencePanel demo pulse={pulse} placeId={999999} request={request} onDismiss={()=>setOpen(false)}/>
   </>
 }
