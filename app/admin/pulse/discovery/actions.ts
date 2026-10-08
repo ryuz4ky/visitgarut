@@ -34,13 +34,13 @@ export async function reviewDiscovery(formData:FormData){
  const row=(await db().query(`SELECT d.*,p.name AS place_name FROM vg_discovery_sources d JOIN vg_places p ON p.id=d.place_id WHERE d.id=$1`,[id])).rows[0]
  if(!row)redirect('/admin/pulse/discovery?error=missing')
  if(decision==='reject'){
-  await db().query("UPDATE vg_discovery_sources SET status='rejected',reviewed_at=now() WHERE id=$1",[id])
+  await db().query("UPDATE vg_discovery_sources SET status='rejected',source_snippet='',reviewed_at=now() WHERE id=$1",[id])
  }else if(decision==='approve'){
   const platform=row.platform as Platform;let normalized
   try{normalized=normalizeSocialUrl(row.source_url,platform)}catch{redirect(`/admin/pulse/discovery?place=${row.place_id}&error=url`)}
   const title=(row.source_title||`${row.place_name} di ${platform}`).slice(0,200)
   const content=(await db().query(`INSERT INTO vg_social_contents(place_id,platform,source_url,source_post_id,title,creator,status,reviewed_at) VALUES($1,$2,$3,$4,$5,'','approved',now()) ON CONFLICT(place_id,source_url) DO UPDATE SET title=EXCLUDED.title,status='approved',reviewed_at=now() RETURNING id`,[row.place_id,platform,normalized.url,normalized.id,title])).rows[0]
-  await db().query("UPDATE vg_discovery_sources SET status='approved',content_id=$2,reviewed_at=now() WHERE id=$1",[id,content.id])
+  await db().query("UPDATE vg_discovery_sources SET status='approved',content_id=$2,source_snippet='',reviewed_at=now() WHERE id=$1",[id,content.id])
  }else redirect(`/admin/pulse/discovery?place=${row.place_id}&error=decision`)
  revalidatePath('/admin/pulse/discovery');revalidatePath('/admin/pulse');revalidatePath('/','layout')
  redirect(`/admin/pulse/discovery?place=${row.place_id}&saved=1`)
