@@ -126,7 +126,6 @@ export default function PulseGlobe({
   }, [nodes, max])
 
   function select(node: GlobeNode, button: HTMLButtonElement) {
-    if (suppressClick.current) { suppressClick.current = false; return }
     setActive(node.topic)
     setPaused(true)
     motion.current.velocityYaw = 0
