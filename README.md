@@ -73,7 +73,7 @@ The experimental Pulse Globe is implemented behind a **server-side** feature fla
 - Sphere topic nodes and SSR-readable insight summaries derive **only** from `calculatePulse(...).insights` after eligibility and source-threshold checks.
 - Topic buttons open the existing `InsightTable` evidence dialog with its moderation and source-link controls, and support keyboard/focus return.
 - There are no generated/quoted micro-comments, no unpublished sensitive node, and no synthetic sentiment percentages.
-- Motion can be paused and automatically respects `prefers-reduced-motion`.
+- Geometry-driven globe reacts to mouse positioning, click-drag and mobile touch-drag, with gentle inertial return and idle rotation. Most-discussed eligible topic is highlighted. Motion can be paused, respects `prefers-reduced-motion`, and stops work when off-screen.
 - Run `npm run test:globe` plus the current Pulse and build tests before enabling this feature.
 
 The planning and rollout gate are tracked in `docs/VISITGARUT_2_REALIGNMENT.md` and GitHub issue #18. Do not enable on production without browser QA, backup verification, and review.
