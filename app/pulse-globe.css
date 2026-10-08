@@ -21,6 +21,7 @@
 .pulse-globe-node[data-sentiment="negative"]{background:#a04547e8;border-color:#fac2a4}
 .pulse-globe-node[data-sentiment="neutral"]{background:#285d91ed;border-color:#a1d0fb}
 .pulse-globe-node[data-sentiment="mixed"]{background:#86643aeb;border-color:#f8dca9}
+.pulse-globe-node[data-dominant="true"]{border-color:#5df2c1;box-shadow:0 0 34px #32d69b9e,inset 0 0 14px #36d09f33;font-weight:700}
 .pulse-globe-node:hover,.pulse-globe-node:focus-visible,.pulse-globe-node[data-active="true"]{z-index:5;outline:2px solid #e6fffd;outline-offset:3px;box-shadow:0 0 25px #77f5cf91}
 .pulse-globe-stage[data-paused="true"] .pulse-globe-sphere,.pulse-globe-stage:hover .pulse-globe-sphere,.pulse-globe-stage:focus-within .pulse-globe-sphere{animation-play-state:paused}
 .pulse-globe-empty{position:absolute;inset:25%;display:flex;flex-direction:column;justify-content:center;text-align:center;z-index:2;font-size:1rem}
