@@ -49,3 +49,11 @@ Checks: `npm run test:pulse`, `npm run test:pulse-activation`, `npm run test:you
 ### Community Pulse insight table
 
 Place pages show a three-column insight table before curated videos: topic, distinct reviewed contributors, and confidence. Every topic opens its evidence panel, even when the sample is empty. Ordinary topics remain insufficient below three independent contributors. Sensitive report counts and texts stay withheld until six identities, two content sources, and complete review checks are satisfied. Traffic and unofficial-ticket reports have separate moderation topics in migration 007. Existing YouTube original comments remain separate from derived metrics until the required approval is configured.
+
+### Public source discovery
+
+`/admin/pulse/discovery` discovers candidate public Instagram, TikTok, Threads and X post/video URLs through public search-result HTML. Discovery metadata is moderator-only: titles/snippets are never treated as visitor evidence or sentiment. Every candidate must be opened at its original URL and explicitly approved before it becomes `vg_social_contents`; it still does not become `vg_social_mentions` automatically.
+
+The default search endpoint is DuckDuckGo HTML and can be replaced with `PUBLIC_SEARCH_HTML_ENDPOINT`. The collector does not bypass login, CAPTCHA, anti-bot controls, private content, or platform access controls. Runs are capped at five per place per Jakarta day, twelve queries per run and sixty unique candidates. Migration `db/008-public-discovery.sql` creates the queue and is applied by `scripts/pulse-migrate.cjs` during staged deploy.
+
+Check the parser/query logic with `npm run test:discovery` in addition to the existing Pulse tests.
