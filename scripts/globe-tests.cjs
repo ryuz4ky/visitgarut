@@ -140,10 +140,12 @@ check('All comments panel includes every public record, not just 12 globe nodes'
  assert.ok(buildGlobeCommentBubbles(p).length<=18)
  assert.equal(filterPublicEvidence(evidenceForTopic(p,'pemandangan'),'pemandangan',{platform:'',sentiment:'',sort:'newest'}).length,55)
 })
-check('Selected topic returns only public approved evidence IDs and no withheld sensitive records',()=>{
+check('Topic lists all public comments including repeated contributors; sensitive topics remain withheld',()=>{
  const p=pulse([mk('akses',{count:3,evidenceIds:[1,2,3]})])
- p.evidence=[{id:1},{id:2},{id:3},{id:44}]
+ p.evidence=[1,2,3,44].map(id=>({id,topics:[{topic:id===44?'pemandangan':'akses',sentiment:'positive'}]}))
  assert.deepEqual(evidenceForTopic(p,'akses').map(e=>e.id),[1,2,3])
+ p.evidence.push({id:55,topics:[{topic:'akses',sentiment:'negative'}]})
+ assert.deepEqual(evidenceForTopic(p,'akses').map(e=>e.id),[1,2,3,55])
  p.topicStatuses[0].sensitive=true;p.topicStatuses[0].missing='verification'
  assert.deepEqual(evidenceForTopic(p,'akses'),[])
 })
