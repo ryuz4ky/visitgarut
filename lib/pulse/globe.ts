@@ -36,11 +36,20 @@ export function globePosition(index: number, total: number) {
 }
 
 export function buildGlobeNodes(pulse: Pulse, limit = 10): GlobeNode[] {
-  // 'insights' already enforces independent contributors, consent, sensitivity,
-  // rights and source thresholds in calculatePulse. Never use topicStatuses
-  // directly: they can include withheld topics or insufficient samples.
+  // The existing engine handles moderation and independent source thresholds.
+  // Cross-check publishable TopicStatus and public Evidence as an extra guard:
+  // the insight may contain counts/IDs from a withheld sensitive contribution.
+  const publiclyVisible = new Set(pulse.evidence.map(e => e.id))
   const allowed = pulse.insights
-    .filter(i => i.count >= (i.sensitive ? 6 : 3) && i.evidenceIds.length > 0)
+    .filter(i => {
+      if (i.count < (i.sensitive ? 6 : 3)) return false
+      const status = pulse.topicStatuses.find(s => s.topic === i.topic)
+      if (!status || status.missing !== null || status.count !== i.count) return false
+      if (status.evidenceIds.length !== i.count) return false
+      const ids = new Set(status.evidenceIds)
+      return i.evidenceIds.length === i.count &&
+        i.evidenceIds.every(id => ids.has(id) && publiclyVisible.has(id))
+    })
     .slice(0, Math.min(12, Math.max(0, limit)))
   return allowed.map((item, index) => ({
     topic: item.topic,
