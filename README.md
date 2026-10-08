@@ -65,3 +65,15 @@ Check the parser/query logic with `npm run test:discovery` in addition to the ex
 Community Pulse now opens its research table when no eligible visitor contributions exist. The table groups attributed editorial notes by topic and counts distinct source URLs; it never turns those sources into visitor identities or sentiment. Users can switch to the visitor evidence table and open either type of evidence independently. The existing discovery feature remains intact.
 
 `data/researched-insights-2026-10-08.json` adds 20 source-checked notes for five existing places. Import with `node scripts/seed-research.cjs data/researched-insights-2026-10-08.json` after setting `DATABASE_URL`. Existing entries and withdrawals are preserved. Check the import and distinct-source counts with `npm run test:research-insights`.
+
+### VisitGarut 2.0 Pulse Globe (development only)
+
+The experimental Pulse Globe is implemented behind a **server-side** feature flag: `PULSE_GLOBE_ENABLED=true` in the server process environment. It is **disabled by default**. No changes to the database schema or Community Pulse moderation rules are needed for this first version.
+
+- Sphere topic nodes and SSR-readable insight summaries derive **only** from `calculatePulse(...).insights` after eligibility and source-threshold checks.
+- Topic buttons open the existing `InsightTable` evidence dialog with its moderation and source-link controls, and support keyboard/focus return.
+- There are no generated/quoted micro-comments, no unpublished sensitive node, and no synthetic sentiment percentages.
+- Motion can be paused and automatically respects `prefers-reduced-motion`.
+- Run `npm run test:globe` plus the current Pulse and build tests before enabling this feature.
+
+The planning and rollout gate are tracked in `docs/VISITGARUT_2_REALIGNMENT.md` and GitHub issue #18. Do not enable on production without browser QA, backup verification, and review.
