@@ -1,7 +1,7 @@
 'use client'
 import { useState,useTransition } from 'react'
 import Link from 'next/link'
-import { platforms,type Pulse } from '@/lib/pulse/core'
+import { platforms,type Pulse,type Topic } from '@/lib/pulse/core'
 import { loadYoutubePulse } from '@/lib/pulse/public-actions'
 import { ContributionForm,ReportForm } from './ContributionForm'
 import PlaceResearch from './ResearchEvidence'
@@ -9,19 +9,27 @@ import SocialMedia from './SocialMedia'
 import DimensionRatings from './DimensionRatings'
 import InsightTable from './InsightTable'
 import ResearchInsightTable from './ResearchInsightTable'
+import PulseGlobe from './PulseGlobe'
+import type { InsightOpenRequest } from './InsightTable'
 import type { SocialContent } from '@/lib/pulse/data'
 import type { ResearchEvidence } from '@/lib/pulse/research'
 const date=(v:string)=>new Date(v).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Jakarta'})
 
-export default function CommunityPulse({pulse:initial,placeId,research=[],contents=[],youtubeAvailable=false,rental=false}:{pulse:Pulse;placeId:number;research?:ResearchEvidence[];contents?:SocialContent[];youtubeAvailable?:boolean;rental?:boolean}){
+export default function CommunityPulse({pulse:initial,placeId,research=[],contents=[],youtubeAvailable=false,rental=false,globeEnabled=false}:{pulse:Pulse;placeId:number;research?:ResearchEvidence[];contents?:SocialContent[];youtubeAvailable?:boolean;rental?:boolean;globeEnabled?:boolean}){
  const [pulse,setPulse]=useState(initial),[consent,setConsent]=useState(false),[loaded,setLoaded]=useState(false)
  const [view,setView]=useState<'research'|'visitors'>(research.length&&initial.classified===0?'research':'visitors')
  const [pending,startTransition]=useTransition(),[error,setError]=useState('')
+ const [openRequest,setOpenRequest]=useState<InsightOpenRequest|null>(null)
+ function openGlobeTopic(topic:Topic,trigger:HTMLButtonElement){
+   setView('visitors')
+   setOpenRequest(previous=>({topic,trigger,token:(previous?.token||0)+1}))
+ }
  return <section id="community-pulse" className="pulse-section">
   <div className="vg-section-heading"><div><span className="vg-eyebrow">PENGALAMAN YANG BISA DITELUSURI</span><h2>Community Pulse</h2></div><Link href="/community-pulse/metode">Cara membaca bukti</Link></div>
   <p>{rental?'Periksa topik pengalaman pelanggan dan bukti di baliknya sebelum memilih penyedia rental.':'Periksa topik pengalaman pengunjung dan bukti di baliknya sebelum merencanakan kunjungan.'}</p>
+  {globeEnabled&&<PulseGlobe pulse={pulse} onOpenTopic={openGlobeTopic}/>}
   <div className="pulse-view-choice" role="group" aria-label="Jenis informasi Community Pulse"><button type="button" aria-pressed={view==='research'} onClick={()=>setView('research')}>Riset tempat <span>{research.length} catatan</span></button><button type="button" aria-pressed={view==='visitors'} onClick={()=>setView('visitors')}>Pengalaman {rental?'pelanggan':'pengunjung'} <span>{pulse.classified} dalam sampel</span></button></div>
-  {view==='research'?<ResearchInsightTable items={research} placeId={placeId}/>:<InsightTable pulse={pulse} placeId={placeId} rental={rental} hasSources={contents.length>0}/>}
+  {view==='research'?<ResearchInsightTable items={research} placeId={placeId}/>:<InsightTable pulse={pulse} placeId={placeId} rental={rental} hasSources={contents.length>0} openRequest={openRequest}/>}
   {pulse.ratings.length>0&&<><h3 className="pulse-visitor-heading">Penilaian {rental?'pelanggan':'pengunjung'} VisitGarut</h3><DimensionRatings pulse={pulse} placeId={placeId}/></>}
   {pulse.classified>0&&<><div className="pulse-stats"><div><strong>{pulse.positivePercent===null?'Belum cukup data':pulse.positivePercent+'% positif'}</strong><small>{pulse.positivePercent===null?'Persentase muncul setelah minimal 10 kontribusi terklasifikasi.':`Dari ${pulse.classified} kontribusi terklasifikasi, termasuk netral dan campuran.`}</small></div><div><strong>{pulse.classified} terklasifikasi</strong><small>Sampel dengan sumber berbeda yang telah diperiksa dalam 90 hari.</small></div><div><strong>{pulse.lastUpdated?date(pulse.lastUpdated):'Menunggu pengalaman'}</strong><small>Pemeriksaan bukti terakhir</small></div></div><p className="pulse-disclosure">Ringkasan dari sampel kontribusi yang disetujui. {pulse.limited&&'Sampel dibatasi pada 1.000 kontribusi terbaru. '}</p></>}
   <PlaceResearch items={research}/>
