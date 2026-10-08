@@ -162,7 +162,8 @@ check('Platform and topic-specific sentiment filters correctly narrow evidence',
  assert.equal(evidenceSentiment(items[0],'pemandangan'),'positive')
  assert.deepEqual(filterPublicEvidence(items,'akses',{platform:'youtube',sentiment:'negative',sort:'newest'}).map(e=>e.id),[3,1])
  assert.deepEqual(filterPublicEvidence(items,'akses',{platform:'',sentiment:'',sort:'engagement'}).map(e=>e.id),[3,1,2])
- assert.deepEqual(platformEvidenceCounts(items).map(p=>p.platform),['youtube','instagram'])
+ assert.deepEqual(platformEvidenceCounts(items).filter(p=>p.count>0).map(p=>p.platform),['youtube','instagram'])
+ assert.ok(platformEvidenceCounts(items).some(p=>p.platform==='threads' && p.count===0))
 })
 check('Source links accept only safe HTTPS URLs',()=>{
  assert.equal(safeEvidenceSource('javascript:alert(1)'),null)
