@@ -40,9 +40,11 @@ export function filterPublicEvidence(items: Evidence[], topic: Topic | null, fil
 }
 
 export function platformEvidenceCounts(items: Evidence[]): { platform: Platform; count: number; label: string }[] {
-  return (Object.keys(platforms) as Platform[])
-    .map(platform => ({ platform, count: items.filter(item => item.platform === platform).length, label: platforms[platform] }))
-    .filter(item => item.count > 0)
+  const primary: Platform[] = ['youtube','instagram','tiktok','threads','x','visitgarut']
+  const included = items.some(item => item.platform === 'google') ? [...primary, 'google' as Platform] : primary
+  return included.map(platform => ({
+    platform, count: items.filter(item => item.platform === platform).length, label: platforms[platform],
+  }))
 }
 
 export function safeEvidenceSource(url: string): string | null {
