@@ -16,7 +16,7 @@
     "test:pulse-activation": "tsc lib/pulse/youtube-public.ts lib/pulse/contribution.ts lib/pulse/core.ts --target ES2022 --module commonjs --skipLibCheck --outDir .pulse-activation-test && node scripts/pulse-activation-tests.cjs && node scripts/pulse-actions-tests.cjs",
     "test:discovery": "tsc lib/pulse/discovery.ts --target ES2022 --module commonjs --skipLibCheck --outDir .discovery-test && node scripts/discovery-tests.cjs",
     "test:research-insights": "tsc lib/pulse/research.ts --target ES2022 --module commonjs --skipLibCheck --outDir .pulse-test && node scripts/research-insight-tests.cjs",
-    "test:globe": "tsc lib/pulse/globe.ts --target ES2022 --module commonjs --skipLibCheck --outDir .pulse-test && node scripts/globe-tests.cjs",
+    "test:globe": "tsc lib/pulse/globe.ts lib/pulse/globe-motion.ts --target ES2022 --module commonjs --skipLibCheck --outDir .pulse-test && node scripts/globe-tests.cjs",
     "test:discovery-ux": "node scripts/discovery-ux-tests.cjs"
   },
   "dependencies": {
