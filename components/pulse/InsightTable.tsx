@@ -1,5 +1,5 @@
 'use client'
-import { useRef,useState } from 'react'
+import { useEffect,useRef,useState } from 'react'
 import { platforms,sentimentNames,type Pulse,type Topic,type TopicStatus } from '@/lib/pulse/core'
 import { ReportForm } from './ContributionForm'
 
@@ -11,7 +11,8 @@ const confidenceLabels={'tinggi':'Tinggi','sedang':'Sedang','rendah':'Rendah','b
 const confidenceClasses={'tinggi':'high','sedang':'medium','rendah':'low','belum cukup':'insufficient'}
 const date=(v:string)=>new Date(v).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Jakarta'})
 
-export default function InsightTable({pulse,placeId,rental=false,hasSources=false}:{pulse:Pulse;placeId:number;rental?:boolean;hasSources?:boolean}){
+export type InsightOpenRequest = { topic: Topic; trigger: HTMLButtonElement; token: number }
+export default function InsightTable({pulse,placeId,rental=false,hasSources=false,openRequest=null}:{pulse:Pulse;placeId:number;rental?:boolean;hasSources?:boolean;openRequest?:InsightOpenRequest|null}){
  const [selectedTopic,setSelectedTopic]=useState<Topic|null>(null)
  const [sentiment,setSentiment]=useState(''),[platform,setPlatform]=useState(''),[sort,setSort]=useState('newest')
  const dialog=useRef<HTMLDialogElement>(null),trigger=useRef<HTMLButtonElement|null>(null)
@@ -25,7 +26,18 @@ export default function InsightTable({pulse,placeId,rental=false,hasSources=fals
  const sourcePlatforms=Array.from(new Set(related.map(e=>e.platform)))
  const shown=related.filter(e=>(!platform||e.platform===platform)&&(!sentiment||e.topics.some(t=>t.topic===selectedTopic&&t.sentiment===sentiment)))
   .sort((a,b)=>sort==='engagement'?b.engagement_count-a.engagement_count:Date.parse(b.published_at)-Date.parse(a.published_at))
- function open(status:TopicStatus,button:HTMLButtonElement){trigger.current=button;setSelectedTopic(status.topic);setSentiment('');setPlatform('');setSort('newest');dialog.current?.showModal()}
+ function open(status:TopicStatus,button:HTMLButtonElement){trigger.current=button;setSelectedTopic(status.topic);setSentiment('');setPlatform('');setSort('newest');if(!dialog.current?.open)dialog.current?.showModal()}
+ // Globe requests open the existing evidence dialog, preserving filters, source
+ // rights, sensitive-topic withholding and keyboard focus-return behavior.
+ useEffect(()=>{
+  if(!openRequest)return
+  const status=pulse.topicStatuses.find(s=>s.topic===openRequest.topic)
+  if(!status||status.missing!==null||!pulse.insights.some(i=>i.topic===status.topic))return
+  trigger.current=openRequest.trigger
+  setSelectedTopic(status.topic)
+  setSentiment('');setPlatform('');setSort('newest')
+  if(!dialog.current?.open)dialog.current?.showModal()
+ },[openRequest,pulse.topicStatuses,pulse.insights])
  return <div className="pulse-insight-block">
   <div className="pulse-insight-heading"><h3>Insight pengalaman</h3><span>{pulse.windowDays} hari terakhir</span></div>
   <p id={'pulse-table-help-'+placeId}>Klik topik atau jumlah bukti untuk membaca pengalaman dan konteksnya.</p>
