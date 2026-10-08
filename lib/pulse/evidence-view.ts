@@ -12,8 +12,10 @@ export function evidenceForTopic(pulse: Pulse, topic: Topic | null): Evidence[] 
   if (topic === null) return pulse.evidence
   const status = pulse.topicStatuses.find(row => row.topic === topic)
   if (!status || (status.sensitive && status.missing !== null)) return []
-  const ids = new Set(status.evidenceIds)
-  return pulse.evidence.filter(item => ids.has(item.id))
+  // Insights count unique authors; the drawer must show ALL already-public
+  // comments on that topic, including repeat comments by the same author.
+  // The core Pulse engine alone determines which raw records are publishable.
+  return pulse.evidence.filter(item => item.topics.some(t => t.topic === topic))
 }
 
 export function evidenceSentiment(evidence: Evidence, topic: Topic | null): Sentiment | 'unclassified' {
