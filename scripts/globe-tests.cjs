@@ -86,4 +86,41 @@ check('Repeated author does not inflate a Globe node',()=>{
   assert.deepEqual(buildGlobeNodes(calculatePulse(rows,NOW)),[])
 })
 
+const { clampPitch, projectGlobePoint } = require('../.pulse-test/globe-motion.js')
+check('3D rotation responds to horizontal cursor/drag yaw',()=>{
+  const p={x:1,y:0,depth:0}
+  const unchanged=projectGlobePoint(p,0,0)
+  const rotated=projectGlobePoint(p,Math.PI/2,0)
+  assert.ok(Math.abs(unchanged.left-87)<1e-8)
+  assert.ok(Math.abs(rotated.left-50)<1e-8)
+  assert.ok(rotated.depth < -0.999)
+})
+check('3D rotation responds to vertical cursor/drag pitch',()=>{
+  const p={x:0,y:1,depth:0}
+  const north=projectGlobePoint(p,0,0)
+  const tilted=projectGlobePoint(p,0,Math.PI/2)
+  assert.ok(north.top < tilted.top)
+  assert.ok(tilted.depth > 0.99)
+})
+check('3D projections retain bounded position and reduce rear opacity',()=>{
+  for(let i=0;i<10;i++){
+    const p=globePosition(i,10)
+    for(const yaw of [0,Math.PI/3,Math.PI]){
+      const q=projectGlobePoint(p,yaw,.5)
+      assert.ok(q.left>=13-1e-6 && q.left<=87+1e-6)
+      assert.ok(q.top>=13-1e-6 && q.top<=87+1e-6)
+      assert.ok(q.opacity>=.4 && q.opacity<=1)
+    }
+  }
+  const behind=projectGlobePoint({x:0,y:0,depth:-1},0,0)
+  const front=projectGlobePoint({x:0,y:0,depth:1},0,0)
+  assert.ok(front.opacity>behind.opacity)
+  assert.equal(behind.front,false)
+  assert.equal(front.front,true)
+})
+check('Pitch is clamped to prevent sphere flipping',()=>{
+  assert.equal(clampPitch(Infinity),Math.PI*.42)
+  assert.equal(clampPitch(-Infinity),-Math.PI*.42)
+  assert.equal(clampPitch(0),0)
+})
 console.log(count+' Pulse Globe view-model checks passed')
