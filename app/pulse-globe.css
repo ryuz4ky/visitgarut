@@ -16,6 +16,18 @@
 .pulse-globe-meridian{transform:rotate(13deg) scaleX(.36)}
 .pulse-globe-rotor{position:absolute;inset:0;z-index:3;transform-origin:50% 50%}
 .pulse-globe-node{position:absolute;z-index:2;max-width:125px;min-width:70px;padding:9px 12px;background:#276774ed;color:#f8ffff;border:1px solid #9de8d09e;border-radius:22px;text-align:center;line-height:1.24;cursor:pointer;transform:translate(-50%,-50%) scale(var(--pulse-scale,1));box-shadow:0 4px 18px #001e2e90;transition:box-shadow .2s,border-color .2s;user-select:none;will-change:left,top,opacity,transform}
+.pulse-globe-quote{position:absolute;display:flex;align-items:center;gap:7px;max-width:190px;width:max-content;padding:8px 10px;border:1px solid #7bafab80;border-radius:15px;background:#092a32eD;color:#eafff9;text-align:left;font-size:.68rem;line-height:1.35;transform:translate(-50%,-50%) scale(var(--pulse-scale,0.7));box-shadow:0 5px 19px #031b25b0;cursor:pointer;user-select:none;will-change:left,top,opacity,transform}
+.pulse-globe-quote:hover,.pulse-globe-quote:focus-visible{outline:2px solid #a2f4e3;outline-offset:2px;background:#0d4145}
+.pulse-globe-quote[data-sentiment="negative"]{border-color:#dd8d7a}
+.pulse-globe-quote[data-sentiment="mixed"]{border-color:#d5ae72}
+.pulse-globe-quote>span:last-child{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pulse-globe-source{font-size:1rem;font-weight:900;display:inline-grid;place-items:center;flex:none;width:26px;height:26px;border-radius:7px;color:white;background:#157464}
+.pulse-globe-source.source-youtube{background:#e62124}
+.pulse-globe-source.source-tiktok{background:#111;text-shadow:-1px 1px #24deee,1px -1px #e84e91}
+.pulse-globe-source.source-instagram{background:linear-gradient(135deg,#ffb548,#ec2768,#6b53fa)}
+.pulse-globe-source.source-threads,.pulse-globe-source.source-x{background:#111}
+.pulse-globe-rotor{pointer-events:none}
+.pulse-globe-node,.pulse-globe-quote{pointer-events:auto}
 .pulse-globe-node strong{display:block;font-size:clamp(.72rem,1.1vw,.92rem);font-weight:650}
 .pulse-globe-node small{display:block;font-size:.64rem;color:#e3f9f4;margin-top:4px}
 .pulse-globe-node[data-sentiment="negative"]{background:#a04547e8;border-color:#fac2a4}
