@@ -1,0 +1,273 @@
+{
+  "researched_at": "2026-10-08T01:55:45.888Z",
+  "method": "Riset sumber primer pada 8 Oktober 2026. Parafrasa editorial; tidak menyalin ulasan, membuat identitas pengunjung, mengisi sentimen, atau mengubah izin penggunaan komentar.",
+  "new_places": [],
+  "existing_place_research": [
+    {
+      "slug": "gunung-papandayan",
+      "research": [
+        {
+          "topic": "pemandangan",
+          "title": "Kawah dan Hutan Mati sebagai bentang utama",
+          "summary": "Indonesia.travel memperkenalkan kawah vulkanik dan Hutan Mati sebagai daya tarik Papandayan. Pilih rute yang dibuka petugas saat berkunjung; penyebutan spot dalam panduan tidak memastikan seluruh area boleh dimasuki.",
+          "source_url": "https://www.indonesia.travel/id/id/destination/java/west-java/gunung-papandayan",
+          "publisher": "Kementerian Pariwisata — Indonesia.travel",
+          "source_kind": "authority",
+          "source_published_at": null,
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Tanggal publikasi atau pembaruan tidak tercantum. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        },
+        {
+          "topic": "aktivitas",
+          "title": "Pendakian dan perkemahan di Pondok Saladah",
+          "summary": "Panduan Kementerian Pariwisata menyebut Pondok Saladah sebagai area perkemahan pada jalur Papandayan. Saran VisitGarut: tanyakan izin berkemah, perlengkapan, dan kondisi jalur kepada pengelola.",
+          "source_url": "https://www.indonesia.travel/id/id/destination/java/west-java/gunung-papandayan",
+          "publisher": "Kementerian Pariwisata — Indonesia.travel",
+          "source_kind": "authority",
+          "source_published_at": null,
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Tanggal publikasi atau pembaruan tidak tercantum. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        },
+        {
+          "topic": "fasilitas",
+          "title": "Fasilitas pendukung pada area perkemahan",
+          "summary": "Panduan menyebut musala, warung, dan sumber air di Pondok Saladah. Catatan ini menunjukkan fasilitas yang dijelaskan sumber, tanpa penilaian kebersihan atau jaminan fasilitas sedang beroperasi.",
+          "source_url": "https://www.indonesia.travel/id/id/destination/java/west-java/gunung-papandayan",
+          "publisher": "Kementerian Pariwisata — Indonesia.travel",
+          "source_kind": "authority",
+          "source_published_at": null,
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Tanggal publikasi atau pembaruan tidak tercantum. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        },
+        {
+          "topic": "akses",
+          "title": "Perjalanan melalui kawasan Cisurupan",
+          "summary": "Papandayan dicantumkan berada di Kecamatan Cisurupan. Panduan menguraikan akses dari Garut dan Bandung. Waktu tempuh bergantung rute, lalu lintas, dan kondisi jalan; periksa petunjuk pengelola menjelang perjalanan.",
+          "source_url": "https://www.indonesia.travel/id/id/destination/java/west-java/gunung-papandayan",
+          "publisher": "Kementerian Pariwisata — Indonesia.travel",
+          "source_kind": "authority",
+          "source_published_at": null,
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Tanggal publikasi atau pembaruan tidak tercantum. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "darajat-pass",
+      "research": [
+        {
+          "topic": "pemandangan",
+          "title": "Kawasan pegunungan dan pertanian Pasirwangi",
+          "summary": "Profil pengelola menggambarkan Darajat Pass berada dalam lingkungan pegunungan dan pertanian di Pasirwangi. Ini deskripsi pengelola, tanpa skor keindahan yang disimpulkan dari ulasan.",
+          "source_url": "https://darajatpass.com/",
+          "publisher": "Darajat Pass",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Tanggal publikasi atau pembaruan tidak tercantum. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        },
+        {
+          "topic": "fasilitas",
+          "title": "Ruang bilas, toilet, musala, dan tempat makan",
+          "summary": "Pengelola mencantumkan kamar bilas, toilet, musala, rumah makan, serta pilihan penginapan. Daftar fasilitas tidak membuktikan kebersihan, kualitas layanan, atau ketersediaannya pada setiap tanggal.",
+          "source_url": "https://darajatpass.com/",
+          "publisher": "Darajat Pass",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Tanggal publikasi atau pembaruan tidak tercantum. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        },
+        {
+          "topic": "aktivitas",
+          "title": "Wahana air dan kegiatan outbound",
+          "summary": "Situs pengelola menampilkan pemandian air panas, taman air, serta pilihan outbound seperti ATV dan permainan kelompok. Tanyakan wahana yang sedang beroperasi dan biaya tambahannya sebelum memesan.",
+          "source_url": "https://darajatpass.com/",
+          "publisher": "Darajat Pass",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Tanggal publikasi atau pembaruan tidak tercantum. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        },
+        {
+          "topic": "keluarga",
+          "title": "Kolam anak dan family slide tercantum",
+          "summary": "Halaman kolam mencantumkan kolam anak dengan family slide, kolam dewasa, dan taman air panas. Periksa kedalaman, aturan pendampingan, dan persyaratan usia pada kolam yang dipilih.",
+          "source_url": "https://darajatpass.com/kolam-renang-air-panas/",
+          "publisher": "Darajat Pass",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Tanggal publikasi atau pembaruan tidak tercantum. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        },
+        {
+          "topic": "harga",
+          "title": "Ketentuan tiket dibedakan menurut hari dan usia",
+          "summary": "Halaman pengelola membedakan tiket hari kerja dan hari libur serta kelompok usia. Karena tanggal pembaruan tarif tidak dicantumkan dan ada angka yang tidak lengkap, VisitGarut tidak menetapkan harga terbaru dari halaman ini.",
+          "source_url": "https://darajatpass.com/kolam-renang-air-panas/",
+          "publisher": "Darajat Pass",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Tanggal publikasi atau pembaruan tidak tercantum. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "taman-air-sabda-alam",
+      "research": [
+        {
+          "topic": "fasilitas",
+          "title": "Gazebo, musala, P3K, dan penyewaan loker",
+          "summary": "Halaman taman air mencantumkan area istirahat, musala, kios makanan, P3K, serta penyewaan loker dan ban. Konfirmasikan biaya sewa, deposit, dan ketersediaan saat kunjungan.",
+          "source_url": "https://www.sabdaalam-garut.com/taman-air",
+          "publisher": "Sabda Alam Garut",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Tanggal publikasi atau pembaruan tidak tercantum. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        },
+        {
+          "topic": "aktivitas",
+          "title": "Kolam ombak, seluncuran, dan sungai wahana",
+          "summary": "Pengelola menampilkan kolam ombak, Slider Boom, dan Wave’s River, dengan aturan penggunaan ban pada beberapa wahana. Ikuti ketentuan yang dipasang petugas; daftar wahana bukan penilaian keselamatan dari pengunjung.",
+          "source_url": "https://www.sabdaalam-garut.com/taman-air",
+          "publisher": "Sabda Alam Garut",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Tanggal publikasi atau pembaruan tidak tercantum. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "kampung-sampireun",
+      "research": [
+        {
+          "topic": "pemandangan",
+          "title": "Danau dan tata bangunan bernuansa Sunda",
+          "summary": "Situs resmi memperkenalkan danau, taman, serta arsitektur terinspirasi budaya Sunda. Pilihan pemandangan kamar bergantung tipe unit, sehingga perlu dikonfirmasi saat reservasi.",
+          "source_url": "https://kampungsampireun.com/about/",
+          "publisher": "Kampung Sampireun Resort & Spa",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Tanggal publikasi atau pembaruan tidak tercantum. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        },
+        {
+          "topic": "keluarga",
+          "title": "Taman bermain dan variasi kapasitas kamar",
+          "summary": "Pengelola menyebut taman bermain dan beberapa tipe suite dengan kapasitas berbeda. Saran VisitGarut: pastikan kapasitas tamu, tambahan tempat tidur, dan fasilitas anak sesuai kebutuhan keluarga.",
+          "source_url": "https://kampungsampireun.com/about/",
+          "publisher": "Kampung Sampireun Resort & Spa",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Tanggal publikasi atau pembaruan tidak tercantum. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        },
+        {
+          "topic": "akses",
+          "title": "Alamat pengelola di Desa Sukakarya, Samarang",
+          "summary": "Situs resmi mencantumkan Jalan Raya Kamojang KM 4, Desa Sukakarya, Kecamatan Samarang. Gunakan alamat tersebut sebagai rujukan awal dan konfirmasikan titik kedatangan ketika mengatur transportasi.",
+          "source_url": "https://kampungsampireun.com/about/",
+          "publisher": "Kampung Sampireun Resort & Spa",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Tanggal publikasi atau pembaruan tidak tercantum. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        },
+        {
+          "topic": "parkir",
+          "title": "Parkir gratis tercantum sebagai layanan",
+          "summary": "Halaman layanan mencantumkan parkir gratis. Keterangan ini berasal dari pengelola, tanpa pengukuran kapasitas atau jaminan tempat parkir tersedia; tanyakan kebutuhan rombongan terlebih dahulu.",
+          "source_url": "https://kampungsampireun.com/services/",
+          "publisher": "Kampung Sampireun Resort & Spa",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Tanggal publikasi atau pembaruan tidak tercantum. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        },
+        {
+          "topic": "pelayanan",
+          "title": "Resepsionis dan pilihan layanan spa",
+          "summary": "Situs resmi menyebut resepsionis 24 jam serta beberapa layanan spa dan paket wisata. Jenis layanan, jadwal, biaya, dan apakah termasuk tarif kamar perlu diperiksa saat pemesanan.",
+          "source_url": "https://kampungsampireun.com/services/",
+          "publisher": "Kampung Sampireun Resort & Spa",
+          "source_kind": "operator",
+          "source_published_at": null,
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Tanggal publikasi atau pembaruan tidak tercantum. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        }
+      ]
+    },
+    {
+      "slug": "hotel-santika-premiere-garut",
+      "research": [
+        {
+          "topic": "keluarga",
+          "title": "Family Room, vila, dan area bermain anak",
+          "summary": "Rilis jaringan hotel pada Juli 2025 menyebut Family Room, vila satu atau dua kamar, serta area bermain anak. Konfirmasikan kapasitas, aturan tamu, dan fasilitas yang termasuk dalam pemesanan saat ini.",
+          "source_url": "https://mykg.id/kg-updates/info-unit/naik-menjadi-hotel-bintang-4-hotel-santika-garut-resmi-bertransformasi-menjadi-hotel-santika-premiere-garut",
+          "publisher": "Kompas Gramedia — informasi Santika Indonesia",
+          "source_kind": "operator",
+          "source_published_at": "2025-07-02",
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Sumber diterbitkan 2 Juli 2025; keterangan bukan konfirmasi kondisi terbaru. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        },
+        {
+          "topic": "pemandangan",
+          "title": "Pilihan kamar dengan orientasi gunung atau kolam",
+          "summary": "Rilis menyebut beberapa kategori kamar dengan orientasi pemandangan gunung, kota, atau kolam. Kategori yang dipesan menentukan pilihan pemandangan; ini keterangan hotel, tanpa agregasi penilaian tamu.",
+          "source_url": "https://mykg.id/kg-updates/info-unit/naik-menjadi-hotel-bintang-4-hotel-santika-garut-resmi-bertransformasi-menjadi-hotel-santika-premiere-garut",
+          "publisher": "Kompas Gramedia — informasi Santika Indonesia",
+          "source_kind": "operator",
+          "source_published_at": "2025-07-02",
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Sumber diterbitkan 2 Juli 2025; keterangan bukan konfirmasi kondisi terbaru. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        },
+        {
+          "topic": "fasilitas",
+          "title": "Restoran, kolam, gym, dan ruang pertemuan",
+          "summary": "Rilis Juli 2025 menyebut dua restoran, kolam renang, gym, ballroom, dan ruang pertemuan. Fasilitas yang dapat digunakan serta ketentuannya perlu dikonfirmasi untuk tanggal menginap.",
+          "source_url": "https://mykg.id/kg-updates/info-unit/naik-menjadi-hotel-bintang-4-hotel-santika-garut-resmi-bertransformasi-menjadi-hotel-santika-premiere-garut",
+          "publisher": "Kompas Gramedia — informasi Santika Indonesia",
+          "source_kind": "operator",
+          "source_published_at": "2025-07-02",
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Sumber diterbitkan 2 Juli 2025; keterangan bukan konfirmasi kondisi terbaru. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        },
+        {
+          "topic": "aktivitas",
+          "title": "Jogging track dan viewing deck dalam rilis hotel",
+          "summary": "Jaringan hotel mencantumkan jogging track dan viewing deck sebagai fasilitas pada Juli 2025. Tanyakan akses serta jam penggunaan; rilis lama tidak memastikan kondisi lapangan pada hari kedatangan.",
+          "source_url": "https://mykg.id/kg-updates/info-unit/naik-menjadi-hotel-bintang-4-hotel-santika-garut-resmi-bertransformasi-menjadi-hotel-santika-premiere-garut",
+          "publisher": "Kompas Gramedia — informasi Santika Indonesia",
+          "source_kind": "operator",
+          "source_published_at": "2025-07-02",
+          "checked_at": "2026-10-08T01:55:45.888Z",
+          "limitations": "Sumber diterbitkan 2 Juli 2025; keterangan bukan konfirmasi kondisi terbaru. Pemeriksaan dilakukan pada sumber daring, bukan kunjungan lapangan. Konfirmasikan ketersediaan dan ketentuan layanan kepada pengelola sebelum berangkat.",
+          "status": "approved"
+        }
+      ]
+    }
+  ],
+  "social_contents": []
+}

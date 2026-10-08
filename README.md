@@ -59,3 +59,9 @@ Discovery metadata is not visitor evidence. Search-result titles/snippets are ne
 The default search endpoint is DuckDuckGo HTML and can be replaced with `PUBLIC_SEARCH_HTML_ENDPOINT`. The collector does not bypass login, CAPTCHA, anti-bot controls, private content, or platform access controls. Runs are capped at five per place per Jakarta day, twelve queries per run and sixty unique candidates. Migration `db/008-public-discovery.sql` creates the discovery log and is applied by `scripts/pulse-migrate.cjs` during staged deploy.
 
 Check the parser/query logic with `npm run test:discovery` in addition to the existing Pulse tests.
+
+### Research insights — 8 October 2026
+
+Community Pulse now opens its research table when no eligible visitor contributions exist. The table groups attributed editorial notes by topic and counts distinct source URLs; it never turns those sources into visitor identities or sentiment. Users can switch to the visitor evidence table and open either type of evidence independently. The existing discovery feature remains intact.
+
+`data/researched-insights-2026-10-08.json` adds 20 source-checked notes for five existing places. Import with `node scripts/seed-research.cjs data/researched-insights-2026-10-08.json` after setting `DATABASE_URL`. Existing entries and withdrawals are preserved. Check the import and distinct-source counts with `npm run test:research-insights`.

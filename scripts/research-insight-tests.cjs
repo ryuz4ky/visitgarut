@@ -1,0 +1,33 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const {PGlite}=require('@electric-sql/pglite');
+const {buildResearchSQL}=require('./seed-research.cjs');
+const {researchTopicGroups}=require('../.pulse-test/research.js');
+const {calculatePulse}=require('../.pulse-test/core.js');
+(async()=>{
+ const pg=new PGlite(),root=path.join(__dirname,'..');
+ for(const file of ['001-mvp.sql','002-seed.sql','003-community-pulse.sql','004-place-research.sql','007-pulse-insight-topics.sql'])await pg.exec(fs.readFileSync(path.join(root,'db',file),'utf8'));
+ await pg.exec(buildResearchSQL(JSON.parse(fs.readFileSync(path.join(root,'data/researched-places-2026-10-07.json'),'utf8'))));
+ const data=JSON.parse(fs.readFileSync(path.join(root,'data/researched-insights-2026-10-08.json'),'utf8'));
+ const notes=data.existing_place_research.flatMap(place=>place.research);
+ assert.equal(notes.length,20);
+ for(const note of notes){assert.equal(new URL(note.source_url).protocol,'https:');assert.ok(note.publisher&&note.summary.length>=20);assert.ok(!note.source_published_at||Date.parse(note.source_published_at)<=Date.parse(data.researched_at))}
+ const before=(await pg.query('SELECT count(*)::int AS n FROM vg_place_research')).rows[0].n;
+ await pg.exec(buildResearchSQL(data));await pg.exec(buildResearchSQL(data));
+ assert.equal((await pg.query('SELECT count(*)::int AS n FROM vg_place_research')).rows[0].n,before+20);
+ assert.equal((await pg.query('SELECT count(*)::int AS n FROM vg_social_mentions')).rows[0].n,0);
+ console.log('PASS 20 attributed research notes; repeat import has no duplicates or visitor mentions');
+ const records=(await pg.query("SELECT r.* FROM vg_place_research r JOIN vg_places p ON p.id=r.place_id WHERE p.slug='gunung-papandayan' AND r.status='approved'")).rows;
+ const groups=researchTopicGroups(records);
+ assert.equal(groups.find(group=>group.topic==='aktivitas').sourceCount,2);
+ const view=records.find(row=>row.topic==='pemandangan');
+ assert.equal(researchTopicGroups([view,{...view,id:99999,title:'Another note on the same source'}])[0].sourceCount,1);
+ assert.equal(researchTopicGroups([]).length,0);
+ assert.equal(calculatePulse([]).classified,0);
+ console.log('PASS unique URL counts stay separate from independent visitor counts');
+ const target=(await pg.query("SELECT id FROM vg_place_research WHERE title='Kawah dan Hutan Mati sebagai bentang utama'")).rows[0].id;
+ await pg.query("UPDATE vg_place_research SET title='Owner revision',status='withdrawn' WHERE id=$1",[target]);
+ await pg.exec(buildResearchSQL(data));
+ assert.equal((await pg.query('SELECT title,status FROM vg_place_research WHERE id=$1',[target])).rows[0].status,'withdrawn');
+ console.log('PASS repeat import preserves owner withdrawals');
+ await pg.close();
+})().catch(error=>{console.error(error);process.exitCode=1});
