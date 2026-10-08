@@ -45,12 +45,11 @@ export default function PulseGlobe({
           <div className="pulse-globe-meridian" />
           <div className="pulse-globe-latitude" />
         </div>
-        {nodes.length > 0 ? nodes.map(node => {
+        {nodes.length > 0 ? <div className="pulse-globe-rotor">{nodes.map(node => {
           const style = {
             left: (50 + node.x * 37) + '%',
             top: (50 - node.y * 37) + '%',
             '--pulse-scale': String(.8 + .28 * Math.sqrt(node.contributors / max)),
-            '--pulse-delay': (-nodes.indexOf(node) * .35) + 's',
             opacity: Math.max(.68, .85 + node.depth * .13),
           } as CSSProperties
           return <button key={node.topic} type="button" className="pulse-globe-node"
@@ -60,7 +59,7 @@ export default function PulseGlobe({
             onClick={e => select(node, e.currentTarget)}>
             <strong>{node.label}</strong><small>{node.contributors} kontributor</small>
           </button>
-        }) : <div className="pulse-globe-empty">
+        })}</div> : <div className="pulse-globe-empty">
           <strong>Pengalaman belum mencukupi</strong>
           <p>Belum ada topik yang memenuhi syarat publikasi. Baca riset tempat atau bagikan pengalamanmu.</p>
         </div>}
