@@ -93,7 +93,8 @@ export default function EvidencePanel({
       {pulse.limited && <p className="pulse-drawer-limited">Sampel backend dibatasi pada 1.000 kontribusi terbaru. Seluruh hasil yang tersedia dalam sampel ini dapat dilihat melalui tombol Muat lainnya.</p>}
       <div className="pulse-drawer-platforms" role="group" aria-label="Filter berdasarkan platform">
         <button type="button" aria-pressed={!filters.platform} onClick={() => setFilter('platform','')}>Semua <span>{related.length}</span></button>
-        {counts.map(({platform,count,label}) => <button key={platform} type="button" aria-pressed={filters.platform === platform}
+        {counts.map(({platform,count,label}) => <button key={platform} type="button" disabled={count === 0}
+          aria-pressed={filters.platform === platform}
           onClick={() => setFilter('platform',platform)}>
           <span className={'pulse-channel-icon channel-'+platform} aria-hidden="true">{platformMarks[platform]}</span>
           {label} <span>{count}</span>
