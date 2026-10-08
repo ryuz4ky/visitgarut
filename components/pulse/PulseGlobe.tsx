@@ -48,6 +48,8 @@ export default function PulseGlobe({
     reduced: false, lastFrame: 0,
   })
   const max = Math.max(1, ...nodes.map(n => n.contributors))
+  const mostDiscussed = nodes.reduce<GlobeNode | null>(
+    (best, node) => !best || node.contributors > best.contributors ? node : best, null)
 
   useEffect(() => { pausedRef.current = paused }, [paused])
 
@@ -216,7 +218,7 @@ export default function PulseGlobe({
           } as CSSProperties
           return <button key={node.topic} type="button" className="pulse-globe-node"
             data-globe-topic={node.topic}
-            data-sentiment={node.sentiment} data-active={active === node.topic}
+            data-sentiment={node.sentiment} data-dominant={node.topic === mostDiscussed?.topic} data-active={active === node.topic}
             style={style} aria-haspopup="dialog"
             aria-label={node.label + ', ' + node.contributors + ' kontributor, sentimen ' + sentimentNames[node.sentiment] + '. Baca bukti.'}
             onClick={e => select(node, e.currentTarget)}>
