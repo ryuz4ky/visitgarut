@@ -9,7 +9,12 @@ const mk = (topic, extra={}) => ({
   ...extra
 })
 const pulse = (insights=[]) => ({
-  insights, topicStatuses: [], evidence: [], ratings: [], classified: 3,
+  insights,
+  topicStatuses: insights.map(i=>({ topic:i.topic,label:i.label,count:i.count,
+    confidence:i.confidence,sensitive:i.sensitive,evidenceIds:i.evidenceIds,
+    missing:null })),
+  evidence: [...new Set(insights.flatMap(i=>i.evidenceIds))].map(id=>({id})),
+  ratings: [], classified: 3,
   positivePercent: null, lastUpdated: null, windowDays: 90, limited: false
 })
 check('Empty data never creates fabricated sentiment nodes', () => {
@@ -19,6 +24,11 @@ check('An unpublished or insufficient topic cannot become a node', () => {
   assert.equal(buildGlobeNodes(pulse([mk('parkir', {count:2})])).length, 0)
   assert.equal(buildGlobeNodes(pulse([mk('keamanan', {count:5,sensitive:true})])).length, 0)
   assert.equal(buildGlobeNodes(pulse([mk('akses', {evidenceIds:[]})])).length, 0)
+  const withheld=pulse([mk('keamanan', {count:6,sensitive:true,evidenceIds:[1,2,3,4,5,6]})])
+  withheld.topicStatuses[0].evidenceIds=[1,2,3,4,5]
+  assert.equal(buildGlobeNodes(withheld).length,0)
+  const hidden=pulse([mk('akses')]); hidden.evidence=[{id:1},{id:2}]
+  assert.equal(buildGlobeNodes(hidden).length,0)
 })
 check('Only eligible insights are mapped and counts refer to unique contributors', () => {
   const nodes=buildGlobeNodes(pulse([mk('pemandangan'),mk('akses',{positive:0,negative:3})]))
