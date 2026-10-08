@@ -1,9 +1,10 @@
 'use client'
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react'
-import { buildGlobeNodes, type GlobeNode } from '@/lib/pulse/globe'
+import { buildGlobeNodes, buildGlobeCommentBubbles, type GlobeNode } from '@/lib/pulse/globe'
 import { clampPitch, projectGlobePoint } from '@/lib/pulse/globe-motion'
-import { sentimentNames, type Pulse, type Topic } from '@/lib/pulse/core'
+import { sentimentNames, platforms, type Pulse, type Topic, type Platform } from '@/lib/pulse/core'
 
+const marks:Record<Platform,string>={youtube:'▶',instagram:'◎',tiktok:'♪',threads:'@',x:'𝕏',visitgarut:'✦',google:'G'}
 const legend = [
   { key: 'positive', label: 'Positif' },
   { key: 'neutral', label: 'Netral' },
@@ -30,15 +31,18 @@ type MotionState = {
 
 export default function PulseGlobe({
   pulse,
-  onOpenTopic,
+  onOpenEvidence, dialogOpen=false,
 }: {
   pulse: Pulse
-  onOpenTopic: (topic: Topic, trigger: HTMLButtonElement) => void
+  onOpenEvidence: (topic: Topic | null, trigger: HTMLButtonElement, evidenceId?: number) => void
+  dialogOpen?: boolean
 }) {
   const nodes = useMemo(() => buildGlobeNodes(pulse), [pulse])
+  const quotes = useMemo(() => buildGlobeCommentBubbles(pulse), [pulse])
   const stageRef = useRef<HTMLDivElement>(null)
   const [paused, setPaused] = useState(false)
   const pausedRef = useRef(false)
+  const modalOpenRef = useRef(false)
   const [active, setActive] = useState<Topic | null>(null)
   const suppressClick = useRef(false)
   const motion = useRef<MotionState>({
@@ -52,6 +56,7 @@ export default function PulseGlobe({
     (best, node) => !best || node.contributors > best.contributors ? node : best, null)
 
   useEffect(() => { pausedRef.current = paused }, [paused])
+  useEffect(() => { modalOpenRef.current = dialogOpen }, [dialogOpen])
 
   // Animates only visible, rendered nodes. Do not store per-frame values in React
   // state: limiting DOM writes avoids 60 re-renders/second on low-end phones.
@@ -59,6 +64,7 @@ export default function PulseGlobe({
     const stage = stageRef.current
     if (!stage || !nodes.length) return
     const buttons = Array.from(stage.querySelectorAll<HTMLButtonElement>('[data-globe-topic]'))
+    const quoteButtons = Array.from(stage.querySelectorAll<HTMLButtonElement>('[data-globe-comment]'))
     const query = window.matchMedia('(prefers-reduced-motion: reduce)')
     const state = motion.current
     state.reduced = query.matches
@@ -71,7 +77,7 @@ export default function PulseGlobe({
       if (!visible || document.hidden) { raf = 0; return }
       const dt = Math.min(48, Math.max(0, now - (state.lastFrame || now)))
       state.lastFrame = now
-      if (!pausedRef.current && !state.reduced && !state.hovered && !state.focused && !state.dragging) {
+      if (!pausedRef.current && !modalOpenRef.current && !state.reduced && !state.hovered && !state.focused && !state.dragging) {
         // One idle revolution is about 80 seconds; decelerate drag momentum.
         state.yaw += dt * (Math.PI * 2 / 80000)
         state.yaw += state.velocityYaw * dt
@@ -97,6 +103,17 @@ export default function PulseGlobe({
         el.style.zIndex = String(Math.round((p.depth + 1) * 100))
         el.style.setProperty('--pulse-scale',
           String((0.8 + 0.28 * Math.sqrt(node.contributors / max)) * p.perspective))
+        el.style.pointerEvents = p.front ? 'auto' : 'none'
+      })
+      quotes.forEach((quote, index) => {
+        const el = quoteButtons[index]
+        if (!el) return
+        const p = projectGlobePoint(quote, yaw + 0.4, pitch)
+        el.style.left = p.left.toFixed(3) + '%'
+        el.style.top = p.top.toFixed(3) + '%'
+        el.style.opacity = p.opacity.toFixed(3)
+        el.style.zIndex = String(Math.round((p.depth + 1) * 100) - 1)
+        el.style.setProperty('--pulse-scale', String(0.68 * p.perspective))
         el.style.pointerEvents = p.front ? 'auto' : 'none'
       })
       raf = window.requestAnimationFrame(tick)
@@ -125,14 +142,13 @@ export default function PulseGlobe({
       window.cancelAnimationFrame(raf)
       state.lastFrame = 0
     }
-  }, [nodes, max])
+  }, [nodes, quotes, max])
 
   function select(node: GlobeNode, button: HTMLButtonElement) {
     setActive(node.topic)
-    setPaused(true)
     motion.current.velocityYaw = 0
     motion.current.velocityPitch = 0
-    onOpenTopic(node.topic, button)
+    onOpenEvidence(node.topic, button)
   }
 
   function pointerDown(e: ReactPointerEvent<HTMLDivElement>) {
@@ -223,6 +239,19 @@ export default function PulseGlobe({
             aria-label={node.label + ', ' + node.contributors + ' kontributor, sentimen ' + sentimentNames[node.sentiment] + '. Baca bukti.'}
             onClick={e => select(node, e.currentTarget)}>
             <strong>{node.label}</strong><small>{node.contributors} kontributor</small>
+          </button>
+        })}{quotes.map(quote => {
+          const style={
+            left:(50+quote.x*34)+'%',top:(50-quote.y*34)+'%',
+            '--pulse-scale':'0.7',opacity:Math.max(0.5,0.84+quote.depth*.15),
+          } as CSSProperties
+          return <button type="button" className="pulse-globe-quote" key={quote.id}
+            data-globe-comment={quote.id} data-sentiment={quote.sentiment} style={style}
+            aria-haspopup="dialog"
+            aria-label={platforms[quote.platform]+': '+quote.excerpt+'. Baca komentar asli dan semua komentar topik.'}
+            onClick={e=>{setActive(quote.topic);motion.current.velocityYaw=0;motion.current.velocityPitch=0;onOpenEvidence(quote.topic,e.currentTarget,quote.id)}}>
+            <span className={'pulse-globe-source source-'+quote.platform} aria-hidden="true">{marks[quote.platform]}</span>
+            <span>{quote.excerpt}</span>
           </button>
         })}</div> : <div className="pulse-globe-empty">
           <strong>Pengalaman belum mencukupi</strong>
