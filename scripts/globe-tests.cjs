@@ -123,4 +123,49 @@ check('Pitch is clamped to prevent sphere flipping',()=>{
   assert.equal(clampPitch(-Infinity),-Math.PI*.42)
   assert.equal(clampPitch(0),0)
 })
+const { evidenceForTopic, evidenceSentiment, filterPublicEvidence, platformEvidenceCounts, safeEvidenceSource } = require('../.pulse-test/evidence-view.js')
+const { buildGlobeCommentBubbles } = require('../.pulse-test/globe.js')
+check('All comments panel includes every public record, not just 12 globe nodes',()=>{
+ const ids=Array.from({length:55},(_,i)=>i+1)
+ const p=pulse([mk('pemandangan',{count:55,evidenceIds:ids})])
+ p.evidence=ids.map(id=>({
+  id, platform:id%2?'youtube':'tiktok',
+  original_text:'Approved original comment '+id,
+  published_at:new Date(NOW-id*60000).toISOString(),
+  sentiment:'positive',topics:[{topic:'pemandangan',sentiment:'positive'}],
+  engagement_count:id,source_url:'https://visitgarut.com/'
+ }))
+ assert.equal(evidenceForTopic(p,'pemandangan').length,55)
+ assert.equal(evidenceForTopic(p,null).length,55)
+ assert.ok(buildGlobeCommentBubbles(p).length<=18)
+ assert.equal(filterPublicEvidence(evidenceForTopic(p,'pemandangan'),'pemandangan',{platform:'',sentiment:'',sort:'newest'}).length,55)
+})
+check('Selected topic returns only public approved evidence IDs and no withheld sensitive records',()=>{
+ const p=pulse([mk('akses',{count:3,evidenceIds:[1,2,3]})])
+ p.evidence=[{id:1},{id:2},{id:3},{id:44}]
+ assert.deepEqual(evidenceForTopic(p,'akses').map(e=>e.id),[1,2,3])
+ p.topicStatuses[0].sensitive=true;p.topicStatuses[0].missing='verification'
+ assert.deepEqual(evidenceForTopic(p,'akses'),[])
+})
+check('Platform and topic-specific sentiment filters correctly narrow evidence',()=>{
+ const items=[
+  {id:1,platform:'youtube',published_at:'2026-10-04',engagement_count:5,
+   sentiment:'mixed',topics:[{topic:'akses',sentiment:'negative'},{topic:'pemandangan',sentiment:'positive'}]},
+  {id:2,platform:'instagram',published_at:'2026-10-05',engagement_count:0,
+   sentiment:'positive',topics:[{topic:'akses',sentiment:'positive'}]},
+  {id:3,platform:'youtube',published_at:'2026-10-06',engagement_count:9,
+   sentiment:'mixed',topics:[{topic:'akses',sentiment:'negative'}]},
+ ]
+ assert.equal(evidenceSentiment(items[0],'akses'),'negative')
+ assert.equal(evidenceSentiment(items[0],'pemandangan'),'positive')
+ assert.deepEqual(filterPublicEvidence(items,'akses',{platform:'youtube',sentiment:'negative',sort:'newest'}).map(e=>e.id),[3,1])
+ assert.deepEqual(filterPublicEvidence(items,'akses',{platform:'',sentiment:'',sort:'engagement'}).map(e=>e.id),[3,1,2])
+ assert.deepEqual(platformEvidenceCounts(items).map(p=>p.platform),['youtube','instagram'])
+})
+check('Source links accept only safe HTTPS URLs',()=>{
+ assert.equal(safeEvidenceSource('javascript:alert(1)'),null)
+ assert.equal(safeEvidenceSource('http://example.com'),null)
+ assert.equal(safeEvidenceSource('not-a-url'),null)
+ assert.equal(safeEvidenceSource('https://youtube.com/watch?v=abc'),'https://youtube.com/watch?v=abc')
+})
 console.log(count+' Pulse Globe view-model checks passed')
