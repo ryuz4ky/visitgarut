@@ -6,21 +6,23 @@
 .pulse-globe-intro p,.pulse-globe-side small,.pulse-globe-method{color:#b5cec9;font-size:.9rem;line-height:1.5}
 .pulse-globe-pause{border:1px solid #91b9b766;background:#0d3d47;color:#f5fffc;border-radius:999px;padding:9px 14px;white-space:nowrap}
 .pulse-globe-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(245px,.8fr);gap:26px;align-items:center}
-.pulse-globe-stage{position:relative;width:min(100%,530px);aspect-ratio:1;margin-inline:auto;isolation:isolate}
+.pulse-globe-stage{position:relative;width:min(100%,530px);aspect-ratio:1;margin-inline:auto;isolation:isolate;touch-action:none;cursor:grab;user-select:none}
+.pulse-globe-stage:active{cursor:grabbing}
+.pulse-globe-hint{font-size:.83rem!important;color:#a9d6ce!important;margin:8px 0 0}
 .pulse-globe-sphere{position:absolute;inset:11%;border-radius:50%;border:1px solid #78d8ca55;box-shadow:inset -28px -10px 60px #051b2d,0 0 66px #44c8bf28,inset 12px 0 70px #46dbc020;background:radial-gradient(circle at 36% 30%,#3cbcae20,#0d5d6d22 38%,#051c2b 73%);animation:pulse-globe-breathe 8s ease-in-out infinite;overflow:hidden}
 .pulse-globe-equator,.pulse-globe-latitude,.pulse-globe-meridian{position:absolute;inset:0;border:1px solid #6abebd42;border-radius:50%;pointer-events:none}
 .pulse-globe-equator{transform:rotate(16deg) scaleY(.35)}
 .pulse-globe-latitude{transform:rotate(-25deg) scaleY(.7)}
 .pulse-globe-meridian{transform:rotate(13deg) scaleX(.36)}
-.pulse-globe-rotor{position:absolute;inset:0;z-index:3;transform-origin:50% 50%;animation:pulse-globe-rotate 78s linear infinite}
-.pulse-globe-node{position:absolute;z-index:2;max-width:125px;min-width:70px;padding:9px 12px;background:#276774ed;color:#f8ffff;border:1px solid #9de8d09e;border-radius:22px;text-align:center;line-height:1.24;cursor:pointer;transform:translate(-50%,-50%) scale(var(--pulse-scale,1));box-shadow:0 4px 18px #001e2e90;animation:pulse-globe-counter-spin 78s linear infinite;transition:box-shadow .2s,border-color .2s}
+.pulse-globe-rotor{position:absolute;inset:0;z-index:3;transform-origin:50% 50%}
+.pulse-globe-node{position:absolute;z-index:2;max-width:125px;min-width:70px;padding:9px 12px;background:#276774ed;color:#f8ffff;border:1px solid #9de8d09e;border-radius:22px;text-align:center;line-height:1.24;cursor:pointer;transform:translate(-50%,-50%) scale(var(--pulse-scale,1));box-shadow:0 4px 18px #001e2e90;transition:box-shadow .2s,border-color .2s;user-select:none;will-change:left,top,opacity,transform}
 .pulse-globe-node strong{display:block;font-size:clamp(.72rem,1.1vw,.92rem);font-weight:650}
 .pulse-globe-node small{display:block;font-size:.64rem;color:#e3f9f4;margin-top:4px}
 .pulse-globe-node[data-sentiment="negative"]{background:#a04547e8;border-color:#fac2a4}
 .pulse-globe-node[data-sentiment="neutral"]{background:#285d91ed;border-color:#a1d0fb}
 .pulse-globe-node[data-sentiment="mixed"]{background:#86643aeb;border-color:#f8dca9}
 .pulse-globe-node:hover,.pulse-globe-node:focus-visible,.pulse-globe-node[data-active="true"]{z-index:5;outline:2px solid #e6fffd;outline-offset:3px;box-shadow:0 0 25px #77f5cf91}
-.pulse-globe-stage[data-paused="true"] .pulse-globe-sphere,.pulse-globe-stage[data-paused="true"] .pulse-globe-node,.pulse-globe-stage[data-paused="true"] .pulse-globe-rotor,.pulse-globe-stage:hover .pulse-globe-node,.pulse-globe-stage:hover .pulse-globe-rotor,.pulse-globe-stage:focus-within .pulse-globe-node,.pulse-globe-stage:focus-within .pulse-globe-rotor{animation-play-state:paused}
+.pulse-globe-stage[data-paused="true"] .pulse-globe-sphere,.pulse-globe-stage:hover .pulse-globe-sphere,.pulse-globe-stage:focus-within .pulse-globe-sphere{animation-play-state:paused}
 .pulse-globe-empty{position:absolute;inset:25%;display:flex;flex-direction:column;justify-content:center;text-align:center;z-index:2;font-size:1rem}
 .pulse-globe-empty p{color:#d6e8e5;font-size:.8rem;line-height:1.5}
 .pulse-globe-side{padding:12px 0}
@@ -42,7 +44,6 @@
 .pulse-globe-seo-summary h4{margin:0 0 10px;color:#f4fffb;font-size:1rem}
 .pulse-globe-seo-summary ul{margin:0;padding-left:22px;display:grid;gap:8px;color:#d6eae5;font-size:.88rem;line-height:1.6}
 @keyframes pulse-globe-breathe{50%{filter:brightness(1.16);transform:scale(1.01)}}
-@keyframes pulse-globe-rotate{to{transform:rotate(360deg)}}
-@keyframes pulse-globe-counter-spin{from{transform:translate(-50%,-50%) rotate(0deg) scale(var(--pulse-scale,1))}to{transform:translate(-50%,-50%) rotate(-360deg) scale(var(--pulse-scale,1))}}
+
 @media(max-width:750px){.pulse-globe-intro{flex-direction:column}.pulse-globe-layout{grid-template-columns:1fr;gap:10px}.pulse-globe-stage{max-width:410px}.pulse-globe-side{padding:0}.pulse-globe-node{max-width:104px;min-width:58px;padding:7px}.pulse-globe-node strong{font-size:.73rem}.pulse-globe-node small{font-size:.56rem}}
 @media(prefers-reduced-motion:reduce){.pulse-globe-sphere,.pulse-globe-node,.pulse-globe-rotor{animation:none!important;transition:none!important}}
