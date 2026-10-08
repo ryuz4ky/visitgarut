@@ -73,8 +73,10 @@ export type GlobeCommentBubble = {
 export function buildGlobeCommentBubbles(pulse:Pulse, maxCards=14):GlobeCommentBubble[] {
  const nodes=buildGlobeNodes(pulse)
  const allowedIds=new Map<number,Topic>()
- for(const node of nodes)for(const id of node.evidenceIds)if(!allowedIds.has(id))allowedIds.set(id,node.topic)
- // Only the existing public Evidence set, never discovered URLs or hidden mentions.
+ for(const node of nodes)for(const evidence of evidenceForTopic(pulse,node.topic))
+   if(!allowedIds.has(evidence.id))allowedIds.set(evidence.id,node.topic)
+ // All visible, published comments per eligible topic; no sampling by contributor.
+ // This is a visual subset only. The drawer renders all available records.
  const selected=pulse.evidence
   .filter(e=>allowedIds.has(e.id) && e.original_text.trim().length>0)
   .sort((a,b)=>Date.parse(b.published_at)-Date.parse(a.published_at))
