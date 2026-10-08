@@ -11,11 +11,12 @@ const platformMarks: Record<Platform,string> = {youtube:'▶',instagram:'◎',ti
 const defaults: EvidenceFilters = {platform:'', sentiment:'', sort:'newest'}
 
 export default function EvidencePanel({
-  pulse, placeId, rental = false, request, onDismiss,
+  pulse, placeId, rental = false, demo = false, request, onDismiss,
 }: {
   pulse: Pulse
   placeId: number
   rental?: boolean
+  demo?: boolean
   request: EvidenceOpenRequest | null
   onDismiss: () => void
 }) {
@@ -136,7 +137,7 @@ export default function EvidencePanel({
             <div className="pulse-drawer-actions">
               {source ? <a href={source} target="_blank" rel="noopener noreferrer">Buka sumber asli ↗</a> :
                 <span>Sumber langsung tidak tersedia untuk dibuka</span>}
-              <ReportForm placeId={placeId} mentionId={item.id}/>
+              {!demo && <ReportForm placeId={placeId} mentionId={item.id}/>}
             </div>
           </article>
         })}
@@ -152,7 +153,7 @@ export default function EvidencePanel({
       </div>
       <footer className="pulse-drawer-footer">
         <p>Jumlah komentar/post dan jumlah kontributor independen adalah metrik berbeda. Komentar yang membahas beberapa topik dapat muncul di lebih dari satu daftar.</p>
-        <a href={'#pengalaman-form-'+placeId} onClick={close}>Bagikan pengalaman{rental?' menyewamu':' kunjunganmu'}</a>
+        {!demo && <a href={'#pengalaman-form-'+placeId} onClick={close}>Bagikan pengalaman{rental?' menyewamu':' kunjunganmu'}</a>}
         <a href="/community-pulse/metode">Baca metodologi Community Pulse</a>
       </footer>
     </div>
