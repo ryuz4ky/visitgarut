@@ -35,7 +35,7 @@ export default function EvidencePanel({
     handledToken.current = request.token
     // Reject withheld sensitive topics before touching the dialog state.
     const status = request.topic === null ? null : pulse.topicStatuses.find(s => s.topic === request.topic)
-    if (request.topic !== null && (!status || (status.sensitive && status.missing !== null))) return
+    if (request.topic !== null && !status) return
     trigger.current = request.trigger
     if (previousTopic.current !== request.topic) {
       setFilters(defaults)
@@ -89,7 +89,10 @@ export default function EvidencePanel({
           {(['positive','mixed','neutral','negative'] as const).map(s => <span key={s} data-sentiment={s}>{sentimentNames[s]}: {insight[s]}</span>)}
         </div>
       </section>}
-      {!insight && topic !== null && <p className="pulse-insight-pending">Topik ini belum memenuhi syarat ringkasan sentimen. Kontribusi individu yang boleh dipublikasikan tidak mewakili kondisi seluruh pengunjung.</p>}
+      {!insight && topic !== null && <p className="pulse-insight-pending">
+        {status?.sensitive ? 'Bukti topik sensitif belum dapat ditampilkan sampai pemeriksaan sumber, identitas, dan konteks selesai.' :
+          'Topik ini belum memenuhi syarat ringkasan sentimen. Kontribusi individu yang boleh dipublikasikan tidak mewakili kondisi seluruh pengunjung.'}
+      </p>}
       {topic === null && <p className="pulse-disclosure">Daftar ini menampilkan seluruh bukti yang tersedia dalam sampel Community Pulse, bukan seluruh komentar di internet. Komentar yang tidak lolos kurasi tidak disertakan.</p>}
       {pulse.limited && <p className="pulse-drawer-limited">Sampel backend dibatasi pada 1.000 kontribusi terbaru. Seluruh hasil yang tersedia dalam sampel ini dapat dilihat melalui tombol Muat lainnya.</p>}
       <div className="pulse-drawer-platforms" role="group" aria-label="Filter berdasarkan platform">
