@@ -1,0 +1,13 @@
+const assert=require('node:assert/strict')
+const d=require('../.discovery-test/discovery.js')
+assert.equal(d.platformFromUrl('https://www.instagram.com/reel/AbC_12/'),'instagram')
+assert.equal(d.platformFromUrl('https://www.tiktok.com/@foo/video/1234567890123456789'),'tiktok')
+assert.equal(d.platformFromUrl('https://www.example.com/a'),null)
+const html=`<div class="result"><a class="result__a" href="//duckduckgo.com/l/?uddg=https%3A%2F%2Fwww.instagram.com%2Freel%2FAbC_12%2F">Situ Bagendit Garut</a><div class="result__snippet">Pengalaman wisata dan parkir di Situ Bagendit.</div></div>`
+const parsed=d.parseDuckDuckGoHtml(html,'"Situ Bagendit" Garut site:instagram.com')
+assert.equal(parsed.length,1);assert.equal(parsed[0].url,'https://www.instagram.com/reel/AbC_12/')
+const normalized=d.normalizeDiscoveryHit(parsed[0],'Situ Bagendit',[])
+assert.equal(normalized.platform,'instagram');assert.ok(normalized.relevanceScore>=80)
+const queries=d.buildDiscoveryQueries('Situ Bagendit',['Bagendit'])
+assert.ok(queries.some(q=>q.includes('site:tiktok.com')));assert.ok(queries.length<=12)
+console.log('discovery tests passed')
