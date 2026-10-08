@@ -52,8 +52,10 @@ Place pages show a three-column insight table before curated videos: topic, dist
 
 ### Public source discovery
 
-`/admin/pulse/discovery` discovers candidate public Instagram, TikTok, Threads and X post/video URLs through public search-result HTML. Discovery metadata is moderator-only: titles/snippets are never treated as visitor evidence or sentiment. Every candidate must be opened at its original URL and explicitly approved before it becomes `vg_social_contents`; it still does not become `vg_social_mentions` automatically.
+`/admin/pulse/discovery` discovers public Instagram, TikTok, Threads and X post/video URLs through public search-result HTML. During this early stage, candidates that pass URL validation and reach a relevance score of at least 70 are automatically inserted as approved `vg_social_contents`; no manual approval is required. Admin can still withdraw/reject a bad source after ingestion.
 
-The default search endpoint is DuckDuckGo HTML and can be replaced with `PUBLIC_SEARCH_HTML_ENDPOINT`. The collector does not bypass login, CAPTCHA, anti-bot controls, private content, or platform access controls. Runs are capped at five per place per Jakarta day, twelve queries per run and sixty unique candidates. Migration `db/008-public-discovery.sql` creates the queue and is applied by `scripts/pulse-migrate.cjs` during staged deploy.
+Discovery metadata is not visitor evidence. Search-result titles/snippets are never treated as reviews or sentiment, snippets are not retained after ingestion, and auto-ingest never creates `vg_social_mentions`. Community Pulse evidence therefore still requires a separate eligible comment/review/contribution source.
+
+The default search endpoint is DuckDuckGo HTML and can be replaced with `PUBLIC_SEARCH_HTML_ENDPOINT`. The collector does not bypass login, CAPTCHA, anti-bot controls, private content, or platform access controls. Runs are capped at five per place per Jakarta day, twelve queries per run and sixty unique candidates. Migration `db/008-public-discovery.sql` creates the discovery log and is applied by `scripts/pulse-migrate.cjs` during staged deploy.
 
 Check the parser/query logic with `npm run test:discovery` in addition to the existing Pulse tests.
