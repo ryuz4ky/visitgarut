@@ -18,7 +18,7 @@ const examples: { topic: Topic; label: string; count: number; positive: number; 
 ]
 
 let nextId=1
-const insights: Insight[]=examples.map(e=>{
+const insights: Insight[]=examples.map((e): Insight=>{
   const evidenceIds=Array.from({length:e.count},()=>nextId++)
   return {
     topic:e.topic,label:e.label,count:e.count,
