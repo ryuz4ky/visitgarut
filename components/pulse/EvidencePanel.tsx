@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { platforms, sentimentNames, type Platform, type Pulse, type Sentiment, type Topic } from '@/lib/pulse/core'
 import { evidenceForTopic, evidenceSentiment, filterPublicEvidence, platformEvidenceCounts, safeEvidenceSource, type EvidenceFilters } from '@/lib/pulse/evidence-view'
 import { ReportForm } from './ContributionForm'
+import { usePublicEvidenceArchive } from './usePublicEvidenceArchive'
 
 export type EvidenceOpenRequest = { token: number; topic: Topic | null; trigger: HTMLButtonElement; evidenceId?: number }
 const pageSize = 20
@@ -11,12 +12,13 @@ const platformMarks: Record<Platform,string> = {youtube:'▶',instagram:'◎',ti
 const defaults: EvidenceFilters = {platform:'', sentiment:'', sort:'newest'}
 
 export default function EvidencePanel({
-  pulse, placeId, rental = false, demo = false, request, onDismiss,
+  pulse, placeId, rental = false, demo = false, youtubeConsent = false, request, onDismiss,
 }: {
   pulse: Pulse
   placeId: number
   rental?: boolean
   demo?: boolean
+  youtubeConsent?: boolean
   request: EvidenceOpenRequest | null
   onDismiss: () => void
 }) {
@@ -51,9 +53,12 @@ export default function EvidencePanel({
 
   const status = topic === null ? null : pulse.topicStatuses.find(s => s.topic === topic)
   const insight = topic === null ? null : pulse.insights.find(i => i.topic === topic)
+  const archive = usePublicEvidenceArchive({
+    pulse,placeId,request,filters,demo,youtubeConsent,
+  })
   const related = useMemo(() => evidenceForTopic(pulse, topic), [pulse, topic])
   const counts = useMemo(() => platformEvidenceCounts(related), [related])
-  const shown = useMemo(() => {
+  const localShown = useMemo(() => {
     const results = filterPublicEvidence(related, topic, filters)
     if (focusedId !== null) {
       const focus = results.find(item => item.id === focusedId)
@@ -61,7 +66,16 @@ export default function EvidencePanel({
     }
     return results
   }, [related, topic, filters, focusedId])
-  const visible = shown.slice(0, visibleCount)
+  const usingArchive = archive.state.active && (
+    archive.state.loading || archive.state.items.length > 0 || archive.state.total === 0)
+  const archivePinned = focusedId !== null
+    ? localShown.find(item => item.id === focusedId)
+    : undefined
+  const shown = usingArchive ? [
+    ...(archivePinned ? [archivePinned] : []),
+    ...archive.state.items.filter(item => item.id !== archivePinned?.id),
+  ] : localShown
+  const visible = usingArchive ? shown : shown.slice(0, visibleCount)
 
   const setFilter = (key: keyof EvidenceFilters, value: string) => {
     setFilters(previous => ({...previous,[key]:value}))
@@ -77,7 +91,7 @@ export default function EvidencePanel({
       <div>
         <span className="vg-eyebrow">COMMUNITY PULSE · BUKTI TERKURASI</span>
         <h2 id={'pulse-evidence-drawer-title-'+placeId}>{status ? 'Komentar tentang ' + status.label : 'Semua komentar & post'}</h2>
-        <p>{related.length} komentar/post publikasi dalam sampel · {pulse.windowDays} hari</p>
+        <p>{usingArchive ? (archive.state.total === null ? 'Memuat arsip…' : archive.state.total + ' komentar/post sesuai filter') : related.length + ' komentar/post publikasi dalam sampel'} · {pulse.windowDays} hari</p>
       </div>
       <button type="button" onClick={close} aria-label="Tutup panel komentar">✕</button>
     </header>
@@ -94,14 +108,18 @@ export default function EvidencePanel({
           'Topik ini belum memenuhi syarat ringkasan sentimen. Kontribusi individu yang boleh dipublikasikan tidak mewakili kondisi seluruh pengunjung.'}
       </p>}
       {topic === null && <p className="pulse-disclosure">Daftar ini menampilkan seluruh bukti yang tersedia dalam sampel Community Pulse, bukan seluruh komentar di internet. Komentar yang tidak lolos kurasi tidak disertakan.</p>}
-      {pulse.limited && <p className="pulse-drawer-limited">Sampel backend dibatasi pada 1.000 kontribusi terbaru. Seluruh hasil yang tersedia dalam sampel ini dapat dilihat melalui tombol Muat lainnya.</p>}
+      {usingArchive
+        ? <p className="pulse-disclosure">Arsip PostgreSQL menampilkan komentar publikasi dalam 90 hari, bertahap 20 item per permintaan. Data sensitif yang memerlukan pemeriksaan khusus hanya dapat diakses melalui ringkasan terkurasi.</p>
+        : pulse.limited && <p className="pulse-drawer-limited">Sampel awal dibatasi pada 1.000 kontribusi. Arsip lengkap akan tersedia setelah data PostgreSQL dapat dimuat.</p>}
+      {archive.state.error && <p role="alert" className="pulse-drawer-limited">{archive.state.error} <button type="button"
+        onClick={() => usingArchive ? archive.loadMore() : archive.retry()}>Coba lagi</button></p>}
       <div className="pulse-drawer-platforms" role="group" aria-label="Filter berdasarkan platform">
         <button type="button" aria-pressed={!filters.platform} onClick={() => setFilter('platform','')}>Semua <span>{related.length}</span></button>
-        {counts.map(({platform,count,label}) => <button key={platform} type="button" disabled={count === 0}
+        {counts.map(({platform,count,label}) => <button key={platform} type="button" disabled={!archive.enabled && count === 0}
           aria-pressed={filters.platform === platform}
           onClick={() => setFilter('platform',platform)}>
           <span className={'pulse-channel-icon channel-'+platform} aria-hidden="true">{platformMarks[platform]}</span>
-          {label} <span>{count}</span>
+          {label} {!archive.enabled && <span>{count}</span>}
         </button>)}
       </div>
       <div className="pulse-drawer-selects">
@@ -118,8 +136,11 @@ export default function EvidencePanel({
           </select>
         </label>
       </div>
-      <p className="pulse-drawer-count" role="status">{shown.length} hasil sesuai filter · menampilkan {visible.length}</p>
+      <p className="pulse-drawer-count" role="status">{usingArchive ? (
+        archive.state.total === null ? 'Memuat arsip…' : archive.state.total + ' hasil sesuai filter'
+      ) : shown.length + ' hasil dalam sampel'} · menampilkan {visible.length}</p>
       <div className="pulse-drawer-list">
+        {usingArchive && archive.state.loading && <p role="status">Memuat komentar dari PostgreSQL…</p>}
         {visible.map(item => {
           const source = safeEvidenceSource(item.source_url, item.platform)
           const sentiment = evidenceSentiment(item,topic)
@@ -144,11 +165,16 @@ export default function EvidencePanel({
             </div>
           </article>
         })}
-        {!shown.length && <div className="pulse-drawer-empty">
+        {!shown.length && !(usingArchive && archive.state.loading) && <div className="pulse-drawer-empty">
           <p>Tidak ada komentar yang memenuhi filter ini.</p>
           <button type="button" onClick={()=>{setFilters(defaults);setVisibleCount(pageSize)}}>Reset filter</button>
         </div>}
-        {shown.length > visibleCount && <button type="button" className="pulse-drawer-load"
+        {usingArchive ? (
+          archive.state.cursor && <button type="button" className="pulse-drawer-load"
+            disabled={archive.state.loadingMore} onClick={archive.loadMore}>
+            {archive.state.loadingMore ? 'Memuat halaman berikutnya…' : 'Muat 20 komentar lainnya'}
+          </button>
+        ) : shown.length > visibleCount && <button type="button" className="pulse-drawer-load"
           onClick={()=>setVisibleCount(n=>n+pageSize)}>
           Muat {Math.min(pageSize,shown.length-visibleCount)} komentar lainnya
           <small>{Math.max(0,shown.length-visibleCount)} belum ditampilkan</small>
