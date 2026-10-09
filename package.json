@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run build:youtube-worker && next build",
+    "build": "npm run test:pulse && npm run test:pulse-overview && npm run test:archive && npm run test:globe && npm run test:discovery-ux && npm run build:youtube-worker && next build",
     "start": "next start",
     "lint": "eslint .",
     "test:pulse": "tsc lib/pulse/core.ts --target ES2022 --module commonjs --skipLibCheck --outDir .pulse-test && node scripts/pulse-tests.cjs .pulse-test/core.js",
@@ -16,7 +16,10 @@
     "test:pulse-activation": "tsc lib/pulse/youtube-public.ts lib/pulse/contribution.ts lib/pulse/core.ts --target ES2022 --module commonjs --skipLibCheck --outDir .pulse-activation-test && node scripts/pulse-activation-tests.cjs && node scripts/pulse-actions-tests.cjs",
     "test:discovery": "tsc lib/pulse/discovery.ts --target ES2022 --module commonjs --skipLibCheck --outDir .discovery-test && node scripts/discovery-tests.cjs",
     "test:research-insights": "tsc lib/pulse/research.ts --target ES2022 --module commonjs --skipLibCheck --outDir .pulse-test && node scripts/research-insight-tests.cjs",
-    "test:pulse-overview": "tsc lib/pulse/core.ts --target ES2022 --module commonjs --skipLibCheck --outDir .pulse-test && node scripts/pulse-overview-tests.cjs"
+    "test:pulse-overview": "tsc lib/pulse/core.ts --target ES2022 --module commonjs --skipLibCheck --outDir .pulse-test && node scripts/pulse-overview-tests.cjs",
+    "test:globe": "tsc lib/pulse/globe.ts lib/pulse/globe-motion.ts --target ES2022 --module commonjs --skipLibCheck --outDir .pulse-test && node scripts/globe-tests.cjs",
+    "test:archive": "tsc lib/pulse/archive-query.ts --target ES2022 --module commonjs --skipLibCheck --outDir .archive-test && node scripts/archive-tests.cjs",
+    "test:discovery-ux": "node scripts/discovery-ux-tests.cjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",

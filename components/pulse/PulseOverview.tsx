@@ -9,7 +9,7 @@ const order:Sentiment[]=['positive','mixed','neutral','negative']
 const date=(value:string)=>new Date(value).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Jakarta'})
 type Selection=Topic|'all'|'quality'|null
 
-export default function PulseOverview({pulse,placeId,rental=false}:{pulse:Pulse;placeId:number;rental?:boolean}){
+export default function PulseOverview({pulse,placeId,rental=false,onOpenEvidence}:{pulse:Pulse;placeId:number;rental?:boolean;onOpenEvidence?:(topic:Topic|null,trigger:HTMLButtonElement)=>void}){
  const overview=pulse.overview
  const [selection,setSelection]=useState<Selection>(null),[expanded,setExpanded]=useState(false),[platform,setPlatform]=useState(''),[sentiment,setSentiment]=useState('')
  const dialog=useRef<HTMLDialogElement>(null),trigger=useRef<HTMLButtonElement|null>(null)
@@ -19,7 +19,7 @@ export default function PulseOverview({pulse,placeId,rental=false}:{pulse:Pulse;
  const shown=related.filter(row=>(!platform||row.platform===platform)&&(!sentiment||(topic?row.topics.find(t=>t.topic===topic.topic)?.sentiment:row.sentiment)===sentiment))
  const title=selection==='quality'?'Cara komentar dipilih':selection==='all'?'Semua komentar terkurasi':topic?.label||''
  const quality=overview.quality,excluded=quality.repeatedAccount+quality.identicalText+quality.withoutTopic+quality.unclassified
- function open(next:Selection,button:HTMLButtonElement){trigger.current=button;setSelection(next);setPlatform('');setSentiment('');dialog.current?.showModal();if(dialog.current)dialog.current.scrollTop=0}
+ function open(next:Selection,button:HTMLButtonElement){if(next!=='quality'&&onOpenEvidence){onOpenEvidence(next==='all'?null:next,button);return}trigger.current=button;setSelection(next);setPlatform('');setSentiment('');dialog.current?.showModal();if(dialog.current)dialog.current.scrollTop=0}
  return <div className="pulse-overview">
   <p className="pulse-overview-summary">{overview.summary}</p>
   {overview.sampleSize>0?<p className="pulse-overview-meta">{overview.sampleSize} komentar tersaring · {overview.platforms.length} platform · {pulse.windowDays} hari terakhir{pulse.limited?' · sampel dibatasi':''}</p>:<p className="pulse-overview-meta">Persentase muncul setelah tersedia cukup komentar yang sesuai dengan tempat dan dapat dianalisis.</p>}
