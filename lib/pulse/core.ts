@@ -32,7 +32,15 @@ export function calculatePulse(input:Mention[],now=Date.now(),youtubeApproved=fa
   insights.push({topic,label,summary,count:authors.length,...counts,sourceCount:sources.size,platformCount,confidence,trend,current30:current,previous30:previous,sensitive,evidenceIds:authors.map(m=>m.id)})
   topicStatuses.push({topic,label,count:authors.length,confidence,sensitive,evidenceIds:authors.map(m=>m.id),missing:null})
  }
- const allowedSensitive=new Set(insights.filter(i=>i.sensitive).flatMap(i=>i.evidenceIds));const visible=available.filter(m=>!(m.is_sensitive||sensitivePattern.test(m.original_text)||m.topics.some(t=>t.topic==='keamanan'||t.topic==='tiket'))||allowedSensitive.has(m.id));
+ // Publication and analysis are different permissions. Evidence may be publicly
+ // displayed only after an explicit moderator review. Review is not inferred
+ // from status='approved' alone. Sensitive claims retain the existing
+ // independent-source and context-verification publication gate.
+ const allowedSensitive=new Set(insights.filter(i=>i.sensitive).flatMap(i=>i.evidenceIds))
+ const visible=available.filter(m=>!!m.reviewed_at && (
+  !(m.is_sensitive||sensitivePattern.test(m.original_text)||m.topics.some(t=>t.topic==='keamanan'||t.topic==='tiket'))
+  || allowedSensitive.has(m.id)
+ ))
  const ratings:DimensionSummary[]=[]
  for(const [key,label] of Object.entries(ratingDimensions)){const dimension=key as RatingDimension;const authors=independent(analyzed.filter(m=>m.platform==='visitgarut'&&visible.some(v=>v.id===m.id)&&m.ratings?.some(r=>r.dimension===dimension)));if(authors.length<(dimension==='keamanan'?6:3))continue;if(dimension==='keamanan'&&authors.some(m=>!m.verification_reference||!m.reviewed_at))continue;ratings.push({dimension,label,count:authors.length,average:Math.round(authors.reduce((sum,m)=>sum+m.ratings!.find(r=>r.dimension===dimension)!.rating,0)/authors.length*10)/10,evidenceIds:authors.map(m=>m.id)})}
  const overall=independent(analyzed.filter(m=>m.sentiment!=='unclassified'&&visible.some(v=>v.id===m.id)));const last=visible.map(m=>m.reviewed_at||m.published_at).sort().at(-1)||null
