@@ -47,9 +47,22 @@ export function platformEvidenceCounts(items: Evidence[]): { platform: Platform;
   }))
 }
 
-export function safeEvidenceSource(url: string): string | null {
+/** Source links must correspond to their displayed platform. A generic HTTPS
+ * link is not sufficient provenance and could mislabel an unrelated website. */
+const allowedSourceHosts: Record<Platform, readonly string[]> = {
+  youtube: ['youtube.com','www.youtube.com','m.youtube.com','youtu.be'],
+  instagram: ['instagram.com','www.instagram.com'],
+  tiktok: ['tiktok.com','www.tiktok.com','m.tiktok.com','vm.tiktok.com'],
+  threads: ['threads.net','www.threads.net','threads.com','www.threads.com'],
+  x: ['x.com','www.x.com','twitter.com','www.twitter.com'],
+  visitgarut: ['visitgarut.com','www.visitgarut.com'],
+  google: ['google.com','www.google.com','maps.google.com','maps.app.goo.gl'],
+}
+export function safeEvidenceSource(url: string, platform?: Platform): string | null {
   try {
     const value = new URL(url)
-    return value.protocol === 'https:' && !value.username && !value.password ? value.href : null
+    if (value.protocol !== 'https:' || value.username || value.password || value.port) return null
+    if (platform && !allowedSourceHosts[platform].includes(value.hostname.toLowerCase())) return null
+    return value.href
   } catch { return null }
 }
