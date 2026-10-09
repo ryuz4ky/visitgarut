@@ -1,0 +1,69 @@
+/* Evidence panel: one shared dialog for topics, individual bubbles and all comments. */
+.pulse-evidence-drawer{position:fixed;inset:0 0 0 auto;margin:0;width:min(490px,100vw);max-width:100vw;max-height:100dvh;height:100dvh;padding:0;border:0;border-radius:20px 0 0 20px;color:#17352e;background:#fff;box-shadow:-15px 0 80px #071f2080;overflow:hidden}
+.pulse-evidence-drawer::backdrop{background:#031713af;backdrop-filter:blur(3px)}
+.pulse-drawer-header{display:flex;position:relative;align-items:flex-start;justify-content:space-between;gap:15px;padding:24px 24px 18px;border-bottom:1px solid #dbe7e2;background:#f7fbf9}
+.pulse-drawer-header h2{font-size:clamp(1.22rem,2vw,1.55rem);margin:7px 0 5px}
+.pulse-drawer-header p{color:#536b62;font-size:.82rem;margin:0}
+.pulse-drawer-header>button{flex:none;border:1px solid #d3e2da;background:#fff;border-radius:50%;width:42px;height:42px;cursor:pointer}
+.pulse-drawer-scroll{overflow-y:auto;overscroll-behavior:contain;height:calc(100% - 115px);padding:20px 24px 28px;scrollbar-gutter:stable}
+.pulse-drawer-overview{padding:17px;border:1px solid #c7e6da;background:#effaf4;border-radius:16px;font-size:.86rem}
+.pulse-drawer-overview p{margin:0 0 12px;line-height:1.6}
+.pulse-drawer-overview p:last-of-type{margin:0}
+.pulse-drawer-sentiments{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.pulse-drawer-sentiments span{font-size:.75rem;background:white;border:1px solid #d0e4db;border-radius:20px;padding:5px 8px}
+.pulse-drawer-sentiments [data-sentiment="positive"]{border-color:#72c4a7}
+.pulse-drawer-sentiments [data-sentiment="negative"]{border-color:#edaaa4}
+.pulse-drawer-limited{padding:12px;background:#fff3de;border:1px solid #ecd39f;border-radius:9px;font-size:.8rem;line-height:1.6}
+.pulse-drawer-platforms{display:flex;overflow-x:auto;gap:8px;margin:22px 0 16px;padding-bottom:10px;scrollbar-width:thin}
+.pulse-drawer-platforms button{display:inline-flex;align-items:center;gap:7px;flex:none;border:1px solid #cadfd6;border-radius:99px;background:#fff;color:#25463b;padding:8px 10px;min-height:42px;font-size:.79rem}
+.pulse-drawer-platforms button[aria-pressed="true"]{background:#0b6752;color:#fff;border-color:#0b6752}
+.pulse-drawer-platforms button>span:last-child{opacity:.8}
+.pulse-channel-icon{display:inline-grid;place-items:center;border-radius:9px;min-width:30px;min-height:30px;font-weight:900;background:#142d2a;color:white;flex:none;font-family:system-ui,sans-serif}
+.pulse-channel-icon.channel-youtube{background:#e22424}
+.pulse-channel-icon.channel-instagram{background:linear-gradient(135deg,#ffb13b,#e33274,#803fe9)}
+.pulse-channel-icon.channel-tiktok{background:#111827;text-shadow:-1px 1px #27e9e5,1px -1px #ef3671}
+.pulse-channel-icon.channel-threads{background:#111}
+.pulse-channel-icon.channel-x{background:#111}
+.pulse-channel-icon.channel-visitgarut{background:#0b7b67}
+.pulse-drawer-selects{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pulse-drawer-selects label{font-size:.8rem;font-weight:700;color:#39584d}
+.pulse-drawer-selects select{width:100%;border:1px solid #c4d9cc;border-radius:10px;padding:10px;color:#17352e;background:white;min-height:44px}
+.pulse-drawer-count{font-size:.82rem;color:#566f65;border-bottom:1px solid #dbe7e1;padding:14px 0 10px;margin:0}
+.pulse-drawer-list{display:grid;gap:12px;margin-top:16px}
+.pulse-drawer-comment{padding:16px;border:1px solid #d8e4de;border-radius:15px;background:#fff;scroll-margin-top:15px}
+.pulse-drawer-comment[data-selected="true"]{border-color:#0fa47d;box-shadow:0 0 0 2px #86e5bd50;background:#f3fcf7}
+.pulse-drawer-comment-top{display:flex;gap:10px;align-items:center}
+.pulse-drawer-comment-top>div{min-width:0;flex:1}
+.pulse-drawer-comment-top strong{display:block;font-size:.87rem}
+.pulse-drawer-comment-top small{display:block;color:#657970;font-size:.74rem;margin:1px 0}
+.pulse-comment-sentiment{border-radius:20px;padding:4px 7px;background:#edf2f0;color:#405d51;font-size:.69rem;white-space:nowrap}
+.pulse-comment-sentiment.is-positive{background:#e0f6e8;color:#126243}
+.pulse-comment-sentiment.is-negative{background:#ffe8e4;color:#963b33}
+.pulse-comment-sentiment.is-mixed{background:#fff1d9;color:#816021}
+.pulse-drawer-comment-text{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.89rem;line-height:1.75;margin:12px 0}
+.pulse-drawer-comment>small{display:block;color:#617568;font-size:.74rem}
+.pulse-drawer-tags{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0}
+.pulse-drawer-tags span{font-size:.7rem;padding:3px 9px;border:1px solid #d6e8df;border-radius:15px;color:#476157}
+.pulse-drawer-actions{border-top:1px solid #ecf2ee;padding-top:10px;margin-top:13px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.pulse-drawer-actions>a{font-weight:700;color:#066752;font-size:.8rem}
+.pulse-drawer-actions>span{font-size:.76rem;color:#667b72}
+.pulse-drawer-actions .pulse-report{margin:0;font-size:.75rem}
+.pulse-drawer-load{display:grid;gap:2px;justify-items:center;width:100%;padding:13px;border-radius:12px;border:1px solid #5ba98f;background:#f0f9f4;color:#0a624e;font-weight:700}
+.pulse-drawer-load small{font-size:.72rem;color:#5a786b}
+.pulse-drawer-empty{padding:30px;text-align:center;background:#f6faf7;border-radius:12px}
+.pulse-drawer-empty button{border:1px solid #b7d7c7;padding:8px 14px;background:white;border-radius:9px}
+.pulse-drawer-footer{padding:22px 0;border-top:1px solid #e1ece6;display:grid;gap:10px;margin-top:16px}
+.pulse-drawer-footer p{font-size:.75rem;color:#61786c;margin:0}
+.pulse-drawer-footer a{font-size:.82rem;font-weight:700;color:#08735a}
+.pulse-all-evidence-cta{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 20px;margin:24px 0;border:1px solid #cbe3d7;background:#f2faf6;border-radius:14px}
+.pulse-all-evidence-cta p{max-width:610px;font-size:.89rem;color:#4d655b;margin:0}
+.pulse-all-evidence-cta button{flex:none;font-size:.85rem}
+@media(max-width:700px){
+ .pulse-evidence-drawer{inset:auto 0 0 0;width:100%;height:min(90dvh,950px);max-height:95dvh;border-radius:20px 20px 0 0}
+ .pulse-drawer-header{padding:15px 16px}
+ .pulse-drawer-scroll{height:calc(100% - 91px);padding:13px 16px 28px}
+ .pulse-drawer-comment{padding:13px}
+ .pulse-all-evidence-cta{align-items:stretch;flex-direction:column}
+ .pulse-all-evidence-cta button{width:100%}
+}
+@media(max-width:380px){.pulse-drawer-selects{grid-template-columns:1fr}}

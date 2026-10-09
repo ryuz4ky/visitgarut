@@ -34,7 +34,7 @@ export function calculatePulse(input:Mention[],now=Date.now(),youtubeApproved=fa
   topicStatuses.push({topic,label,count:authors.length,confidence,sensitive,evidenceIds:authors.map(m=>m.id),missing:null})
  }
  const isSensitive=(m:Mention)=>m.is_sensitive||sensitivePattern.test(m.original_text)||m.topics.some(t=>t.topic==='keamanan'||t.topic==='tiket')
- const allowedSensitive=new Set(insights.filter(i=>i.sensitive).flatMap(i=>i.evidenceIds));const preliminary=available.filter(m=>!isSensitive(m)||allowedSensitive.has(m.id))
+ const allowedSensitive=new Set(insights.filter(i=>i.sensitive).flatMap(i=>i.evidenceIds));const preliminary=available.filter(m=>!!m.reviewed_at&&(m.rights_basis!=='youtube_api'||youtubeApproved)&&(!isSensitive(m)||allowedSensitive.has(m.id)))
  const preliminaryIds=new Set(preliminary.map(m=>m.id))
  const overview=buildPulseOverview(analyzed.filter(m=>preliminaryIds.has(m.id)),insights,preliminary.filter(isSensitive).map(m=>m.id))
  const overviewIds=new Set(overview.evidenceIds),visible=preliminary.filter(m=>!isSensitive(m)||overviewIds.has(m.id))
