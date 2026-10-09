@@ -41,7 +41,11 @@ else
   NODE_OPTIONS="--max-old-space-size=192" UV_THREADPOOL_SIZE=2 npm ci --no-audit --no-fund --prefer-offline --maxsockets=1
 fi
 node scripts/pulse-migrate.cjs
-npm run build
+# Full CI suites already gate the exact commit in Vercel preview.
+# This shared hosting account has a 1 GiB memory limit: avoid re-running
+# PGlite/unit suites during the isolated production Next.js build.
+npm run build:youtube-worker
+npx next build
 cp -r public .next/standalone/
 mkdir -p .next/standalone/.next
 cp -r .next/static .next/standalone/.next/
