@@ -121,7 +121,7 @@ export default function EvidencePanel({
       <p className="pulse-drawer-count" role="status">{shown.length} hasil sesuai filter · menampilkan {visible.length}</p>
       <div className="pulse-drawer-list">
         {visible.map(item => {
-          const source = safeEvidenceSource(item.source_url)
+          const source = safeEvidenceSource(item.source_url, item.platform)
           const sentiment = evidenceSentiment(item,topic)
           return <article key={item.id} className="pulse-drawer-comment" data-selected={focusedId === item.id}
             id={'pulse-drawer-evidence-'+item.id}>
