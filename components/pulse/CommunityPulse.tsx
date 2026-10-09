@@ -40,7 +40,7 @@ export default function CommunityPulse({pulse:initial,placeId,research=[],conten
    <button type="button" className="vg-button" onClick={e=>openEvidence(null,e.currentTarget)}>Lihat semua {pulse.evidence.length} komentar / post</button>
   </div>}
   {youtubeAvailable&&!loaded&&<div className="pulse-consent"><p>Bukti YouTube opsional</p><p>Tambahkan komentar YouTube yang telah diperiksa ke sampel ini. Dengan melanjutkan, Anda menyetujui <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer">Ketentuan YouTube</a> dan memahami <Link href="/privasi">kebijakan privasi</Link> serta <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">privasi Google</a>.</p><label className="vg-checkbox"><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)}/>Saya setuju memuat data YouTube.</label><button className="vg-button" disabled={!consent||pending} onClick={()=>startTransition(async()=>{try{setPulse(await loadYoutubePulse(placeId,consent));setLoaded(true)}catch{setError('Data YouTube belum dapat dimuat.')}})}>{pending?'Memuat…':'Tambahkan bukti YouTube'}</button>{error&&<p role="alert">{error}</p>}</div>}
-  <EvidencePanel pulse={pulse} placeId={placeId} rental={rental} request={openRequest} onDismiss={()=>setEvidenceOpen(false)}/>
+  <EvidencePanel pulse={pulse} placeId={placeId} rental={rental} youtubeConsent={loaded && consent} request={openRequest} onDismiss={()=>setEvidenceOpen(false)}/>
   <ContributionForm placeId={placeId} rental={rental}/>
   <ReportForm placeId={placeId}/>
  </section>
