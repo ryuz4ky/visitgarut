@@ -11,6 +11,15 @@ test('Repeated author counts once and newest context wins',()=>{const p=calculat
 test('Mixed experience keeps separate positive and negative topics and full text',()=>{const p=calculatePulse([mention(1),mention(2),mention(3)],now);assert.equal(p.insights.find(i=>i.topic==='pemandangan').positive,3);assert.equal(p.insights.find(i=>i.topic==='akses').negative,3);assert.equal(p.evidence[0].original_text,mention(1).original_text);assert.equal(p.evidence[0].sentiment,'mixed')});
 test('Percentage waits for ten and includes neutral and mixed denominator',()=>{assert.equal(calculatePulse(Array.from({length:9},(_,i)=>mention(i)),now).positivePercent,null);assert.equal(calculatePulse(Array.from({length:10},(_,i)=>mention(i,{sentiment:i<6?'positive':i<8?'neutral':'mixed'})),now).positivePercent,60)});
 test('Pending, withdrawn, stale experience, and expired evidence cannot influence public output',()=>{const rows=[mention(1,{status:'pending'}),mention(2,{status:'withdrawn'}),mention(3,{expires_at:new Date(now-1).toISOString()}),mention(4,{experience_date:'2025-01-01'})];const p=calculatePulse(rows,now);assert.equal(p.evidence.length,0);assert.equal(p.classified,0)});
+test('Approved yet unreviewed comments never enter public evidence',()=>{
+ const rows=[mention(1),mention(2),mention(3),mention(4,{reviewed_at:null})]
+ const p=calculatePulse(rows,now)
+ assert.equal(p.insights.find(i=>i.topic==='pemandangan').count,3)
+ assert.ok(!p.evidence.some(e=>e.id===4))
+ assert.equal(p.evidence.length,3)
+ const onlyUnreviewed=calculatePulse([mention(9,{reviewed_at:null})],now)
+ assert.equal(onlyUnreviewed.evidence.length,0)
+});
 test('Permission and independent identity gate analysis',()=>{const p=calculatePulse([mention(1,{analysis_allowed:false}),mention(2,{independence_key:null}),mention(3,{platform:'google',analysis_allowed:false})],now);assert.equal(p.insights.length,0);assert.equal(p.classified,0)});
 test('YouTube derived metrics stay blocked without explicit permission',()=>{const rows=[1,2,3].map(i=>mention(i,{platform:'youtube',rights_basis:'youtube_api',expires_at:new Date(now+DAY).toISOString()}));const blocked=calculatePulse(rows,now,false);assert.equal(blocked.insights.length,0);assert.equal(blocked.topicStatuses.find(s=>s.topic==='pemandangan').count,0);assert.equal(calculatePulse(rows,now,true).insights.length,2)});
 test('Sensitive claims require six verified independent sources and two content sources',()=>{const rows=Array.from({length:6},(_,i)=>mention(i,{platform:'youtube',source_url:'https://www.youtube.com/watch?v='+ (i<3?'ABCDEFGHIJK':'LMNOPQRSTUV')+'&lc='+i,is_sensitive:true,verification_reference:'checked',topics:[{topic:'keamanan',sentiment:'negative'}]}));assert.equal(calculatePulse(rows.slice(0,5),now).evidence.length,0);assert.equal(calculatePulse(rows.map(m=>({...m,verification_reference:''})),now).evidence.length,0);assert.equal(calculatePulse(rows.map(m=>({...m,source_url:'https://www.youtube.com/watch?v=ABCDEFGHIJK&lc='+m.id})),now).insights.length,0);const p=calculatePulse(rows,now);assert.equal(p.insights[0].count,6);assert.equal(p.insights[0].sourceCount,2)});
