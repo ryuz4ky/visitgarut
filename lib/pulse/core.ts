@@ -37,7 +37,7 @@ export function calculatePulse(input:Mention[],now=Date.now(),youtubeApproved=fa
  // from status='approved' alone. Sensitive claims retain the existing
  // independent-source and context-verification publication gate.
  const allowedSensitive=new Set(insights.filter(i=>i.sensitive).flatMap(i=>i.evidenceIds))
- const visible=available.filter(m=>!!m.reviewed_at && (
+ const visible=available.filter(m=>!!m.reviewed_at && (m.rights_basis!=='youtube_api'||youtubeApproved) && (
   !(m.is_sensitive||sensitivePattern.test(m.original_text)||m.topics.some(t=>t.topic==='keamanan'||t.topic==='tiket'))
   || allowedSensitive.has(m.id)
  ))
