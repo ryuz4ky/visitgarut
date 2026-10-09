@@ -81,6 +81,11 @@ check('Sensitive and unreviewed mentions remain invisible with real Pulse calcul
   const unreviewed=[sample(1,{reviewed_at:null}),sample(2),sample(3)]
   assert.equal(buildGlobeNodes(calculatePulse(unreviewed,NOW)).length,0)
 })
+check('Approved but unreviewed records are unavailable in the all-comments evidence set',()=>{
+ const p=calculatePulse([sample(1),sample(2),sample(3),sample(4,{reviewed_at:null})],NOW)
+ assert.equal(p.evidence.some(row=>row.id===4),false)
+ assert.equal(p.evidence.filter(row=>row.topics.some(t=>t.topic==='pemandangan')).some(row=>row.id===4),false)
+})
 check('Repeated author does not inflate a Globe node',()=>{
   const rows=[sample(1),sample(2),sample(3,{independence_key:'visitor-1'})]
   assert.deepEqual(buildGlobeNodes(calculatePulse(rows,NOW)),[])
