@@ -10,7 +10,8 @@ VG_STAGE=$(mktemp -d /home/visitgar/.visitgarut-build.XXXXXX)
 trap 'rm -rf "$VG_STAGE"' EXIT
 git archive "$VG_REVISION" | tar -x -C "$VG_STAGE"
 cd "$VG_STAGE"
-npm ci --no-audit --no-fund
+# Keep installation below the account's shared 1 GiB memory limit while the old app runs.
+NODE_OPTIONS="--max-old-space-size=192" UV_THREADPOOL_SIZE=2 npm ci --no-audit --no-fund --prefer-offline --maxsockets=1
 node scripts/pulse-migrate.cjs
 npm run build
 cp -r public .next/standalone/
