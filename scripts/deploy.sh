@@ -10,8 +10,36 @@ VG_STAGE=$(mktemp -d /home/visitgar/.visitgarut-build.XXXXXX)
 trap 'rm -rf "$VG_STAGE"' EXIT
 git archive "$VG_REVISION" | tar -x -C "$VG_STAGE"
 cd "$VG_STAGE"
-# Keep installation below the account's shared 1 GiB memory limit while the old app runs.
-NODE_OPTIONS="--max-old-space-size=192" UV_THREADPOOL_SIZE=2 npm ci --no-audit --no-fund --prefer-offline --maxsockets=1
+# Reuse a verified dependency tree for source-only changes, copying it into the isolated build.
+if node - /home/visitgar/public_html "$VG_STAGE" <<'DEPENDENCIES'
+const fs = require('node:fs');
+const path = require('node:path');
+try {
+  const source = process.argv[2], target = process.argv[3];
+  const wanted = JSON.parse(fs.readFileSync(path.join(target, 'package-lock.json'), 'utf8')).packages;
+  const installed = JSON.parse(fs.readFileSync(path.join(source, 'node_modules/.package-lock.json'), 'utf8')).packages;
+  if (!wanted || !installed || !Object.keys(installed).length) throw new Error('Missing dependency metadata');
+  for (const [name, entry] of Object.entries(installed)) {
+    if (!name) continue;
+    const expected = wanted[name];
+    if (!expected || entry.version !== expected.version || entry.integrity !== expected.integrity || entry.resolved !== expected.resolved) throw new Error('Dependency lock mismatch');
+    const actual = JSON.parse(fs.readFileSync(path.join(source, name, 'package.json'), 'utf8'));
+    if (actual.version !== expected.version) throw new Error('Installed version mismatch');
+  }
+  for (const [name, entry] of Object.entries(wanted)) {
+    if (name && !entry.optional && !installed[name]) throw new Error('Required dependency missing');
+  }
+  console.log('Verified existing dependencies against the target lockfile');
+} catch {
+  process.exitCode = 1;
+}
+DEPENDENCIES
+then
+  cp -a /home/visitgar/public_html/node_modules "$VG_STAGE/node_modules"
+else
+  # Keep installation below the account's shared 1 GiB memory limit while the old app runs.
+  NODE_OPTIONS="--max-old-space-size=192" UV_THREADPOOL_SIZE=2 npm ci --no-audit --no-fund --prefer-offline --maxsockets=1
+fi
 node scripts/pulse-migrate.cjs
 npm run build
 cp -r public .next/standalone/
