@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run test:globe && npm run test:discovery-ux && npm run build:youtube-worker && next build",
+    "build": "npm run test:pulse && npm run test:globe && npm run test:discovery-ux && npm run build:youtube-worker && next build",
     "start": "next start",
     "lint": "eslint .",
     "test:pulse": "tsc lib/pulse/core.ts --target ES2022 --module commonjs --skipLibCheck --outDir .pulse-test && node scripts/pulse-tests.cjs .pulse-test/core.js",
