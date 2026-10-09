@@ -1,4 +1,5 @@
 import { ratingDimensions,type DimensionRating,type RatingDimension } from './contribution'
+import { buildPulseOverview,type PulseOverview } from './overview'
 export const platforms = {google:'Google Maps',youtube:'YouTube',instagram:'Instagram',tiktok:'TikTok',threads:'Threads',x:'X',visitgarut:'VisitGarut'} as const
 export type Platform = keyof typeof platforms
 export const topics = {pemandangan:'Pemandangan',aktivitas:'Aktivitas & spot foto',keluarga:'Pengalaman bersama keluarga',pelayanan:'Pelayanan',harga:'Harga & nilai',akses:'Jalan & akses',lalu_lintas:'Lalu lintas & kemacetan',parkir:'Parkir',kebersihan:'Kebersihan',fasilitas:'Fasilitas & toilet',keramaian:'Keramaian & antrean',tiket:'Penawaran tiket di luar kanal resmi',keamanan:'Keamanan'} as const
@@ -11,7 +12,7 @@ export type Evidence = Pick<Mention,'id'|'platform'|'original_text'|'display_nam
 export type Insight = {topic:Topic;label:string;summary:string;count:number;positive:number;neutral:number;negative:number;mixed:number;sourceCount:number;platformCount:number;confidence:'rendah'|'sedang'|'tinggi';trend:'naik'|'turun'|'stabil'|'belum cukup data';current30:number;previous30:number;sensitive:boolean;evidenceIds:number[]}
 export type TopicStatus = {topic:Topic;label:string;count:number|null;confidence:Insight['confidence']|'belum cukup';sensitive:boolean;evidenceIds:number[];missing:'sample'|'sources'|'verification'|null}
 export type DimensionSummary={dimension:RatingDimension;label:string;average:number;count:number;evidenceIds:number[]}
-export type Pulse = {topicStatuses:TopicStatus[];ratings:DimensionSummary[];insights:Insight[];evidence:Evidence[];classified:number;positivePercent:number|null;lastUpdated:string|null;windowDays:number;limited:boolean}
+export type Pulse = {overview:PulseOverview;topicStatuses:TopicStatus[];ratings:DimensionSummary[];insights:Insight[];evidence:Evidence[];classified:number;positivePercent:number|null;lastUpdated:string|null;windowDays:number;limited:boolean}
 const DAY=86400000
 function validTime(value:string){const n=Date.parse(value);return Number.isFinite(n)?n:null}
 function eligible(m:Mention,now:number){const t=validTime(m.published_at);const expiry=m.expires_at?validTime(m.expires_at):null;return m.status==='approved'&&t!==null&&t<=now&&t>=now-90*DAY&&(!m.expires_at||(expiry!==null&&expiry>now))&&(!m.experience_date||Date.parse(m.experience_date)>=now-90*DAY)}
@@ -32,12 +33,18 @@ export function calculatePulse(input:Mention[],now=Date.now(),youtubeApproved=fa
   insights.push({topic,label,summary,count:authors.length,...counts,sourceCount:sources.size,platformCount,confidence,trend,current30:current,previous30:previous,sensitive,evidenceIds:authors.map(m=>m.id)})
   topicStatuses.push({topic,label,count:authors.length,confidence,sensitive,evidenceIds:authors.map(m=>m.id),missing:null})
  }
- const allowedSensitive=new Set(insights.filter(i=>i.sensitive).flatMap(i=>i.evidenceIds));const visible=available.filter(m=>!(m.is_sensitive||sensitivePattern.test(m.original_text)||m.topics.some(t=>t.topic==='keamanan'||t.topic==='tiket'))||allowedSensitive.has(m.id));
+ const isSensitive=(m:Mention)=>m.is_sensitive||sensitivePattern.test(m.original_text)||m.topics.some(t=>t.topic==='keamanan'||t.topic==='tiket')
+ const allowedSensitive=new Set(insights.filter(i=>i.sensitive).flatMap(i=>i.evidenceIds));const preliminary=available.filter(m=>!isSensitive(m)||allowedSensitive.has(m.id))
+ const preliminaryIds=new Set(preliminary.map(m=>m.id))
+ const overview=buildPulseOverview(analyzed.filter(m=>preliminaryIds.has(m.id)),insights,preliminary.filter(isSensitive).map(m=>m.id))
+ const overviewIds=new Set(overview.evidenceIds),visible=preliminary.filter(m=>!isSensitive(m)||overviewIds.has(m.id))
+ const publishedSensitiveTopics=new Set(overview.topics.filter(t=>t.sensitive).map(t=>t.topic))
+ for(const status of topicStatuses)if(status.sensitive&&status.missing===null&&!publishedSensitiveTopics.has(status.topic)){status.count=null;status.confidence='belum cukup';status.evidenceIds=[];status.missing='sample'}
  const ratings:DimensionSummary[]=[]
  for(const [key,label] of Object.entries(ratingDimensions)){const dimension=key as RatingDimension;const authors=independent(analyzed.filter(m=>m.platform==='visitgarut'&&visible.some(v=>v.id===m.id)&&m.ratings?.some(r=>r.dimension===dimension)));if(authors.length<(dimension==='keamanan'?6:3))continue;if(dimension==='keamanan'&&authors.some(m=>!m.verification_reference||!m.reviewed_at))continue;ratings.push({dimension,label,count:authors.length,average:Math.round(authors.reduce((sum,m)=>sum+m.ratings!.find(r=>r.dimension===dimension)!.rating,0)/authors.length*10)/10,evidenceIds:authors.map(m=>m.id)})}
  const overall=independent(analyzed.filter(m=>m.sentiment!=='unclassified'&&visible.some(v=>v.id===m.id)));const last=visible.map(m=>m.reviewed_at||m.published_at).sort().at(-1)||null
  const publicIds=new Set(visible.map(m=>m.id));for(const status of topicStatuses)status.evidenceIds=status.evidenceIds.filter(id=>publicIds.has(id))
- return {topicStatuses,ratings,insights:insights.sort((a,b)=>b.count-a.count),evidence:visible.map(publicEvidence),classified:overall.length,positivePercent:overall.length>=10?Math.round(overall.filter(m=>m.sentiment==='positive').length/overall.length*100):null,lastUpdated:last,windowDays:90,limited:input.length>=1000}
+ return {overview,topicStatuses,ratings,insights:insights.filter(i=>!i.sensitive||publishedSensitiveTopics.has(i.topic)).sort((a,b)=>b.count-a.count),evidence:visible.map(publicEvidence),classified:overall.length,positivePercent:overall.length>=10?Math.round(overall.filter(m=>m.sentiment==='positive').length/overall.length*100):null,lastUpdated:last,windowDays:90,limited:input.length>=1000}
 }
 export function normalizeSocialUrl(value:string,platform:Platform){const u=new URL(value);if(u.protocol!=='https:'||u.username||u.password||u.port)throw new Error('Gunakan URL publik https tanpa kredensial.');const host=u.hostname.toLowerCase().replace(/^www\./,'');let id='',url=''
  if(platform==='youtube'){if(host==='youtu.be')id=u.pathname.slice(1);else if(['youtube.com','m.youtube.com'].includes(host)){id=u.searchParams.get('v')||u.pathname.match(/^\/(shorts|embed)\/([\w-]+)/)?.[2]||''}if(!/^[\w-]{11}$/.test(id))throw new Error('URL video YouTube tidak valid.');url='https://www.youtube.com/watch?v='+id}

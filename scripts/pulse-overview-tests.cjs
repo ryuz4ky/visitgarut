@@ -1,0 +1,25 @@
+const assert=require('node:assert/strict');
+const {calculatePulse}=require('../.pulse-test/core.js');
+const {overviewEvidence}=require('../.pulse-test/overview.js');
+const now=Date.parse('2026-10-08T14:00:00Z'),DAY=86400000;
+const m=(id,extra={})=>({id,platform:'visitgarut',original_text:`Komentar contoh uji ${id} tentang pemandangan dan akses lokasi.`,display_name:'Akun uji',source_url:`https://visitgarut.com/wisata/qa#pengalaman-${id}`,published_at:new Date(now-id*1000).toISOString(),experience_date:null,sentiment:'mixed',status:'approved',rights_basis:'first_party',analysis_allowed:true,independence_key:'account-'+id,is_sensitive:false,verification_reference:'',engagement_count:0,expires_at:null,topics:[{topic:'pemandangan',sentiment:'positive'},{topic:'akses',sentiment:'negative'}],reviewed_at:new Date(now).toISOString(),...extra});
+const overview=rows=>calculatePulse(rows,now).overview;
+const empty=overview([]);assert.equal(empty.sampleSize,0);assert.equal(empty.percentages,null);assert.deepEqual(empty.topics,[]);
+const data=Array.from({length:20},(_,i)=>m(i+1,{platform:i%2?'instagram':'visitgarut',sentiment:i<9?'positive':i<15?'mixed':i<18?'neutral':'negative',topics:i<16?[{topic:'pemandangan',sentiment:'positive'},...(i<10?[{topic:'akses',sentiment:'negative'}]:[])]:[{topic:'fasilitas',sentiment:'neutral'}]}));
+const p=calculatePulse(data,now),o=p.overview;
+assert.equal(o.sampleSize,20);assert.equal(o.topics.find(t=>t.topic==='pemandangan').percent,80);assert.equal(o.topics.find(t=>t.topic==='akses').percent,50);
+for(const topic of o.topics){assert.equal(topic.count,overviewEvidence(p.evidence,topic.evidenceIds).length);assert.equal(Object.values(topic.sentiments).reduce((a,b)=>a+b,0),topic.count);assert(topic.count<=o.sampleSize)}
+assert.equal(Object.values(o.percentages).reduce((a,b)=>a+b,0),100);
+const rounded=overview(data.slice(0,11));assert.equal(Object.values(rounded.percentages).reduce((a,b)=>a+b,0),100);assert.equal(overview(data.slice(0,9)).percentages,null);
+const duplicateAccount=overview([...data,m(21,{independence_key:'account-1'})]);assert.equal(duplicateAccount.sampleSize,20);assert.equal(duplicateAccount.quality.repeatedAccount,1);
+const repeated='Komentar salinan panjang untuk memastikan satu teks identik tidak menaikkan jumlah bukti. Pengujian ini hanya menggunakan data sintetis.';
+const duplicateText=overview([m(1,{original_text:repeated}),m(2,{original_text:repeated.toUpperCase()}),m(3)]);assert.equal(duplicateText.sampleSize,2);assert.equal(duplicateText.quality.identicalText,1);assert.equal(duplicateText.topics.length,0);
+assert.equal(overview([m(1,{topics:[]}),m(2,{sentiment:'unclassified'}),m(3)]).sampleSize,1);
+assert.equal(overview([m(1,{status:'pending'}),m(2,{analysis_allowed:false}),m(3,{independence_key:null}),m(4,{expires_at:new Date(now-1).toISOString()})]).sampleSize,0);
+const youtube=data.map(row=>({...row,platform:'youtube',rights_basis:'youtube_api',expires_at:new Date(now+DAY).toISOString()}));assert.equal(overview(youtube).sampleSize,0);assert.equal(calculatePulse(youtube,now,true).overview.sampleSize,20);
+const sensitive=Array.from({length:6},(_,i)=>m(i+1,{is_sensitive:true,verification_reference:'checked',original_text:repeated,source_url:'https://www.instagram.com/p/'+(i<3?'POSTA':'POSTB')+'/',topics:[{topic:'keamanan',sentiment:'negative'}]}));
+const hidden=overview(sensitive);assert.equal(hidden.sampleSize,0);assert.equal(hidden.quality.evaluated,0);assert.deepEqual(hidden.evidenceIds,[]);
+const withheld=calculatePulse(sensitive,now);assert.equal(withheld.evidence.length,0);assert.equal(withheld.classified,0);assert.equal(withheld.insights.length,0);assert.equal(withheld.topicStatuses.find(t=>t.topic==='keamanan').count,null);
+const approved=overview(sensitive.map((row,i)=>({...row,original_text:row.original_text+' Variasi sumber '+i})));assert.equal(approved.sampleSize,6);assert.equal(approved.topics[0].count,6);
+for(const key of ['independence_key','verification_reference','permission_reference','rights_basis'])assert(!JSON.stringify(o).includes(key));
+console.log('PASS overview: percentage denominators, rounding, topic-dialog evidence parity, identity/text deduplication, permissions, small samples, and sensitive evidence gates.');

@@ -46,9 +46,9 @@ Visitors can optionally submit their own 1–5 ratings for nine dimensions. Subm
 
 Checks: `npm run test:pulse`, `npm run test:pulse-activation`, `npm run test:youtube-collection`, `npm run test:youtube`, `npx tsc --noEmit`, and `npm run build`. No test reviews should be published to the live visitor sample.
 
-### Community Pulse insight table
+### Community Pulse evidence thresholds
 
-Place pages show a three-column insight table before curated videos: topic, distinct reviewed contributors, and confidence. Every topic opens its evidence panel, even when the sample is empty. Ordinary topics remain insufficient below three independent contributors. Sensitive report counts and texts stay withheld until six identities, two content sources, and complete review checks are satisfied. Traffic and unofficial-ticket reports have separate moderation topics in migration 007. Existing YouTube original comments remain separate from derived metrics until the required approval is configured.
+Ordinary topics remain insufficient below three independent contributors. Sensitive report counts and texts stay withheld until six identities, two content sources, and complete review checks are satisfied, including after sample deduplication. Traffic and unofficial-ticket reports have separate moderation topics in migration 007. Existing YouTube original comments remain separate from derived metrics until the required approval is configured.
 
 ### Public source discovery
 
@@ -62,6 +62,16 @@ Check the parser/query logic with `npm run test:discovery` in addition to the ex
 
 ### Research insights — 8 October 2026
 
-Community Pulse now opens its research table when no eligible visitor contributions exist. The table groups attributed editorial notes by topic and counts distinct source URLs; it never turns those sources into visitor identities or sentiment. Users can switch to the visitor evidence table and open either type of evidence independently. The existing discovery feature remains intact.
+Attributed research notes are preserved separately from visitor evidence. Their distinct source URLs never become visitor identities or sentiment. The existing discovery feature remains intact.
 
 `data/researched-insights-2026-10-08.json` adds 20 source-checked notes for five existing places. Import with `node scripts/seed-research.cjs data/researched-insights-2026-10-08.json` after setting `DATABASE_URL`. Existing entries and withdrawals are preserved. Check the import and distinct-source counts with `npm run test:research-insights`.
+
+### Summary-first Community Pulse — 9 October 2026
+
+Place pages lead with a short conversation summary, sentiment distribution, and up to five topic cards. One click opens the supporting comments across eligible platforms. Research and source videos are compact disclosures below the summary; no research/visitor tab choice is required.
+
+The overview selects the newest eligible classified, topic-tagged comment per verified internal account identity and deduplicates identical normalized texts of at least 80 characters. All topic proportions use that same sample denominator, and each dialog is built from the exact evidence IDs counted by its topic card. Sentiment percentages appear at ten comments and use largest-remainder rounding to total 100%. Empty samples show an honest explanatory state. No production seed comments or simulated metrics are added.
+
+The quality dialog reports actual exclusions when available and states that authenticity cannot yet be established. It does not label an account a bot or a visitor verified from text alone. Topic headlines describe curated topic sentiment; there is no fabricated AI extraction of detailed place conditions. Multi-platform data access and YouTube derived-metrics approval remain prerequisites for those sources to enter the sample.
+
+Validate with `npm run test:pulse-overview`, `npm run test:pulse`, and `npm run build`.
