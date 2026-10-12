@@ -29,3 +29,4 @@
   .vg-choice-grid>a>small{grid-column:2;margin-top:5px}
 }
 @media(prefers-reduced-motion:reduce){.vg-choice-grid>a{transition:none}.vg-choice-grid>a:hover{transform:none}}
+.vg-trip-layout{display:grid;grid-template-columns:minmax(250px,340px) minmax(0,1fr);gap:32px;align-items:start}.vg-trip-layout .vg-editor{min-width:0}.vg-trip-day{padding:24px;border:1px solid #dce4df;border-radius:18px;margin-bottom:20px;background:#fff}.vg-trip-day li{padding:12px 0}.vg-trip-day h3{margin:0 0 8px}@media(max-width:720px){.vg-trip-layout{grid-template-columns:1fr}.vg-trip-day{padding:18px}}

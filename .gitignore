@@ -40,3 +40,7 @@ next-env.d.ts
 /.directory-test/
 
 .pulse-activation-test/
+/.archive-test/
+/.discovery-test/
+/.planner-test/
+/test-results/

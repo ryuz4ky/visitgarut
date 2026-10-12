@@ -4,7 +4,7 @@ import { buildPlacesQuery, type PlaceSearch } from './search'
 
 export { categories } from './categories'
 export type Place = {google_place_id?:string; id: number; slug: string; name: string; category: string; district: string; address: string; excerpt: string; content: string; image_url: string; image_credit: string; latitude: number | null; longitude: number | null; website: string; whatsapp: string; source_url: string; status: string; updated_at: Date }
-export type Article = { id: number; slug: string; title: string; excerpt: string; content: string; author: string; status: string; published_at: Date | null; updated_at: Date }
+export type Article = { source_urls?:string[];image_url?:string;image_credit?:string;author_type?:string;reviewed_by?:string;reviewed_at?:Date|null; id: number; slug: string; title: string; excerpt: string; content: string; author: string; status: string; published_at: Date | null; updated_at: Date }
 export type Event = { id: number; slug: string; title: string; excerpt: string; content: string; address: string; starts_at: Date; ends_at: Date | null; source_url: string; status: string; updated_at: Date }
 export async function places(options: PlaceSearch = {}): Promise<Place[]> {
   if (!process.env.DATABASE_URL) return []
@@ -32,4 +32,14 @@ export async function relatedArticles(id: number): Promise<Article[]> {
 export async function events(): Promise<Event[]> {
   if (!process.env.DATABASE_URL) return []
   return (await db().query<Event>("SELECT * FROM vg_events WHERE status='published' AND COALESCE(ends_at,starts_at+interval '1 day')>=now() ORDER BY starts_at LIMIT 100")).rows
+}
+
+// Sitemaps must not silently inherit the 100-row interactive directory cap.
+export async function sitemapRecords(){
+ if(!process.env.DATABASE_URL)return {places:[],articles:[]};
+ const [ps,as]=await Promise.all([
+  db().query<Pick<Place,'slug'|'category'|'updated_at'>>("SELECT slug,category,updated_at FROM vg_places WHERE status='published' ORDER BY id LIMIT 45000"),
+  db().query<Pick<Article,'slug'|'updated_at'>>("SELECT slug,updated_at FROM vg_articles WHERE status='published' ORDER BY id LIMIT 4500")
+ ]);
+ return {places:ps.rows,articles:as.rows};
 }

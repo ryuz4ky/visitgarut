@@ -1,6 +1,6 @@
 /* Pulse Globe: visually enhanced, evidence-first 2.5D SVG/CSS-style sphere. */
 .pulse-globe{margin:28px 0 38px;padding:clamp(18px,3vw,30px);color:#eaf9f4;border-radius:26px;background:radial-gradient(ellipse at 35% 45%,#164d54 0,#0c2e38 43%,#071e2c 85%);box-shadow:0 20px 55px #071e2c23}
-.pulse-globe-intro{display:flex;align-items:start;justify-content:space-between;gap:16px}
+.pulse-globe-intro{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
 .pulse-globe .vg-eyebrow{color:#8de3d0}
 .pulse-globe h3{font-size:clamp(1.2rem,2.5vw,1.85rem);line-height:1.3;color:#f6fffc;margin:8px 0}
 .pulse-globe-intro p,.pulse-globe-side small,.pulse-globe-method{color:#b5cec9;font-size:.9rem;line-height:1.5}

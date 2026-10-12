@@ -8,7 +8,8 @@ export function middleware(request: NextRequest) {
   return NextResponse.redirect(url,308)
  }
  if(path.startsWith('/explore/')) { const url=request.nextUrl.clone();url.pathname=path.replace('/explore/','/wisata/');return NextResponse.redirect(url,308) }
- if(/^\/(account|login|partner|trip|claim|auth)(\/|$)/.test(path)) return new NextResponse('Fitur ini belum tersedia pada versi awal VisitGarut.',{status:404})
+ if(/^\/(account|login|partner|claim|auth)(\/|$)/.test(path)) return new NextResponse('Fitur ini belum tersedia pada versi awal VisitGarut.',{status:404})
+ if(path.startsWith('/trip/')) return new NextResponse('Rencana tidak ditemukan.',{status:404})
  if(path==='/api/nearby') return NextResponse.json({error:'Gunakan peta VisitGarut.'},{status:404})
  return NextResponse.next()
 }

@@ -2,7 +2,7 @@
 import { db } from '@/lib/mvp/db'
 import { type Evidence, type Topic } from './core'
 import {
- archivePageSql,archiveCountSql,ARCHIVE_PAGE_SIZE,
+ archivePageSql,archiveCountSql,archiveSelectedSql,ARCHIVE_PAGE_SIZE,
  encodeArchiveCursor,validateArchiveFilters,type ArchiveFilters,
 } from './archive-query'
 
@@ -11,12 +11,13 @@ export type ArchivePageResponse={
  nextCursor: string|null
  total: number|null
 }
-/** Only PUBLIC read access. Never accepts arbitrary SQL, record IDs or limits. */
+/** Only PUBLIC read access. Accepts only validated filters, a selected record ID and an opaque cursor. */
 export async function fetchPublicEvidencePage(input:{
- placeId:number;filters:ArchiveFilters;cursor:string|null;youtubeConsent:boolean
+ placeId:number;filters:ArchiveFilters;cursor:string|null;youtubeConsent:boolean;selectedId?:number
 }):Promise<ArchivePageResponse>{
+ if(!input || typeof input!=='object' || typeof input.youtubeConsent!=='boolean') throw new Error('Permintaan tidak valid.')
  const {placeId,filters,cursor,youtubeConsent}=input
- if(!input || typeof youtubeConsent!=='boolean') throw new Error('Permintaan tidak valid.')
+ if(cursor!==null && typeof cursor!=='string') throw new Error('Cursor tidak valid.')
  validateArchiveFilters(filters)
  if(!Number.isSafeInteger(placeId)||placeId<1) throw new Error('Lokasi tidak valid.')
  const client=db()
@@ -43,6 +44,13 @@ export async function fetchPublicEvidencePage(input:{
  const hasMore=rows.length>ARCHIVE_PAGE_SIZE
  const page=rows.slice(0,ARCHIVE_PAGE_SIZE)
  const last=page.at(-1)
+ // Revalidate a selected comment against the same current publication gates.
+ // Never pin stale SSR evidence after withdrawal or expiry.
+ if(cursor===null && Number.isSafeInteger(input.selectedId) && (input.selectedId ?? 0)>0){
+  const selectedQuery=archiveSelectedSql(placeId,filters,allowedYoutube,input.selectedId!)
+  const selected=await client.query(selectedQuery.sql,selectedQuery.params)
+  if(selected.rows[0]){const index=page.findIndex(row=>row.id===input.selectedId);if(index>=0)page.splice(index,1);page.unshift(selected.rows[0])}
+ }
  return {
   items:page.map(row=>({
    id:row.id,platform:row.platform,original_text:row.original_text,
