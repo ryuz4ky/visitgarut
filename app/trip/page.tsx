@@ -1,2 +1,21 @@
-import { redirect } from 'next/navigation'
-export default function Page(){redirect('/')}
+import Link from 'next/link'
+import {Shell,Breadcrumbs} from '@/components/mvp/Shell'
+import {places} from '@/lib/mvp/data'
+import {buildItinerary,eligibleTripPlace,tripCategories} from '@/lib/trip/planner'
+import ShareTrip from '@/components/trip/ShareTrip'
+export const dynamic='force-dynamic'
+export const metadata={title:'Rencanakan perjalanan Garut',description:'Susun rencana kunjungan dari tempat bersumber di direktori VisitGarut.',robots:{index:false,follow:true},alternates:{canonical:'/trip'}}
+export default async function Trip({searchParams}:{searchParams:Promise<Record<string,string|string[]|undefined>>}){
+ const p=await searchParams;const value=(key:string)=>typeof p[key]==='string'?p[key] as string:'';
+ const items=(await places()).filter(eligibleTripPlace);
+ const days=Math.max(1,Math.min(3,Math.floor(Number(value('days')))||1));
+ const mode=value('mode')==='walking'?'walking':'driving';
+ const interests=value('interests').split(',').filter(x=>(tripCategories as readonly string[]).includes(x));
+ const categories=interests.length?interests:[...tripCategories];
+ const startId=Number(value('start'))||items[0]?.id||0;
+ const date=/^\d{4}-\d{2}-\d{2}$/.test(value('date'))&&!Number.isNaN(Date.parse(value('date')))&&new Date(value('date')).toISOString().slice(0,10)===value('date')?value('date'):'';
+ const plan=value('plan')==='1'?buildItinerary(items,{days,startId,interests:categories,mode,date}):[];
+ return <Shell><section className="vg-wrap vg-section"><Breadcrumbs items={[{name:'Rencana perjalanan',path:'/trip'}]}/><span className="vg-eyebrow">RENCANA KUNJUNGAN</span><h1>Susun perjalananmu di Garut</h1><p className="vg-intro">Pilih titik awal dan minatmu. Kami mengurutkan tempat dari direktori berdasarkan kedekatan koordinat, lalu menyediakan tautan rute untuk diperiksa.</p>
+ <div className="vg-trip-layout"><form action="/trip" className="vg-editor"><input type="hidden" name="plan" value="1"/><label>Titik awal<select name="start" defaultValue={startId} required>{items.map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></label><label>Tanggal mulai<input type="date" name="date" defaultValue={date}/></label><label>Durasi<select name="days" defaultValue={days}>{[1,2,3].map(n=><option key={n} value={n}>{n} hari</option>)}</select></label><label>Perjalanan<select name="mode" defaultValue={mode}><option value="driving">Kendaraan</option><option value="walking">Jalan kaki — area berdekatan</option></select></label><label>Minat<select name="interests" defaultValue={categories.join(',')}><option value="wisata,kuliner,cafe">Wisata, kuliner & kafe</option><option value="wisata">Wisata</option><option value="kuliner,cafe">Kuliner & kafe</option></select></label><button className="vg-button" disabled={!items.length}>Susun rencana</button>{!items.length&&<p role="status">Belum tersedia tempat dengan sumber dan koordinat untuk menyusun rencana.</p>}</form>
+ <div>{plan.length>0?<><p className="vg-alert">Rencana awal {plan.length} hari{date?' mulai '+date:''}. Jam buka, tiket, waktu tempuh dan ketersediaan belum dikonfirmasi. Periksa rute aktual sebelum berangkat.</p>{plan.map(day=><section className="vg-trip-day" key={day.day}><h2>Hari {day.day}</h2><ol>{day.stops.map(place=><li key={place.id}><h3><Link href={`/${place.category}/${place.slug}`}>{place.name}</Link></h3><p>{place.district||'Garut'} · Biaya kunjungan belum tersedia</p><a href={place.source_url} target="_blank" rel="noopener noreferrer">Periksa sumber informasi ↗</a></li>)}</ol><a className="vg-button" href={day.mapUrl} target="_blank" rel="noopener noreferrer">Periksa rute hari {day.day} ↗</a></section>)}{plan.length<days&&<p>Tempat yang memenuhi pilihan belum cukup untuk {days} hari. Perluas minat atau ubah titik awal.</p>}<ShareTrip/></>:<div className="vg-empty"><h2>{value('plan')==='1'?'Belum ada rencana yang sesuai':'Perjalanan dimulai dari pilihanmu'}</h2><p>{value('plan')==='1'?'Ubah titik awal, minat, atau moda perjalanan.':'Maksimal tiga tempat per hari, tanpa tempat berulang. Tautan rencana dapat dibagikan setelah dibuat.'}</p></div>}<p className="vg-source">Koordinat direktori dapat menunjukkan area sekitar tempat. Urutan ini bukan optimasi rute jalan dan tidak menjamin tempat buka pada tanggal pilihan. Untuk jalan kaki, saran dibatasi jarak garis lurus 3 km antartitik.</p></div></div></section></Shell>
+}

@@ -27,15 +27,16 @@ export function usePublicEvidenceArchive({
   fetchPublicEvidencePage({
    placeId,
    filters:{topic,platform:filters.platform,sentiment:filters.sentiment,sort:filters.sort},
-   cursor:null,youtubeConsent,
+   cursor:null,youtubeConsent,selectedId:request?.evidenceId,
   }).then((result:ArchivePageResponse)=>{
    if(currentKey.current!==key)return
    setState({active:true,items:result.items,cursor:result.nextCursor,
     total:result.total,loading:false,loadingMore:false,error:''})
   }).catch(()=>{
    if(currentKey.current!==key)return
-   setState({...empty,active:true,error:'Arsip PostgreSQL belum dapat dimuat. Menampilkan sampel komentar yang telah tersedia.'})
+   setState({...empty,active:true,error:'Arsip komentar belum dapat dimuat. Menampilkan sampel komentar yang telah tersedia.'})
   })
+  return ()=>{if(currentKey.current===key)currentKey.current++}
  },[enabled,placeId,request?.token,topic,filters.platform,filters.sentiment,filters.sort,youtubeConsent,retry])
  function loadMore(){
   if(!enabled||!state.cursor||state.loading||state.loadingMore)return

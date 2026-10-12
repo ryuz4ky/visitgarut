@@ -1,5 +1,5 @@
 'use client'
-import { useState,useTransition } from 'react'
+import { useState,useTransition,useRef } from 'react'
 import Link from 'next/link'
 import type { Pulse, Topic } from '@/lib/pulse/core'
 import { loadYoutubePulse } from '@/lib/pulse/public-actions'
@@ -18,9 +18,11 @@ export default function CommunityPulse({pulse:initial,placeId,research=[],conten
  const [pending,startTransition]=useTransition(),[error,setError]=useState('')
  const [openRequest,setOpenRequest]=useState<EvidenceOpenRequest|null>(null)
  const [drawerOpen,setDrawerOpen]=useState(false)
+ const requestToken=useRef(0)
  function openEvidence(topic:Topic|null,trigger:HTMLButtonElement,evidenceId?:number){
   setDrawerOpen(true)
-  setOpenRequest(previous=>({topic,trigger,evidenceId,token:(previous?.token||0)+1}))
+  const token=++requestToken.current
+  setOpenRequest({topic,trigger,evidenceId,token})
  }
  return <section id="community-pulse" className="pulse-section pulse-section-compact">
   <div className="vg-section-heading"><div><span className="vg-eyebrow">COMMUNITY PULSE</span><h2>{rental?'Apa kata pelanggan?':'Apa kata orang?'}</h2></div></div>
@@ -30,7 +32,7 @@ export default function CommunityPulse({pulse:initial,placeId,research=[],conten
   {research.length>0&&<details className="pulse-supporting" id="riset-tempat"><summary>Info praktis dari sumber publik <span>{research.length} catatan</span></summary><PlaceResearch items={research}/></details>}
   {pulse.ratings.length>0&&<details className="pulse-supporting"><summary>Penilaian aspek dari {rental?'pelanggan':'pengunjung'} VisitGarut</summary><DimensionRatings pulse={pulse} placeId={placeId}/></details>}
   {youtubeAvailable&&!loaded&&<details className="pulse-supporting"><summary>Tambahkan sampel YouTube yang tersedia</summary><div className="pulse-consent"><p>Tambahkan komentar YouTube yang telah diperiksa ke sampel ini. Dengan melanjutkan, Anda menyetujui <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer">Ketentuan YouTube</a> dan memahami <Link href="/privasi">kebijakan privasi</Link> serta <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">privasi Google</a>.</p><label className="vg-checkbox"><input type="checkbox" checked={consent} onChange={event=>setConsent(event.target.checked)}/>Saya setuju memuat data YouTube.</label><button className="vg-button" disabled={!consent||pending} onClick={()=>startTransition(async()=>{try{setPulse(await loadYoutubePulse(placeId,consent));setLoaded(true)}catch{setError('Data YouTube belum dapat dimuat.')}})}>{pending?'Memuat…':'Tambahkan sampel YouTube'}</button>{error&&<p role="alert">{error}</p>}</div></details>}
-  <EvidencePanel pulse={pulse} placeId={placeId} rental={rental} youtubeConsent={loaded&&consent} request={openRequest} onDismiss={()=>setDrawerOpen(false)}/>
+  <EvidencePanel pulse={pulse} placeId={placeId} rental={rental} youtubeConsent={loaded&&consent} request={openRequest} onDismiss={()=>{setDrawerOpen(false);setOpenRequest(null)}}/>
   <ContributionForm placeId={placeId} rental={rental}/>
   <ReportForm placeId={placeId}/>
  </section>

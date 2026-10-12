@@ -86,3 +86,9 @@ export function archiveCountSql(placeId:number,filters:ArchiveFilters,youtubeCon
  const {where,params}=archiveWhere(placeId,filters,youtubeConsent)
  return {sql:`SELECT count(*)::integer AS total FROM vg_social_mentions m WHERE ${where}`,params}
 }
+
+export function archiveSelectedSql(placeId:number,filters:ArchiveFilters,youtubeConsent:boolean,selectedId:number){
+ if(!Number.isSafeInteger(selectedId)||selectedId<1)throw new Error('Komentar tidak valid.');
+ const query=archivePageSql(placeId,filters,youtubeConsent,null);
+ return {sql:query.sql.replace(' ORDER BY ',` AND m.id=$${query.params.length+1} ORDER BY `),params:[...query.params,selectedId]};
+}

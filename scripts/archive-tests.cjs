@@ -1,7 +1,7 @@
 const assert=require('node:assert/strict')
 const { PGlite }=require('@electric-sql/pglite')
 const {
- archivePageSql,archiveCountSql,encodeArchiveCursor,decodeArchiveCursor,
+ archivePageSql,archiveCountSql,archiveSelectedSql,encodeArchiveCursor,decodeArchiveCursor,
  validateArchiveFilters,ARCHIVE_PAGE_SIZE,
 }=require('../.archive-test/archive-query.js')
 const defaults={topic:null,platform:'',sentiment:'',sort:'newest'}
@@ -47,7 +47,7 @@ async function main(){
       CASE WHEN s%5=0 THEN 'instagram' ELSE 'tiktok' END,
       'first_party',false,'Pemandangan dan akses Garut sangat bagus hari ini',
       'Sample '||s,'https://visitgarut.com/', 'positive', s%7
-    FROM generate_series(1,55) s;
+    FROM generate_series(1,1055) s;
     INSERT INTO vg_mention_topics SELECT id,'pemandangan','positive' FROM vg_social_mentions;
     INSERT INTO vg_mention_topics SELECT id,'akses','negative' FROM vg_social_mentions WHERE id%2=0;
     UPDATE vg_social_mentions SET reviewed_at=NULL WHERE id=3;
@@ -58,12 +58,18 @@ async function main(){
     UPDATE vg_social_mentions SET rights_basis='youtube_api',platform='youtube' WHERE id=8;
     UPDATE vg_social_mentions SET place_id=77 WHERE id=9;
     UPDATE vg_social_mentions SET expires_at=now()-interval '1 day' WHERE id=10;`)
+  const selected=archiveSelectedSql(7,defaults,false,52);
+  assert.equal((await pg.query(selected.sql,selected.params)).rows[0].id,52);
+  await pg.query("UPDATE vg_social_mentions SET status='withdrawn' WHERE id=52");
+  assert.equal((await pg.query(selected.sql,selected.params)).rows.length,0);
+  await pg.query("UPDATE vg_social_mentions SET status='approved' WHERE id=52");
+  console.log('PASS selected comment rechecked after withdrawal');pass++;
   const c=archiveCountSql(7,defaults,false)
   const total=(await pg.query(c.sql,c.params)).rows[0].total
-  assert.equal(total,47)
+  assert.equal(total,1047)
   console.log('PASS PostgreSQL eligibility excludes unpublished, unreviewed, sensitive and unconsented rows');pass++
   let cursor=null,seen=[]
-  for(let i=0;i<5;i++){
+  for(let i=0;i<60;i++){
    const q=archivePageSql(7,defaults,false,cursor)
    const result=(await pg.query(q.sql,q.params)).rows
    const rows=result.slice(0,ARCHIVE_PAGE_SIZE)
@@ -74,10 +80,10 @@ async function main(){
    }):null
    if(!cursor)break
   }
-  assert.equal(seen.length,47)
-  assert.equal(new Set(seen).size,47)
+  assert.equal(seen.length,1047)
+  assert.equal(new Set(seen).size,1047)
   assert.equal(cursor,null)
-  console.log('PASS PostgreSQL keyset walks all 47 visible records without duplicates');pass++
+  console.log('PASS PostgreSQL keyset walks all 1,047 visible records without duplicates');pass++
   const first=archivePageSql(7,{...defaults,topic:'akses',sentiment:'negative'},false,null)
   const data=(await pg.query(first.sql,first.params)).rows
   assert.ok(data.every(row=>row.id%2===0 && row.topics.some(t=>t.topic==='akses')))
@@ -88,7 +94,7 @@ async function main(){
   assert.ok(filtered.every((r,i)=>!i||filtered[i-1].engagement_count>=r.engagement_count))
   console.log('PASS PostgreSQL platform + engagement ordering');pass++
   const yt=archiveCountSql(7,defaults,true)
-  assert.equal((await pg.query(yt.sql,yt.params)).rows[0].total,48)
+  assert.equal((await pg.query(yt.sql,yt.params)).rows[0].total,1048)
   console.log('PASS YouTube data appears only with explicit approved consent boolean');pass++
   console.log(pass+' PostgreSQL evidence pagination checks passed')
  }finally{await pg.close()}

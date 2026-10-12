@@ -68,13 +68,7 @@ export default function EvidencePanel({
   }, [related, topic, filters, focusedId])
   const usingArchive = archive.state.active && (
     archive.state.loading || archive.state.items.length > 0 || archive.state.total === 0)
-  const archivePinned = focusedId !== null
-    ? localShown.find(item => item.id === focusedId)
-    : undefined
-  const shown = usingArchive ? [
-    ...(archivePinned ? [archivePinned] : []),
-    ...archive.state.items.filter(item => item.id !== archivePinned?.id),
-  ] : localShown
+  const shown = usingArchive ? archive.state.items : localShown
   const visible = usingArchive ? shown : shown.slice(0, visibleCount)
 
   const setFilter = (key: keyof EvidenceFilters, value: string) => {
@@ -109,12 +103,12 @@ export default function EvidencePanel({
       </p>}
       {topic === null && <p className="pulse-disclosure">Daftar ini menampilkan seluruh bukti yang tersedia dalam sampel Community Pulse, bukan seluruh komentar di internet. Komentar yang tidak lolos kurasi tidak disertakan.</p>}
       {usingArchive
-        ? <p className="pulse-disclosure">Arsip PostgreSQL menampilkan komentar publikasi dalam 90 hari, bertahap 20 item per permintaan. Data sensitif yang memerlukan pemeriksaan khusus hanya dapat diakses melalui ringkasan terkurasi.</p>
-        : pulse.limited && <p className="pulse-drawer-limited">Sampel awal dibatasi pada 1.000 kontribusi. Arsip lengkap akan tersedia setelah data PostgreSQL dapat dimuat.</p>}
+        ? <p className="pulse-disclosure">Arsip menampilkan komentar yang lolos kurasi dalam 90 hari, bertahap 20 item, ditambah komentar pilihan bila sesuai filter. Topik sensitif hanya ditampilkan melalui ringkasan yang telah diperiksa.</p>
+        : pulse.limited && <p className="pulse-drawer-limited">Sampel awal dibatasi pada 1.000 kontribusi. Komentar lainnya dapat dijelajahi setelah arsip berhasil dimuat.</p>}
       {archive.state.error && <p role="alert" className="pulse-drawer-limited">{archive.state.error} <button type="button"
         onClick={() => usingArchive ? archive.loadMore() : archive.retry()}>Coba lagi</button></p>}
       <div className="pulse-drawer-platforms" role="group" aria-label="Filter berdasarkan platform">
-        <button type="button" aria-pressed={!filters.platform} onClick={() => setFilter('platform','')}>Semua <span>{related.length}</span></button>
+        <button type="button" aria-pressed={!filters.platform} onClick={() => setFilter('platform','')}>Semua {!archive.enabled && <span>{related.length}</span>}</button>
         {counts.map(({platform,count,label}) => <button key={platform} type="button" disabled={!archive.enabled && count === 0}
           aria-pressed={filters.platform === platform}
           onClick={() => setFilter('platform',platform)}>
@@ -140,7 +134,7 @@ export default function EvidencePanel({
         archive.state.total === null ? 'Memuat arsip…' : archive.state.total + ' hasil sesuai filter'
       ) : shown.length + ' hasil dalam sampel'} · menampilkan {visible.length}</p>
       <div className="pulse-drawer-list">
-        {usingArchive && archive.state.loading && <p role="status">Memuat komentar dari PostgreSQL…</p>}
+        {usingArchive && archive.state.loading && <p role="status">Memuat arsip komentar…</p>}
         {visible.map(item => {
           const source = safeEvidenceSource(item.source_url, item.platform)
           const sentiment = evidenceSentiment(item,topic)
