@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Shell } from '@/components/mvp/Shell'
 import { db } from '@/lib/mvp/db'
 import { categories } from '@/lib/mvp/categories'
+import { hubExperienceCountSql,hubExperienceParams } from '@/lib/pulse/hub-query'
 export const dynamic='force-dynamic'
 export const metadata={title:'Community Pulse — Telusuri Cerita dan Sumber Garut',description:'Periksa video, percakapan asli, riset tempat, serta pengalaman yang dikirim pengunjung sebelum merencanakan perjalanan ke Garut.',alternates:{canonical:'/community-pulse'}}
 export default async function PulseHub({searchParams}:{searchParams:Promise<{q?:string;category?:string}>}){
@@ -9,9 +10,9 @@ export default async function PulseHub({searchParams}:{searchParams:Promise<{q?:
  const rows=(await db().query(`SELECT p.id,p.name,p.category,p.slug,p.district,
  (SELECT count(*)::int FROM vg_youtube_videos v WHERE v.place_id=p.id AND v.review_status='approved' AND v.reviewed_at IS NOT NULL AND v.expires_at>now()) AS videos,
  EXISTS(SELECT 1 FROM vg_youtube_comments c JOIN vg_youtube_videos v ON v.id=c.video_id WHERE v.place_id=p.id AND v.review_status='approved' AND v.reviewed_at IS NOT NULL AND v.expires_at>now() AND c.public_status='approved' AND c.reviewed_at IS NOT NULL AND c.expires_at>now() AND c.parent_key IS NULL) AS comments,
- (SELECT count(*)::int FROM vg_social_mentions m WHERE m.place_id=p.id AND m.status='approved' AND m.platform='visitgarut' AND m.published_at>=now()-interval '90 days') AS experiences,
+ ${hubExperienceCountSql} AS experiences,
  (SELECT count(*)::int FROM vg_place_research r WHERE r.place_id=p.id AND r.status='approved') AS research
- FROM vg_places p WHERE p.status='published' ORDER BY comments DESC,videos DESC,p.name`)).rows
+ FROM vg_places p WHERE p.status='published' ORDER BY comments DESC,videos DESC,p.name`,[...hubExperienceParams])).rows
  const shown=rows.filter(p=>(!category||p.category===category)&&(!q||(p.name+' '+p.district).toLocaleLowerCase('id').includes(q.toLocaleLowerCase('id'))))
  const withVideos=rows.filter(p=>p.videos>0).length
  return <Shell><section className="vg-wrap vg-section pulse-hub"><div className="pulse-hub-hero"><span className="vg-eyebrow">COMMUNITY PULSE · GARUT</span><h1>Telusuri cerita.<br/>Periksa sumbernya.</h1><p className="vg-intro">Pilih tempat, lihat video dari berbagai pembuat, dan baca percakapan aslinya. Pengalaman yang dikirim ke VisitGarut diperiksa sebelum menjadi ringkasan.</p><div className="pulse-hub-facts"><span><strong>{rows.length}</strong> tempat untuk ditelusuri</span><span><strong>{withVideos}</strong> tempat dengan video yang diperiksa</span><Link href="/community-pulse/metode">Cara membaca bukti ↗</Link></div></div>

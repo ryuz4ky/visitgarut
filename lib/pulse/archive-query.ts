@@ -5,7 +5,7 @@ export type ArchiveFilters = { topic: Topic | null; platform: Platform | ''; sen
 export type ArchiveCursor = { time: string; id: number; engagement: number }
 export const ARCHIVE_PAGE_SIZE = 20
 
-const sensitivePgExpression = '\\y' + sensitivePattern.source.replace(/^\\b|\\b$/g, '') + '\\y'
+export const sensitivePgExpression = '\\y' + sensitivePattern.source.replace(/^\\b|\\b$/g, '') + '\\y'
 
 export function validateArchiveFilters(raw: ArchiveFilters): ArchiveFilters {
  if (!raw || (raw.topic !== null && !Object.hasOwn(topics, raw.topic)) ||
@@ -33,19 +33,22 @@ export function decodeArchiveCursor(value: string | null): ArchiveCursor | null 
 /** SQL is parameterised end-to-end and restricts all rows to independently
  * moderated, publication-eligible, NON-SENSITIVE evidence only.
  * Sensitive topics continue to use the tightly controlled existing aggregate. */
-export function archiveWhere(placeId:number, filters:ArchiveFilters, youtubeConsent:boolean) {
- validateArchiveFilters(filters)
- if (!Number.isSafeInteger(placeId) || placeId<1) throw new Error('Lokasi tidak valid.')
- const params: unknown[]=[placeId,sensitivePgExpression]
- let where=`m.place_id=$1 AND m.status='approved' AND m.reviewed_at IS NOT NULL
+export function publicEvidenceGate(sensitiveIndex:number, consentIndex:number) {
+ if(!Number.isSafeInteger(sensitiveIndex)||sensitiveIndex<1||!Number.isSafeInteger(consentIndex)||consentIndex<1)throw new Error('Parameter tidak valid.')
+ return `m.status='approved' AND m.reviewed_at IS NOT NULL
   AND m.platform<>'google'
   AND m.published_at BETWEEN now()-interval '90 days' AND now()
   AND (m.expires_at IS NULL OR m.expires_at>now())
   AND (m.experience_date IS NULL OR m.experience_date>=((now() AT TIME ZONE 'Asia/Jakarta')::date - 90))
-  AND m.is_sensitive=false AND m.original_text !~* $2
+  AND m.is_sensitive=false AND m.original_text !~* $${sensitiveIndex}
   AND NOT EXISTS(SELECT 1 FROM vg_mention_topics forbidden WHERE forbidden.mention_id=m.id AND forbidden.topic IN ('tiket','keamanan'))
-  AND (m.rights_basis<>'youtube_api' OR $3::boolean)`
- params.push(youtubeConsent)
+  AND (m.rights_basis<>'youtube_api' OR $${consentIndex}::boolean)`
+}
+export function archiveWhere(placeId:number, filters:ArchiveFilters, youtubeConsent:boolean) {
+ validateArchiveFilters(filters)
+ if (!Number.isSafeInteger(placeId) || placeId<1) throw new Error('Lokasi tidak valid.')
+ const params: unknown[]=[placeId,sensitivePgExpression,youtubeConsent]
+ let where=`m.place_id=$1 AND ${publicEvidenceGate(2,3)}`
  if(filters.topic!==null) {
   params.push(filters.topic)
   where+=` AND EXISTS(SELECT 1 FROM vg_mention_topics t WHERE t.mention_id=m.id AND t.topic=$${params.length})`

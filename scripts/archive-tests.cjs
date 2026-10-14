@@ -4,6 +4,7 @@ const {
  archivePageSql,archiveCountSql,archiveSelectedSql,encodeArchiveCursor,decodeArchiveCursor,
  validateArchiveFilters,ARCHIVE_PAGE_SIZE,
 }=require('../.archive-test/archive-query.js')
+const {hubExperienceCountSql,hubExperienceParams}=require('../.archive-test/hub-query.js')
 const defaults={topic:null,platform:'',sentiment:'',sort:'newest'}
 let pass=0
 function check(name,fn){fn();pass++;console.log('PASS '+name)}
@@ -96,6 +97,20 @@ async function main(){
   const yt=archiveCountSql(7,defaults,true)
   assert.equal((await pg.query(yt.sql,yt.params)).rows[0].total,1048)
   console.log('PASS YouTube data appears only with explicit approved consent boolean');pass++
+  await pg.exec(`CREATE TABLE vg_places(id integer PRIMARY KEY); INSERT INTO vg_places VALUES(7),(77);
+   UPDATE vg_social_mentions SET platform='visitgarut' WHERE rights_basis='first_party';
+   UPDATE vg_social_mentions SET experience_date=current_date-91 WHERE id=11;
+   UPDATE vg_social_mentions SET published_at=now()+interval '1 day' WHERE id=12;`)
+  const badgeQuery=`SELECT p.id,${hubExperienceCountSql} AS experiences FROM vg_places p ORDER BY p.id`
+  const badge=(await pg.query(badgeQuery,[...hubExperienceParams])).rows
+  const native=archiveCountSql(7,{...defaults,platform:'visitgarut'},false)
+  const nativeTotal=(await pg.query(native.sql,native.params)).rows[0].total
+  assert.equal(badge[0].experiences,nativeTotal)
+  assert.equal(nativeTotal,1045)
+  assert.equal(badge[1].experiences,1)
+  await pg.query("UPDATE vg_social_mentions SET status='withdrawn' WHERE place_id=7")
+  assert.equal((await pg.query(badgeQuery,[...hubExperienceParams])).rows[0].experiences,0)
+  console.log('PASS hub badges match public archive gates, reject stale/future experience and disappear on withdrawal');pass++
   console.log(pass+' PostgreSQL evidence pagination checks passed')
  }finally{await pg.close()}
 }
