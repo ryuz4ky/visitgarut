@@ -12,11 +12,10 @@ const layout = read('app/layout.tsx')
 let total=0
 function test(name,assertion){assertion();console.log('PASS '+name);total++}
 test('Mobile navigation only links to implemented public destinations',()=>{
- for(const route of ['/search','/map','/artikel','/community-pulse']){
+ for(const route of ['/search','/map','/trip','/artikel','/community-pulse']){
   assert.ok(mobile.includes("href: '"+route+"'"),route)
   assert.ok(fs.existsSync(path.join(root,'app',route.slice(1),'page.tsx')),route+' page missing')
  }
- assert.doesNotMatch(mobile,/href:\s*['"]\/trip['"]/)
 })
 test('Mobile nav exposes active-page state',()=>{
  assert.match(mobile,/usePathname\(\)/)
