@@ -1,12 +1,12 @@
 'use client'
-import { useState } from 'react'
+import { useState,useRef } from 'react'
 import EvidencePanel, { type EvidenceOpenRequest } from './EvidencePanel'
 import PulseGlobe from '@/components/pulse/PulseGlobe'
 import type { Pulse, Topic, Insight, Evidence, TopicStatus } from '@/lib/pulse/core'
 import { buildPulseOverview } from '@/lib/pulse/overview'
 
 /**
- * PREVIEW-ONLY UI fixture. These numbers and records are fictitious.
+ * Public experimental UI fixture. These numbers and records are fictitious.
  * Never use this component as an actual visitor sentiment data source.
  */
 const examples: { topic: Topic; label: string; count: number; positive: number; negative: number; neutral: number; mixed: number; summary: string }[] = [
@@ -58,9 +58,10 @@ const pulse: Pulse={
 export default function PulseGlobeDemo(){
   const [request,setRequest]=useState<EvidenceOpenRequest|null>(null)
   const [open,setOpen]=useState(false)
+  const requestToken=useRef(0)
   function openEvidence(topic:Topic|null,trigger:HTMLButtonElement,evidenceId?:number){
     setOpen(true)
-    setRequest(previous=>({token:(previous?.token||0)+1,topic,trigger,evidenceId}))
+    setRequest({token:++requestToken.current,topic,trigger,evidenceId})
   }
   return <>
     <div role="note" className="vg-alert" style={{marginBottom:20}}>
@@ -74,6 +75,6 @@ export default function PulseGlobeDemo(){
         Lihat semua {pulse.evidence.length} komentar simulasi
       </button>
     </div>
-    <EvidencePanel demo pulse={pulse} placeId={999999} request={request} onDismiss={()=>setOpen(false)}/>
+    <EvidencePanel demo pulse={pulse} placeId={999999} request={request} onDismiss={()=>{setOpen(false);setRequest(null)}}/>
   </>
 }
