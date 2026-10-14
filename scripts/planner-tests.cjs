@@ -6,3 +6,5 @@ const plan=buildItinerary(places,options),ids=plan.flatMap(d=>d.stops.map(p=>p.i
 assert.deepEqual(buildItinerary(places,{...options,startId:999}),[]);assert.deepEqual(buildItinerary(places,{...options,interests:['cafe']}),[]);
 const far=[places[0],{...places[1],latitude:-8}];assert.equal(buildItinerary(far,{...options,mode:'walking'})[0].stops.length,1);
 console.log('PASS planner: grounded published/source-only places, invalid start, no duplicates, walking distance and map links');
+
+const picked=buildItinerary(places,{...options,selectedIds:[2,5,11,999]});assert.deepEqual(picked.flatMap(d=>d.stops.map(p=>p.id)).sort((a,b)=>a-b),[2,5]);assert.deepEqual(buildItinerary(places,{...options,selectedIds:[]}),[]);console.log('PASS selected itinerary: only selected eligible stops, no unselected origin stop, no draft/unknown fallback');

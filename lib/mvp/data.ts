@@ -1,6 +1,7 @@
 import 'server-only'
 import { db } from './db'
 import { buildPlacesQuery, type PlaceSearch } from './search'
+import {normalizeSavedIds} from './saved'
 
 export { categories } from './categories'
 export type Place = {coordinate_reference?:unknown;google_place_id?:string; id: number; slug: string; name: string; category: string; district: string; address: string; excerpt: string; content: string; image_url: string; image_credit: string; latitude: number | null; longitude: number | null; website: string; whatsapp: string; source_url: string; status: string; updated_at: Date }
@@ -42,4 +43,14 @@ export async function sitemapRecords(){
   db().query<Pick<Article,'slug'|'updated_at'>>("SELECT slug,updated_at FROM vg_articles WHERE status='published' ORDER BY id LIMIT 4500")
  ]);
  return {places:ps.rows,articles:as.rows};
+}
+
+// Saved selections must not inherit the interactive directory's 100-row cap.
+export const selectedTripPlacesSql="SELECT * FROM vg_places WHERE id=ANY($1::int[]) AND status='published' ORDER BY name LIMIT 101"
+export async function selectedTripPlaces(ids:number[],startId:number):Promise<Place[]>{
+ if(!process.env.DATABASE_URL)return []
+ const wanted=normalizeSavedIds(ids)
+ if(Number.isInteger(startId)&&startId>0&&startId<=2147483647&&!wanted.includes(startId))wanted.push(startId)
+ if(!wanted.length)return []
+ return (await db().query<Place>(selectedTripPlacesSql,[wanted])).rows
 }

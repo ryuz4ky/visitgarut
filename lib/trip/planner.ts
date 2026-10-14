@@ -1,5 +1,5 @@
 export type TripPlace = {id:number;slug:string;name:string;category:string;district:string;latitude:number|null;longitude:number|null;source_url:string;status:string}
-export type TripOptions = {days:number;startId:number;interests:string[];mode:'driving'|'walking';date:string}
+export type TripOptions = {days:number;startId:number;interests:string[];mode:'driving'|'walking';date:string;selectedIds?:number[]}
 export const tripCategories = ['wisata','kuliner','cafe'] as const
 export function eligibleTripPlace(p:TripPlace) {
  try {const u=new URL(p.source_url);return p.status==='published' && ['http:','https:'].includes(u.protocol) && !u.username && !u.password && p.latitude!==null && p.longitude!==null && Number.isFinite(p.latitude) && Number.isFinite(p.longitude) && Math.abs(p.latitude)<=90 && Math.abs(p.longitude)<=180} catch {return false}
@@ -14,6 +14,7 @@ export function buildItinerary(places:TripPlace[],options:TripOptions) {
  const available=places.filter(eligibleTripPlace);
  const start=available.find(p=>p.id===options.startId);
  if(!start)return [];
+ const selected=options.selectedIds===undefined?null:new Set(options.selectedIds);
  const days=Math.max(1,Math.min(3,Math.floor(options.days)||1));
  let current=start;
  const used=new Set<number>();
@@ -21,7 +22,7 @@ export function buildItinerary(places:TripPlace[],options:TripOptions) {
  for(let day=1;day<=days;day++){
   const stops:TripPlace[]=[];
   for(let slot=0;slot<3;slot++){
-   const candidates=available.filter(p=>!used.has(p.id)&&options.interests.includes(p.category));
+   const candidates=available.filter(p=>!used.has(p.id)&&options.interests.includes(p.category)&&(!selected||selected.has(p.id)));
    candidates.sort((a,b)=>distanceKm(current,a)-distanceKm(current,b)||a.id-b.id);
    const next=candidates.find(p=>options.mode!=='walking'||distanceKm(current,p)<=3);
    if(!next)break;

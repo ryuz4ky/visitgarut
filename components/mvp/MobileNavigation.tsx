@@ -15,6 +15,7 @@ const items = [
 export default function MobileNavigation() {
   const pathname = usePathname() || '/'
   const section =
+    pathname === '/saved' ? 'saved' :
     pathname === '/map' ? 'map' :
     pathname === '/trip' ? 'trip' :
     pathname.startsWith('/artikel') ? 'articles' :
