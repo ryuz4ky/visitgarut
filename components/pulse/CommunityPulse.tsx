@@ -9,6 +9,7 @@ import SocialMedia from './SocialMedia'
 import DimensionRatings from './DimensionRatings'
 import PulseOverview from './PulseOverview'
 import PulseGlobe from './PulseGlobe'
+import ResearchGlobe from './ResearchGlobe'
 import EvidencePanel, { type EvidenceOpenRequest } from './EvidencePanel'
 import type { SocialContent } from '@/lib/pulse/data'
 import type { ResearchEvidence } from '@/lib/pulse/research'
@@ -19,14 +20,17 @@ export default function CommunityPulse({pulse:initial,placeId,research=[],conten
  const [openRequest,setOpenRequest]=useState<EvidenceOpenRequest|null>(null)
  const [drawerOpen,setDrawerOpen]=useState(false)
  const requestToken=useRef(0)
+ const [globeView,setGlobeView]=useState<'information'|'experience'>('information')
  function openEvidence(topic:Topic|null,trigger:HTMLButtonElement,evidenceId?:number){
   setDrawerOpen(true)
   const token=++requestToken.current
   setOpenRequest({topic,trigger,evidenceId,token})
  }
  return <section id="community-pulse" className="pulse-section pulse-section-compact">
-  <div className="vg-section-heading"><div><span className="vg-eyebrow">COMMUNITY PULSE</span><h2>{rental?'Apa kata pelanggan?':'Apa kata orang?'}</h2></div></div>
-  {globeEnabled&&pulse.insights.length>0&&<PulseGlobe pulse={pulse} onOpenEvidence={openEvidence} dialogOpen={drawerOpen}/>}
+  <div className="vg-section-heading"><div><span className="vg-eyebrow">COMMUNITY PULSE</span><h2>{rental?'Kenali layanan & pengalaman pelanggan':'Kenali tempat & pengalamannya'}</h2></div></div>
+  {globeEnabled&&research.length>0&&pulse.insights.length>0&&<div className="pulse-globe-view" role="group" aria-label="Tampilan Globe"><button type="button" aria-pressed={globeView==='information'} onClick={()=>setGlobeView('information')}>Informasi tempat</button><button type="button" aria-pressed={globeView==='experience'} onClick={()=>setGlobeView('experience')}>Pengalaman pengunjung</button></div>}
+  {globeEnabled&&research.length>0&&(globeView==='information'||pulse.insights.length===0)&&<ResearchGlobe items={research} placeId={placeId}/>}
+  {globeEnabled&&pulse.insights.length>0&&(globeView==='experience'||research.length===0)&&<PulseGlobe pulse={pulse} onOpenEvidence={openEvidence} dialogOpen={drawerOpen}/>}
   <PulseOverview pulse={pulse} placeId={placeId} rental={rental} onOpenEvidence={openEvidence}/>
   {contents.length>0&&<details className="pulse-supporting" id="sumber-pengalaman"><summary>Video & sumber percakapan <span>{contents.length} sumber</span></summary><SocialMedia contents={contents} placeId={placeId}/></details>}
   {research.length>0&&<details className="pulse-supporting" id="riset-tempat"><summary>Info praktis dari sumber publik <span>{research.length} catatan</span></summary><PlaceResearch items={research}/></details>}

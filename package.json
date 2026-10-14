@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run test:pulse && npm run test:pulse-overview && npm run test:archive && npm run test:globe && npm run test:discovery-ux && npm run test:planner && npm run test:supervisor && npm run test:editorial && npm run build:youtube-worker && next build",
+    "build": "npm run test:pulse && npm run test:pulse-overview && npm run test:archive && npm run test:globe && npm run test:research-globe && npm run test:research-enrichment && npm run test:discovery-ux && npm run test:planner && npm run test:supervisor && npm run test:editorial && npm run build:youtube-worker && next build",
     "start": "next start",
     "lint": "eslint .",
     "test:pulse": "tsc lib/pulse/core.ts --target ES2022 --module commonjs --skipLibCheck --outDir .pulse-test && node scripts/pulse-tests.cjs .pulse-test/core.js",
@@ -22,7 +22,9 @@
     "test:discovery-ux": "node scripts/discovery-ux-tests.cjs",
     "test:planner": "tsc lib/trip/planner.ts --target ES2022 --module commonjs --skipLibCheck --outDir .planner-test && node scripts/planner-tests.cjs",
     "test:supervisor": "node scripts/supervisor-tests.cjs",
-    "test:editorial": "node scripts/editorial-tests.cjs"
+    "test:editorial": "node scripts/editorial-tests.cjs",
+    "test:research-globe": "tsc lib/pulse/research-globe.ts --target ES2022 --module commonjs --skipLibCheck --outDir .research-globe-test && node scripts/research-globe-tests.cjs",
+    "test:research-enrichment": "node scripts/research-enrichment-tests.cjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",

@@ -60,3 +60,5 @@
 
 @media(max-width:750px){.pulse-globe-intro{flex-direction:column}.pulse-globe-layout{grid-template-columns:1fr;gap:10px}.pulse-globe-stage{max-width:410px}.pulse-globe-side{padding:0}.pulse-globe-node{max-width:104px;min-width:58px;padding:7px}.pulse-globe-node strong{font-size:.73rem}.pulse-globe-node small{font-size:.56rem}}
 @media(prefers-reduced-motion:reduce){.pulse-globe-sphere,.pulse-globe-node,.pulse-globe-rotor{animation:none!important;transition:none!important}}
+
+.pulse-research-note{padding:20px 0;border-bottom:1px solid #dce6e2;color:#173e37}.pulse-research-note h3{color:#173e37;margin:8px 0}.pulse-research-note p{color:#405c55;line-height:1.65}.pulse-research-note a{color:#087a72;font-weight:650}.pulse-globe-view{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.pulse-globe-view button{padding:11px 16px;border:1px solid #cadbd6;border-radius:20px;background:#fff;color:#174e46;cursor:pointer}.pulse-globe-view button[aria-pressed=true]{background:#087a72;color:#fff}.pulse-research-globe .pulse-globe-node{background:#285d91ed;border-color:#a1d0fb}
