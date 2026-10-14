@@ -67,3 +67,5 @@ body{background:#f6f9f5}
  .vg-mobile-nav{background:#fffffff5}.vg-mobile-nav a.is-active{background:#e2f0e4;color:#06694c;border-radius:16px}
 }
 @media(max-width:380px){.vg-dashboard-greeting h1{font-size:1.6rem}.vg-dashboard-map{width:40px;height:40px}.vg-home-collection .vg-card{grid-template-columns:92px minmax(0,1fr)}.vg-home-collection .vg-card-body{padding:12px}.vg-dashboard-context{font-size:.73rem}.vg-dashboard-event .vg-button{margin-left:0}}
+
+.vg-coordinate-source{padding:15px;background:#fff;border:1px solid #d6e4d9;border-radius:14px}.vg-coordinate-source p{font-size:.85rem;margin:8px 0!important}.vg-coordinate-source small{display:block;margin-top:7px;font-size:.8rem}
