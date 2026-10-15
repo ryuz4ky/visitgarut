@@ -50,3 +50,4 @@ next-env.d.ts
 .nearby-test/
 
 .saved-test/
+.related-places-test

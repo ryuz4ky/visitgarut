@@ -2,6 +2,7 @@ import 'server-only'
 import { db } from './db'
 import { buildPlacesQuery, type PlaceSearch } from './search'
 import {normalizeSavedIds} from './saved'
+import {relatedPlaceSuggestionsSql} from './related-places'
 
 export { categories } from './categories'
 export type Place = {coordinate_reference?:unknown;google_place_id?:string; id: number; slug: string; name: string; category: string; district: string; address: string; excerpt: string; content: string; image_url: string; image_credit: string; latitude: number | null; longitude: number | null; website: string; whatsapp: string; source_url: string; status: string; updated_at: Date }
@@ -29,6 +30,10 @@ export async function relatedPlaces(id: number): Promise<Place[]> {
 }
 export async function relatedArticles(id: number): Promise<Article[]> {
   return (await db().query<Article>("SELECT a.* FROM vg_articles a JOIN vg_article_places ap ON ap.article_id=a.id WHERE ap.place_id=$1 AND a.status='published' ORDER BY a.published_at DESC",[id])).rows
+}
+export async function relatedPlaceSuggestions(id:number):Promise<Place[]>{
+  if(!process.env.DATABASE_URL)return []
+  return (await db().query<Place>(relatedPlaceSuggestionsSql,[id])).rows
 }
 export async function events(): Promise<Event[]> {
   if (!process.env.DATABASE_URL) return []
