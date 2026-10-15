@@ -1,6 +1,6 @@
 import 'server-only'
 import { db } from './db'
-import { buildPlacesQuery, type PlaceSearch } from './search'
+import { buildPlacesQuery,buildDirectoryQueries,directorySummarySql,directoryPageSize, type PlaceSearch } from './search'
 import {normalizeSavedIds} from './saved'
 import {relatedPlaceSuggestionsSql} from './related-places'
 
@@ -12,6 +12,19 @@ export async function places(options: PlaceSearch = {}): Promise<Place[]> {
   if (!process.env.DATABASE_URL) return []
   const query = buildPlacesQuery(options)
   return (await db().query<Place>(query.text, query.values)).rows
+}
+export async function directoryPlaces(options:PlaceSearch={},page=1){
+  if(!process.env.DATABASE_URL)return {items:[] as Place[],total:0,pages:1,page}
+  const queries=buildDirectoryQueries(options,page)
+  const total=(await db().query<{total:number}>(queries.count.text,queries.count.values)).rows[0].total
+  const pages=Math.max(1,Math.ceil(total/directoryPageSize))
+  const items=page>pages?[]:(await db().query<Place>(queries.items.text,queries.items.values)).rows
+  return {items,total,pages,page}
+}
+export async function directorySummary(){
+  if(!process.env.DATABASE_URL)return {total:0,districts:[] as string[]}
+  const rows=(await db().query<{district:string;total:number}>(directorySummarySql)).rows
+  return {total:rows.reduce((sum,row)=>sum+row.total,0),districts:rows.map(row=>row.district).filter(Boolean)}
 }
 export async function place(slug: string, category?: string): Promise<Place | undefined> {
   if (!process.env.DATABASE_URL) return undefined
