@@ -1,6 +1,6 @@
 const assert=require('node:assert/strict');const fs=require('node:fs');
-const {joinPractical,splitPractical,validatePractical,currentPractical,listedEntry}=require('../.visit-test/practical.js');
-const {normalizeOptions,budgetSummary,timeline,parsePlan,mapsUrl}=require('../.visit-test/companion.js');
+const {joinPractical,splitPractical,validatePractical,currentPractical,listedEntry,tariffRows}=require('../.visit-test/practical.js');
+const {normalizeOptions,updatePlanOptions,budgetSummary,timeline,parsePlan,mapsUrl}=require('../.visit-test/companion.js');
 const {parseRouteIds,parseRoadResponse}=require('../.visit-test/route.js');
 const now=new Date('2026-10-16T12:00:00Z');
 const pilot=JSON.parse(fs.readFileSync('data/visit-practical-2026-10-16.json','utf8'));
@@ -11,10 +11,27 @@ assert.deepEqual(splitPractical('Body\n<!-- visitgarut:practical:v1\nnot json'),
 assert.equal(validatePractical({...info,sourceUrl:'javascript:alert(1)'}),null);assert.equal(validatePractical({...info,sourceUrl:'https://user:secret@example.com'}),null);assert.equal(validatePractical({...info,weekday:-1}),null);assert.equal(validatePractical({...info,checkedAt:'2026-02-30'}),null);
 assert.equal(currentPractical(info,new Date('2026-12-01T00:00:00Z')),false);assert.equal(currentPractical(info,new Date('2026-10-01T00:00:00Z')),false);
 assert.equal(listedEntry(info,'2026-10-16','auto',now),45000);assert.equal(listedEntry(info,'2026-10-17','auto',now),60000);assert.equal(listedEntry(info,'2026-10-16','weekend',now),60000);assert.equal(listedEntry(info,'','auto',now),null);
+assert.equal(listedEntry(info,'2026-02-30','auto',now),null);assert.equal(listedEntry(info,'2026-10-17','holiday',now),null);
+const bagendit=pilot['situ-bagendit'],mawar=pilot['kebun-mawar-situhapa'];
+assert.equal(listedEntry(bagendit,'2026-10-19','auto',now),10000);assert.equal(listedEntry(bagendit,'2026-10-16','auto',now),null);assert.equal(listedEntry(bagendit,'2026-10-17','auto',now),15000);assert.equal(listedEntry(bagendit,'2026-10-17','holiday',now),null);assert.equal(listedEntry(bagendit,'2026-10-17','special',now),20000);assert.equal(listedEntry(bagendit,'','weekday',now),null);
+assert.equal(listedEntry(mawar,'2026-10-17','auto',now),17500);assert.equal(listedEntry(mawar,'2026-10-18','auto',now),22500);assert.equal(listedEntry(mawar,'','weekend',now),null);assert.equal(listedEntry(mawar,'2026-10-19','holiday',now),22500);assert.equal(listedEntry(mawar,'2026-10-19','special',now),null);assert.equal(listedEntry(mawar,'2026-10-19','auto',new Date('2026-12-01')),null);
+assert.equal(listedEntry(pilot['darajat-pass'],'2026-10-19','holiday',now),35000);
+assert.deepEqual(tariffRows(mawar),[{label:'Senin–Sabtu',amount:17500},{label:'Minggu',amount:22500},{label:'Libur nasional',amount:22500},{label:'Libur khusus',amount:null}]);
+assert.deepEqual(splitPractical(joinPractical('Body',mawar)).practical,mawar);
+for(const calendar of [null,{days:[1,2],holiday:null,specialHoliday:null},{days:[null,null,null,null,null,null,-1],holiday:null,specialHoliday:null},{days:Array(7).fill(0),holiday:1.5,specialHoliday:null},{days:Array(7),holiday:null,specialHoliday:null}])assert.equal(validatePractical({...mawar,calendar}),null);
 const place={id:1,category:'wisata',name:'Sabda Alam',practical:info};
 let o=normalizeOptions({date:'2026-10-17',adults:2,children:1,stopIds:[1],budget:'100000',transport:'0',meals:'50000',parking:'',extras:'0'});
 let b=budgetSummary([place],o,now);assert.equal(b.known,170000);assert.equal(b.remaining,-70000);assert.ok(b.unknown.includes('Ketentuan dan tiket anak'));assert.ok(b.unknown.includes('Parkir seluruh kunjungan'));assert.ok(!b.unknown.includes('Transport pergi-pulang'));
 const childTotal=budgetSummary([place],{...o,childrenTickets:'50000'},now);assert.equal(childTotal.known,220000);assert.ok(!childTotal.unknown.includes('Ketentuan dan tiket anak'));
+const manual=budgetSummary([place],normalizeOptions({...o,adultTickets:{1:'80000'},childrenTickets:'20000'}),now);assert.equal(manual.known,150000);assert.equal(manual.entries[0].total,80000);assert.equal(manual.entries[0].manual,true);assert.equal(manual.entries[0].unit,60000);
+const staleManual=budgetSummary([place],normalizeOptions({...o,adultTickets:{1:'0'}}),new Date('2026-12-01'));assert.equal(staleManual.entries[0].total,0);assert.equal(staleManual.entries[0].manual,true);assert.ok(!staleManual.unknown.includes('Tiket Sabda Alam'));
+let saved=normalizeOptions({...o,stopIds:[1,2],adultTickets:{1:'80000',2:'90000',3:'50000'},childrenTickets:'20000',returnChecked:true});
+assert.deepEqual(parsePlan(JSON.stringify(saved)).adultTickets,{'1':'80000','2':'90000'});
+assert.deepEqual(updatePlanOptions(saved,{stopIds:[2,1]}).adultTickets,saved.adultTickets);assert.equal(updatePlanOptions(saved,{stopIds:[2,1]}).childrenTickets,'20000');
+assert.deepEqual(updatePlanOptions(saved,{stopIds:[2]}).adultTickets,{'2':'90000'});assert.equal(updatePlanOptions(saved,{stopIds:[2]}).childrenTickets,'');
+for(const change of [{date:'2026-10-18'},{dayType:'holiday'},{adults:3}]){const next=updatePlanOptions(saved,change);assert.deepEqual(next.adultTickets,{'1':'','2':''});assert.equal(next.childrenTickets,'');}
+assert.equal(updatePlanOptions(saved,{date:'2026-10-18'}).returnChecked,false);assert.deepEqual(updatePlanOptions(saved,{children:2}).adultTickets,saved.adultTickets);assert.equal(updatePlanOptions(saved,{children:2}).childrenTickets,'');
+assert.equal(normalizeOptions({stopIds:[1],adultTickets:{1:'-1'}}).adultTickets['1'],'');assert.equal(normalizeOptions({stopIds:[1],adultTickets:{1:'100000001'}}).adultTickets['1'],'');assert.equal(normalizeOptions({stopIds:[1],adultTickets:{1:'1.5'}}).adultTickets['1'],'');assert.deepEqual(normalizeOptions({stopIds:[1],adultTickets:['50000']}).adultTickets,{'1':''});
 assert.equal(budgetSummary([{...place,category:'cafe'}],o,now).entries.length,0);
 b=budgetSummary([place],o,new Date('2026-12-01'));assert.equal(b.known,50000);assert.ok(b.unknown.includes('Tiket Sabda Alam'));
 assert.equal(normalizeOptions({budget:'-1',date:'2026-02-30',adults:999,originId:-1}).budget,'');assert.equal(parsePlan('{bad').adults,2);assert.deepEqual(normalizeOptions({stopIds:[1,1,2,3,4]}).stopIds,[1,2,3]);
@@ -22,4 +39,4 @@ o=normalizeOptions({stopIds:[1],durations:[90],departure:'09:00',returnBy:'12:00
 const map=new URL(mapsUrl({name:'Stasiun Garut'},[{name:'A'},{name:'B'}],'driving'));assert.equal(map.searchParams.get('origin'),map.searchParams.get('destination'));assert.equal(map.searchParams.get('waypoints'),'A Garut|B Garut');
 assert.deepEqual(parseRouteIds('-1,1,2'),[-1,1,2]);for(const input of ['1,1','1','1,2,3,4,5','1,NaN','0,2','1,-2'])assert.equal(parseRouteIds(input),null);
 const response={code:'Ok',routes:[{legs:[{duration:61},{duration:120}]}],waypoints:[{distance:5},{distance:10},{distance:20}]};assert.deepEqual(parseRoadResponse(response,3),[2,2]);assert.equal(parseRoadResponse({...response,waypoints:[{distance:2000},{distance:0},{distance:0}]},3),null);assert.equal(parseRoadResponse({...response,code:'NoRoute'},3),null);
-console.log('PASS visit companion: content roundtrip, invalid/future/stale facts, weekday/holiday rates, incomplete budget, child exclusions, manual time overrides, return loop, malformed inputs, routing failures');
+console.log('PASS visit companion: calendar/holiday exceptions, stale/unknown rates, manual adult totals without double counting, scoped shared estimates, context resets, content roundtrip, incomplete child budgets, return loop and routing failures');

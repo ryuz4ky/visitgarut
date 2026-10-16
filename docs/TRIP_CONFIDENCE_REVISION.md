@@ -1,5 +1,7 @@
 # VisitGarut: practical trip decisions
 
+Later increments are documented in `PRACTICAL_COVERAGE_2026-10-16.md` and `CALENDAR_BUDGET_REVISION.md`. The latter adds per-day/holiday tariffs and private visitor-entered adult ticket totals to the original planner below.
+
 ## Visitor outcome
 
 A visitor can compare places for their party, calculate the known portion of a group budget, identify missing costs, and plan travel back to the starting point. The homepage promise is "Ke Garut, lebih jelas." Existing category/place URLs, maps, saved places, articles, and Community Pulse remain available.

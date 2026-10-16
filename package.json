@@ -29,7 +29,7 @@
     "test:research-globe": "tsc lib/pulse/research-globe.ts --target ES2022 --module commonjs --skipLibCheck --outDir .research-globe-test && node scripts/research-globe-tests.cjs",
     "test:research-enrichment": "node scripts/research-enrichment-tests.cjs",
     "test:related-places": "tsc lib/mvp/related-places.ts --target ES2022 --module commonjs --skipLibCheck --outDir .related-places-test && node scripts/related-places-tests.cjs",
-    "test:visit": "tsc lib/visit/practical.ts lib/visit/companion.ts lib/visit/route.ts --target ES2022 --module commonjs --skipLibCheck --outDir .visit-test && node scripts/visit-tests.cjs",
+    "test:visit": "tsc lib/visit/practical.ts lib/visit/companion.ts lib/visit/route.ts --target ES2022 --module commonjs --skipLibCheck --outDir .visit-test && node scripts/visit-tests.cjs && node scripts/visit-import-tests.cjs",
     "seed:visit": "tsc lib/visit/practical.ts --target ES2022 --module commonjs --skipLibCheck --outDir .visit-test && node scripts/seed-visit-practical.cjs"
   },
   "dependencies": {

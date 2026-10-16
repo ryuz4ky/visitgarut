@@ -32,11 +32,24 @@
     "checkedAt": "2026-10-16",
     "weekday": null,
     "weekend": 35000,
-    "priceNote": "Pengelola mencantumkan Rp35.000 untuk usia di atas 10 tahun pada Sabtu, Minggu, dan hari libur; Rp30.000 untuk usia 3-10 tahun. Batas usia 10 tahun perlu diperjelas. Angka hari kerja di halaman tidak jelas sehingga tidak dipakai dalam hitungan.",
+    "priceNote": "Pengelola mengelompokkan Sabtu, Minggu, dan hari libur dengan tarif Rp35.000 untuk usia 10 tahun ke atas, serta Rp30.000 untuk usia 3-10 tahun. Batas usia 10 tahun perlu diperjelas. Angka hari kerja tidak jelas sehingga tidak dihitung; ketentuan libur khusus perlu dikonfirmasi.",
     "familyNote": "Pengelola mencantumkan kolam anak dan dewasa dengan beragam kedalaman. Tanyakan aturan pendampingan dan wahana yang sesuai untuk anak.",
     "accessNote": "Kondisi perjalanan dan jarak berjalan dari parkir belum dikonfirmasi pada sumber ini.",
     "hoursNote": "Konfirmasikan jam kolam yang ingin digunakan pada tanggal kunjungan.",
-    "extrasNote": "Sumber menyebut tiket mencakup wahana air; parkir, makan, dan layanan lain belum dihitung."
+    "extrasNote": "Sumber menyebut tiket mencakup wahana air; parkir, makan, dan layanan lain belum dihitung.",
+    "calendar": {
+      "days": [
+        35000,
+        null,
+        null,
+        null,
+        null,
+        null,
+        35000
+      ],
+      "holiday": 35000,
+      "specialHoliday": null
+    }
   },
   "situ-bagendit": {
     "version": 1,
@@ -45,11 +58,24 @@
     "checkedAt": "2026-10-16",
     "weekday": null,
     "weekend": null,
-    "priceNote": "Panduan mencantumkan dewasa domestik Rp10.000 Senin-Kamis, Rp15.000 Sabtu-Minggu, dan Rp20.000 libur khusus. Jumat tidak dijelaskan. Tiket belum dihitung otomatis karena aturan Jumat dan libur khusus perlu dipastikan; konfirmasikan tanggal dan zona masuk.",
+    "priceNote": "Tarif dewasa domestik pada panduan: Rp10.000 Senin-Kamis, Rp15.000 Sabtu-Minggu, dan Rp20.000 libur khusus. Jumat dan kategori libur nasional tidak dijelaskan terpisah; konfirmasikan tanggal, kategori hari, zona masuk, serta ketentuan anak. Hari libur tidak dideteksi otomatis.",
     "familyNote": "Panduan mencantumkan area bermain anak, masjid, dan aktivitas di danau. Tanyakan pendampingan serta perlengkapan keselamatan sebelum memilih aktivitas air.",
     "accessNote": "Lokasi di Sukamukti, Banyuresmi. Panduan menyebut angkot dari Terminal Guntur; pastikan trayek yang masih berjalan, titik turun, dan kendaraan pulang sebelum berangkat.",
     "hoursNote": "Panduan mencantumkan 08.00-17.00 WIB setiap hari. Pastikan jam pintu masuk dan aktivitas yang dipilih pada tanggalmu.",
-    "extrasNote": "Rakit, sepeda air, beberapa area atau wahana, parkir, dan makan perlu anggaran terpisah. Tanyakan apakah tarif per orang, per perahu, atau per durasi."
+    "extrasNote": "Rakit, sepeda air, beberapa area atau wahana, parkir, dan makan perlu anggaran terpisah. Tanyakan apakah tarif per orang, per perahu, atau per durasi.",
+    "calendar": {
+      "days": [
+        15000,
+        10000,
+        10000,
+        10000,
+        10000,
+        null,
+        15000
+      ],
+      "holiday": null,
+      "specialHoliday": 20000
+    }
   },
   "candi-cangkuang": {
     "version": 1,
@@ -240,10 +266,23 @@
     "checkedAt": "2026-10-16",
     "weekday": 17500,
     "weekend": null,
-    "priceNote": "Pengelola mencantumkan tiket taman Rp17.500 Senin-Sabtu dan Rp22.500 Minggu/libur nasional. Hitungan otomatis memakai Rp17.500 hanya untuk hari kerja; akhir pekan perlu konfirmasi karena Sabtu dan Minggu berbeda. Ketentuan anak belum dirinci.",
+    "priceNote": "Pengelola mencantumkan tiket taman Rp17.500 Senin-Sabtu dan Rp22.500 Minggu/libur nasional. Pilih tanggal kunjungan atau jenis libur yang sesuai. Ketentuan anak dan libur khusus belum dirinci; konfirmasikan sebelum berangkat.",
     "familyNote": "Situs menampilkan taman, restoran, dan vila. Fasilitas tersebut tidak memastikan seluruh jalur ramah kursi roda; tanyakan permukaan jalan, akses tanpa tangga, dan tempat istirahat sesuai kebutuhan keluarga.",
     "accessNote": "Alamat pengelola di Jl. Raya Kamojang KM 5, Sukakarya, Samarang. Pastikan pintu masuk taman dan jarak berjalan dari tempat turun kendaraan.",
     "hoursNote": "Pengelola mencantumkan taman 09.00-17.00 dan restoran 10.00-20.00. Jam restoran tidak berarti taman tetap terbuka setelah 17.00; periksa untuk tanggalmu.",
-    "extrasNote": "Makan dan penginapan merupakan layanan terpisah. Tanyakan parkir, layanan transfer, serta manfaat paket yang dipilih; komponen tersebut belum termasuk hitungan tiket taman."
+    "extrasNote": "Makan dan penginapan merupakan layanan terpisah. Tanyakan parkir, layanan transfer, serta manfaat paket yang dipilih; komponen tersebut belum termasuk hitungan tiket taman.",
+    "calendar": {
+      "days": [
+        22500,
+        17500,
+        17500,
+        17500,
+        17500,
+        17500,
+        17500
+      ],
+      "holiday": 22500,
+      "specialHoliday": null
+    }
   }
 }

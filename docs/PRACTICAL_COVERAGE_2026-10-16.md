@@ -1,5 +1,7 @@
 # Practical information coverage — 16 October 2026
 
+This records the first content-coverage batch. The later `CALENDAR_BUDGET_REVISION.md` adds date-specific tariff handling for Bagendit, Kebun Mawar, and Darajat Pass; use that document for their current calculation rules.
+
 ## Visitor outcome
 
 Extend the practical summaries from the three launch records to all 19 existing attraction listings. The 16 additions explain what a visitor should check about prices, group needs, access, hours, and extra costs. This is a content release using the existing metadata and revision storage; there is no application, schema, URL, or hosting change.
