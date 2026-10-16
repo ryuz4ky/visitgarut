@@ -1,0 +1,41 @@
+{
+  "gunung-papandayan": {
+    "version": 1,
+    "sourceUrl": "https://www.indonesia.travel/id/id/destination/java/west-java/gunung-papandayan",
+    "publisher": "Indonesia Travel / Kementerian Pariwisata",
+    "checkedAt": "2026-10-16",
+    "weekday": 30000,
+    "weekend": 45000,
+    "priceNote": "Tarif wisatawan nusantara pada panduan pariwisata. Tarif anak, camping, kendaraan, dan ketentuan hari libur perlu dikonfirmasi.",
+    "familyNote": "Kegiatan melibatkan berjalan dan trekking. Pilih tujuan dan kemampuan berjalan setiap anggota; tanyakan jalur yang sesuai kepada pengelola.",
+    "accessNote": "Panduan menjelaskan area parkir dan jalur berjalan menuju kawah serta area trekking. Titik parkir dan jalur yang digunakan perlu dipastikan sebelum berangkat.",
+    "hoursNote": "Jam masuk dan batas waktu jalur pada tanggal kunjungan belum dikonfirmasi.",
+    "extrasNote": "Biaya kendaraan, camping, pemandu, dan kebutuhan lainnya belum termasuk hitungan tiket dewasa."
+  },
+  "taman-air-sabda-alam": {
+    "version": 1,
+    "sourceUrl": "https://www.sabdaalam-garut.com/taman-air",
+    "publisher": "Taman Air Sabda Alam",
+    "checkedAt": "2026-10-16",
+    "weekday": 45000,
+    "weekend": 60000,
+    "priceNote": "Halaman pengelola mencantumkan tarif Senin-Jumat dan Sabtu-Minggu; ketentuan anak serta hari libur perlu dikonfirmasi. Tarif dapat berubah.",
+    "familyNote": "Pengelola mencantumkan kolam anak, kolam ombak, mushola, serta gazebo. Periksa kedalaman, pendampingan, dan aturan tiap wahana sesuai anggota rombongan.",
+    "accessNote": "Alamat kawasan di Jl. Raya Cipanas No. 3. Jarak berjalan dari parkir dan akses tanpa tangga belum dikonfirmasi.",
+    "hoursNote": "Jam operasional untuk tanggal kunjungan belum dikonfirmasi.",
+    "extrasNote": "Sewa ban, loker, tikar, dan area Taman Sabda Alam memiliki biaya tersendiri. Halaman tarif juga menyebut deposit; tanyakan jumlah yang harus dibayar dan syarat pengembaliannya."
+  },
+  "darajat-pass": {
+    "version": 1,
+    "sourceUrl": "https://darajatpass.com/kolam-renang-air-panas/",
+    "publisher": "Darajat Pass",
+    "checkedAt": "2026-10-16",
+    "weekday": null,
+    "weekend": 35000,
+    "priceNote": "Pengelola mencantumkan Rp35.000 untuk usia di atas 10 tahun pada Sabtu, Minggu, dan hari libur; Rp30.000 untuk usia 3-10 tahun. Batas usia 10 tahun perlu diperjelas. Angka hari kerja di halaman tidak jelas sehingga tidak dipakai dalam hitungan.",
+    "familyNote": "Pengelola mencantumkan kolam anak dan dewasa dengan beragam kedalaman. Tanyakan aturan pendampingan dan wahana yang sesuai untuk anak.",
+    "accessNote": "Kondisi perjalanan dan jarak berjalan dari parkir belum dikonfirmasi pada sumber ini.",
+    "hoursNote": "Konfirmasikan jam kolam yang ingin digunakan pada tanggal kunjungan.",
+    "extrasNote": "Sumber menyebut tiket mencakup wahana air; parkir, makan, dan layanan lain belum dihitung."
+  }
+}

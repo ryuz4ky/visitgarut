@@ -51,3 +51,5 @@ next-env.d.ts
 
 .saved-test/
 .related-places-test
+
+/.visit-test/

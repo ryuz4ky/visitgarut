@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run test:pulse && npm run test:pulse-overview && npm run test:archive && npm run test:globe && npm run test:research-globe && npm run test:research-enrichment && npm run test:discovery-ux && npm run test:planner && npm run test:saved && npm run test:directory && npm run test:related-places && npm run test:nearby && npm run test:coordinate-references && npm run test:supervisor && npm run test:editorial && npm run build:youtube-worker && next build",
+    "build": "npm run test:pulse && npm run test:pulse-overview && npm run test:archive && npm run test:globe && npm run test:research-globe && npm run test:research-enrichment && npm run test:discovery-ux && npm run test:planner && npm run test:saved && npm run test:directory && npm run test:related-places && npm run test:nearby && npm run test:coordinate-references && npm run test:supervisor && npm run test:visit && npm run test:editorial && npm run build:youtube-worker && next build",
     "start": "next start",
     "lint": "eslint .",
     "test:pulse": "tsc lib/pulse/core.ts --target ES2022 --module commonjs --skipLibCheck --outDir .pulse-test && node scripts/pulse-tests.cjs .pulse-test/core.js",
@@ -28,7 +28,9 @@
     "test:editorial": "node scripts/editorial-tests.cjs",
     "test:research-globe": "tsc lib/pulse/research-globe.ts --target ES2022 --module commonjs --skipLibCheck --outDir .research-globe-test && node scripts/research-globe-tests.cjs",
     "test:research-enrichment": "node scripts/research-enrichment-tests.cjs",
-    "test:related-places": "tsc lib/mvp/related-places.ts --target ES2022 --module commonjs --skipLibCheck --outDir .related-places-test && node scripts/related-places-tests.cjs"
+    "test:related-places": "tsc lib/mvp/related-places.ts --target ES2022 --module commonjs --skipLibCheck --outDir .related-places-test && node scripts/related-places-tests.cjs",
+    "test:visit": "tsc lib/visit/practical.ts lib/visit/companion.ts lib/visit/route.ts --target ES2022 --module commonjs --skipLibCheck --outDir .visit-test && node scripts/visit-tests.cjs",
+    "seed:visit": "tsc lib/visit/practical.ts --target ES2022 --module commonjs --skipLibCheck --outDir .visit-test && node scripts/seed-visit-practical.cjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",
