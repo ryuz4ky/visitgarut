@@ -11,7 +11,10 @@ const {PGlite} = require('@electric-sql/pglite');
   let authorized = true;
   let invalidations = 0;
   const redirect = location => {throw Object.assign(new Error('redirect'), {location});};
+  const practicalCode=ts.transpileModule(fs.readFileSync('lib/visit/practical.ts','utf8'), {compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
+  const practicalModule={exports:{}};vm.runInNewContext(practicalCode,{module:practicalModule,exports:practicalModule.exports,URL,Date});
   const dependencies = {
+    '@/lib/visit/practical':practicalModule.exports,
     '@/lib/mvp/db': {db: () => ({connect: async () => ({query, release() {}}), query})},
     '@/lib/mvp/auth': {requireAdmin: async () => {if (!authorized) redirect('/admin/login');}},
     'next/navigation': {redirect},
@@ -53,6 +56,23 @@ const {PGlite} = require('@electric-sql/pglite');
   await save({...publication, title: 'Unauthorized edit'}, '/admin/login');
   assert.equal((await query('SELECT title FROM vg_articles')).rows[0].title, 'Guide');
   assert.equal(invalidations, 3);
+  authorized=true;
+  const placeValues={kind:'place',slug:'visit-test',name:'Visit test',category:'wisata',content:'Original public description',status:'draft'};
+  await save(placeValues);
+  const placeId=(await query("SELECT id FROM vg_places WHERE slug='visit-test'")).rows[0].id;
+  const visitValues={...placeValues,id:placeId,visit_source:'https://example.org/operator',visit_publisher:'Operator',visit_checked:'2026-10-01',visit_weekday:'45000',visit_weekend:'60000',visit_priceNote:'Adult price only',visit_extrasNote:'Parking is not included',visit_familyNote:'Children rules need confirmation',visit_accessNote:'Ask the entrance distance',visit_hoursNote:'Confirm date-specific hours'};
+  await save(visitValues);
+  let raw=(await query('SELECT content FROM vg_places WHERE id=$1',[placeId])).rows[0].content;
+  assert.equal(practicalModule.exports.splitPractical(raw).practical.weekend,60000);
+  assert.equal(practicalModule.exports.splitPractical(raw).content,'Original public description');
+  await save({...visitValues,visit_weekday:'-1'},'/admin?error=save');
+  await save({...visitValues,visit_checked:'2099-01-01'},'/admin?error=save');
+  await save({...placeValues,id:placeId,content:'Updated public description'});
+  raw=(await query('SELECT content FROM vg_places WHERE id=$1',[placeId])).rows[0].content;
+  assert.equal(practicalModule.exports.splitPractical(raw).practical.weekday,45000);
+  await save({...visitValues,visit_source:''});
+  raw=(await query('SELECT content FROM vg_places WHERE id=$1',[placeId])).rows[0].content;
+  assert.equal(practicalModule.exports.splitPractical(raw).practical,null);
   await database.close();
-  console.log('Editorial actions: publication validation, revision snapshots, rollback, stable URLs and authorization passed');
+  console.log('Editorial actions: practical metadata persistence, preservation/removal, invalid-date/price rollback, publication validation, revision snapshots, rollback, stable URLs and authorization passed');
 })().catch(error => {console.error(error); process.exitCode = 1;});
