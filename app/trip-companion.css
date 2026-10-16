@@ -8,3 +8,5 @@
 @media(prefers-reduced-motion:reduce){.vg-confidence-home *{scroll-behavior:auto}}
 @media print{.vg-header,.vg-footer,.vg-mobile-nav,.vg-trip-brief,.vg-compare-cards,.vg-visit-filters,.vg-visit-search,.vg-companion button{display:none!important}.vg-companion-layout{display:block}.vg-budget-panel{position:static;break-inside:avoid}.vg-companion-layout>aside{margin-top:20px}}
 .vg-decision-card dd.vg-rate-note{font-size:.67rem;color:#6b755d;line-height:1.6;margin-top:6px}
+.vg-manual-ticket{border-bottom:1px solid #e7dfca;padding-bottom:12px}.vg-reset-ticket{display:block;background:transparent;border:0;color:#416148;text-align:left;padding:8px 0 0;font-size:.67rem;line-height:1.5;cursor:pointer}.vg-calendar-fields{margin-top:18px;padding:15px;border:1px solid #d5dfce;border-radius:8px}.vg-calendar-fields>summary{cursor:pointer;font-weight:600}.vg-calendar-fields>p{font-size:.78rem}.vg-calendar-fields .vg-calendar-toggle{display:flex;align-items:flex-start;gap:9px;margin-top:15px}.vg-calendar-toggle input{width:18px;min-width:18px;margin-top:3px}
+@media(min-width:1101px){.vg-budget-panel{max-height:calc(100dvh - 40px);overflow:auto}}
