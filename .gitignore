@@ -53,3 +53,5 @@ next-env.d.ts
 .related-places-test
 
 /.visit-test/
+
+.visit-validation-test/
