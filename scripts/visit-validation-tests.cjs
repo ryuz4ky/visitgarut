@@ -102,7 +102,7 @@ function load(file, dependencies, extras = {}) {
   const report = load('app/admin/trip-validation/page.tsx', {
     'react/jsx-runtime': require('react/jsx-runtime'),
     'next/link': { default: props => require('react').createElement('a', props, props.children) },
-    '@/components/mvp/Shell': { Shell: props => props.children },
+    '@/components/mvp/AdminShell': { default: props => props.children },
     '@/lib/mvp/auth': { requireAdmin: async () => { if (!authorized) throw Error('admin required') } },
     '@/lib/mvp/db': { db: () => ({ query: (sql, args) => { reportQueries++; return query(sql, args) } }) },
     '@/lib/visit/validation': core,

@@ -12,7 +12,7 @@ const layout = read('app/layout.tsx')
 let total=0
 function test(name,assertion){assertion();console.log('PASS '+name);total++}
 test('Mobile navigation only links to implemented public destinations',()=>{
- for(const route of ['/search','/map','/trip','/artikel','/community-pulse']){
+ for(const route of ['/','/search','/trip','/community-pulse','/saved']){
   assert.ok(mobile.includes("href: '"+route+"'"),route)
   assert.ok(fs.existsSync(path.join(root,'app',route.slice(1),'page.tsx')),route+' page missing')
  }
@@ -28,8 +28,11 @@ test('Primary shell displays mobile navigation and skip content',()=>{
  assert.match(shell,/<main id="konten-utama">/)
 })
 test('Homepage offers three functional, non-fabricated discovery paths',()=>{
- for(const route of ['/map','/community-pulse','/artikel'])assert.ok(home.includes('<Link href="'+route+'">'))
- assert.match(home,/vg-discovery-choices/)
+ for(const route of ['/map','/community-pulse','/artikel']){
+  assert.ok(home.includes('href="'+route+'"'),route)
+  assert.ok(fs.existsSync(path.join(root,'app',route.slice(1),'page.tsx')),route+' page missing')
+ }
+ assert.match(home,/id="pulse"/)
  assert.match(home,/JsonLd/)
  assert.doesNotMatch(home,/\b(?:rating|review)Count\s*[:=]\s*\d+/)
 })

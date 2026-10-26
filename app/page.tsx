@@ -66,7 +66,7 @@ export default async function Home(){
    <h2 id="vh-planner-title" className="sr-only">Mulai rencana perjalanan</h2>
    <nav className="vh-tabs" aria-label="Mulai dari">
     <span className="is-active" aria-current="true"><Route size={16} aria-hidden="true"/>Rencana</span>
-    <Link href="/wisata">Wisata</Link><Link href="/hotel">Penginapan</Link><Link href="/kuliner">Kuliner</Link><Link href="/transportasi">Rental</Link>
+    <Link href="/wisata">Wisata</Link><Link href="/hotel">Penginapan</Link><Link href="/kuliner">Kuliner</Link><Link href="/transportasi">Rental</Link><Link href="/map">Peta</Link>
    </nav>
    <form action="/trip" className="vh-plan-form">
     <label>Pergi dengan<select name="intent" defaultValue="together"><option value="together">Sendiri / teman</option><option value="family">Keluarga + anak</option><option value="train">Naik kereta</option></select></label>
