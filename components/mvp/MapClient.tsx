@@ -42,7 +42,7 @@ export default function MapClient({ items, initialCategory = '', initialPlace }:
         const link = document.createElement('a')
         link.href = `/${p.category}/${p.slug}`
         link.textContent = p.name
-        L.circleMarker([p.latitude, p.longitude], { radius: 9, color: '#fff', weight: 3, fillColor: '#0c8a80', fillOpacity: 1 }).bindPopup(link).on('click', () => setSelected(p.id)).addTo(m)
+        L.circleMarker([p.latitude, p.longitude], { radius: 9, color: '#fff', weight: 3, fillColor: '#0e1311', fillOpacity: 1 }).bindPopup(link).on('click', () => setSelected(p.id)).addTo(m)
       })
       if (origin) {
         points.push([origin.latitude, origin.longitude])
