@@ -3,7 +3,8 @@ import Link from 'next/link'
 import DirectoryPagination from '@/components/mvp/DirectoryPagination'
 import {parseDirectoryPage,directoryPageSize,directoryPageHref} from '@/lib/mvp/search'
 import { Car, Bike, Compass } from 'lucide-react'
-import { Shell,CategoryNav,SearchForm,PlaceGrid,Breadcrumbs } from '@/components/mvp/Shell'
+import { Shell,CategoryNav,PlaceGrid,Breadcrumbs } from '@/components/mvp/Shell'
+import {DirectoryHero} from '@/components/mvp/Directory'
 import { categories,directoryPlaces } from '@/lib/mvp/data'
 export const dynamic='force-dynamic'
 type CategoryProps={params:Promise<{category:string}>;searchParams:Promise<Record<string,string|string[]|undefined>>}
@@ -21,9 +22,9 @@ export default async function Category({params,searchParams}:CategoryProps) {
   const {items,total,pages}=await directoryPlaces({category},page)
   if(page>pages)notFound()
   const rental=category==='transportasi'
-  return <Shell><section className="vg-wrap vg-section">
-    <Breadcrumbs items={[{name:c.name,path:`/${category}`}]}/><span className="vg-eyebrow">JELAJAHI GARUT</span><h1>{c.name} di Garut</h1><p className="vg-intro">{c.description}</p>
-    {!rental&&<CategoryNav active={category}/>}<SearchForm category={category}/>
+  return <Shell><section className="vg-wrap vx-page vx-page-category">
+    <Breadcrumbs items={[{name:c.name,path:`/${category}`}]}/>
+    <DirectoryHero title={`${c.name} di Garut.`} intro={c.description} active={category} placeholder={rental?'Cari rental mobil, motor, atau penyedia…':undefined}/>
     {rental&&<div className="vg-rental-options" aria-label="Jenis kendaraan"><Link href="/search?category=transportasi&q=mobil"><Car size={18}/>Rental mobil</Link><Link href="/search?category=transportasi&q=motor"><Bike size={18}/>Rental motor</Link><Link href="/search?category=transportasi&q=rombongan"><Compass size={18}/>Kendaraan rombongan</Link></div>}
     <div className="vg-results-heading"><p className="vg-count" role="status"><strong>{total} {c.unit}</strong> dalam direktori{total>0&&<span> · Menampilkan {(page-1)*directoryPageSize+1}–{(page-1)*directoryPageSize+items.length}</span>}</p></div>
     {rental&&items.length>0&&<p className="vg-heading-note vg-rental-note">Profil dirangkum dari situs penyedia. Tarif dan ketersediaan perlu dikonfirmasi langsung.</p>}

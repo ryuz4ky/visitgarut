@@ -2,8 +2,9 @@ import Link from 'next/link'
 import {notFound} from 'next/navigation'
 import DirectoryPagination from '@/components/mvp/DirectoryPagination'
 import {parseDirectoryFilters,parseDirectoryPage,directoryPageSize,directoryPageHref} from '@/lib/mvp/search'
-import { Search as SearchIcon, SlidersHorizontal } from 'lucide-react'
-import { Shell, PlaceGrid, Breadcrumbs, CategoryNav } from '@/components/mvp/Shell'
+import { Search as SearchIcon } from 'lucide-react'
+import {DirectoryHero,FilterPanel} from '@/components/mvp/Directory'
+import { Shell, PlaceGrid, Breadcrumbs } from '@/components/mvp/Shell'
 import { directoryPlaces,directorySummary, categories } from '@/lib/mvp/data'
 export const dynamic = 'force-dynamic'
 type SearchParams=Promise<Record<string,string|string[]|undefined>>
@@ -23,11 +24,15 @@ export default async function Search({ searchParams }: { searchParams: SearchPar
   const {districts}=summary
   const filtered = Boolean(q || category || district)
   const cat=categories.find(c=>c.slug===category)
-  return <Shell><section className="vg-wrap vg-section"><Breadcrumbs items={[{ name: 'Cari tempat', path: '/search' }]}/><span className="vg-eyebrow">JELAJAHI GARUT</span><h1>Temukan pilihanmu</h1><p className="vg-intro">Cari tempat atau layanan, pilih wilayah, lalu baca informasi sebelum berangkat.</p>
-    <form className="vg-search-panel" action="/search"><label className="vg-search-field">Nama tempat, layanan, atau kata kunci<div><SearchIcon size={20}/><input name="q" defaultValue={q} placeholder="Misalnya: pantai, Papandayan, rental motor…" maxLength={120}/></div></label><div className="vg-search-filters"><label>Kategori<select name="category" defaultValue={category}><option value="">Semua kategori</option>{categories.map(c => <option key={c.slug} value={c.slug}>{c.name}</option>)}</select></label><label>Wilayah<select name="district" defaultValue={district}><option value="">Semua wilayah</option>{district && !districts.includes(district) && <option value={district}>{district}</option>}{districts.map(d => <option key={d} value={d}>{d}</option>)}</select></label><label>Urutkan<select name="sort" defaultValue={sort}><option value="relevant">Paling sesuai</option><option value="name">Nama A–Z</option><option value="latest">Baru diperbarui</option></select></label><button className="vg-button" type="submit"><SlidersHorizontal size={17}/>Cari tempat</button></div></form>
-    <div className="vg-results-heading"><p className="vg-count" role="status"><strong>{total} {cat?.unit||'listing'}</strong>{q ? ` untuk “${q}”` : ''}{cat ? ` · ${cat.name}` : ''}{district ? ` · ${district}` : ''}{total>0&&<span> · Menampilkan {(page-1)*directoryPageSize+1}–{(page-1)*directoryPageSize+items.length}</span>}</p>{filtered && <Link href="/search">Hapus semua filter</Link>}</div>
-    {items.length ? <PlaceGrid items={items}/> : <div className="vg-empty"><SearchIcon size={30}/><h2>Belum menemukan hasil yang sesuai</h2><p>Coba kata yang lebih singkat atau perluas wilayah dan kategori.</p>{cat&&<Link className="vg-button" href={`/${cat.slug}`}>Lihat semua {cat.name.toLocaleLowerCase('id-ID')}</Link>}<Link className={cat?'vg-empty-alternative':'vg-button'} href="/search">Jelajahi semua {summary.total} listing</Link></div>}
-    <DirectoryPagination path="/search" page={page} pages={pages} filters={filters}/>
-    <div className="vg-category-followup"><h2>Jelajahi kategori lain</h2><CategoryNav active={category} query={q} district={district} sort={sort}/></div>
+  return <Shell><section className="vg-wrap vx-page"><Breadcrumbs items={[{ name: 'Jelajahi', path: '/search' }]}/>
+    <DirectoryHero title={cat?`${cat.name} di Garut.`:'Jelajahi Garut.'} filters={{query:q,district,sort}} active={category} placeholder="Misalnya: pantai, Papandayan, rental motor…"/>
+    <div className="vx-layout">
+     <FilterPanel filters={filters} districts={districts}/>
+     <div className="vx-results">
+      <div className="vx-results-head"><p className="vx-count" role="status"><strong>{total} {cat?.unit||'tempat'}</strong>{q ? ` untuk “${q}”` : ''}{cat ? ` · ${cat.name}` : ''}{district ? ` · ${district}` : ''}{total>0&&<span> · menampilkan {(page-1)*directoryPageSize+1}–{(page-1)*directoryPageSize+items.length}</span>}</p>{filtered && <Link className="vx-clear" href="/search">Hapus semua filter</Link>}</div>
+      {items.length ? <PlaceGrid items={items}/> : <div className="vg-empty"><SearchIcon size={30}/><h2>Belum menemukan hasil yang sesuai</h2><p>Coba kata yang lebih singkat atau perluas wilayah dan kategori.</p>{cat&&<Link className="vg-button" href={`/${cat.slug}`}>Lihat semua {cat.name.toLocaleLowerCase('id-ID')}</Link>}<Link className={cat?'vg-empty-alternative':'vg-button'} href="/search">Jelajahi semua {summary.total} listing</Link></div>}
+      <DirectoryPagination path="/search" page={page} pages={pages} filters={filters}/>
+     </div>
+    </div>
   </section></Shell>
 }

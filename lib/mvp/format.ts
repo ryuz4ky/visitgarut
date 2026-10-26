@@ -1,4 +1,4 @@
-import type { PracticalInfo } from '@/lib/visit/practical'
+import { currentPractical, type PracticalInfo } from '@/lib/visit/practical'
 
 const tz = 'Asia/Jakarta'
 
@@ -22,8 +22,9 @@ export function shortDate(value: string | Date) {
 
 /** Lowest known adult ticket from a sourced practical record, or null when not yet known. */
 export function knownTicket(practical?: PracticalInfo | null) {
-  if (!practical) return null
-  const values = [practical.weekday, practical.weekend].filter((v): v is number => typeof v === 'number' && v >= 0)
+  // Stale tariffs (older than the 30-day window) are treated as unknown, matching the trip planner.
+  if (!practical || !currentPractical(practical)) return null
+  const values = [practical.weekday, practical.weekend, ...(practical.calendar?.days ?? [])].filter((v): v is number => typeof v === 'number' && v >= 0)
   return values.length ? Math.min(...values) : null
 }
 
