@@ -1,0 +1,52 @@
+/* Superadmin — artboards A1–A3 */
+.va{display:flex;min-height:100vh;background:#f6f7f4}
+.va-side{flex:0 0 264px;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;gap:24px;padding:22px 14px;background:#fff;border-right:1px solid #e2e6e1}
+.va-brand{display:flex;align-items:baseline;gap:8px;padding:0 10px;text-decoration:none!important}
+.va-brand small{font-size:.65rem;font-weight:700;letter-spacing:.12em;color:var(--vg-muted)}
+.va-side nav{display:flex;flex-direction:column;gap:18px}
+.va-group{display:flex;flex-direction:column;gap:2px}
+.va-group-label{padding:0 12px 6px;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7c8781}
+.va-group a{display:flex;align-items:center;gap:10px;min-height:42px;padding:0 12px;border-radius:12px;color:var(--vg-ink-2);font-size:.9rem;font-weight:500;text-decoration:none!important}
+.va-group a:hover{background:var(--vg-ground)}
+.va-group a.is-active{background:var(--vg-ink);color:#fff}
+.va-group a.is-active svg{color:var(--vg-lime)}
+.va-side-foot{margin-top:auto;display:flex;flex-direction:column;gap:4px;padding-top:16px;border-top:1px solid #eef0ec}
+.va-side-foot a,.va-side-foot button{display:flex;align-items:center;gap:10px;min-height:40px;padding:0 12px;border:0;border-radius:12px;background:transparent;color:var(--vg-muted);font:inherit;font-size:.88rem;cursor:pointer;text-decoration:none!important;width:100%}
+.va-side-foot a:hover,.va-side-foot button:hover{background:var(--vg-ground);color:var(--vg-ink)}
+.va-main{flex:1 1 auto;min-width:0}
+.va-main>.vg-wrap,.va-main>section{width:auto;max-width:1400px;margin:0 auto;padding:28px 32px 48px}
+.va-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.va-head h1{margin:4px 0 0;font-size:clamp(2rem,3.4vw,2.8rem);letter-spacing:-.04em}
+.va-date{font-size:.85rem;color:var(--vg-muted)}
+.va-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.va-stats>div{display:flex;flex-direction:column;gap:4px;padding:18px 20px;border-radius:20px;background:#fff;border:1px solid #e6e9e3}
+.va-stats span{font-size:.8rem;color:var(--vg-muted)}
+.va-stats strong{font-family:var(--vg-display);font-size:1.9rem;font-weight:600;letter-spacing:-.03em;line-height:1.1}
+.va-stats small{font-size:.75rem}
+.va-stats .is-warn{background:var(--vg-warn-bg);border-color:#efe0a8}
+.va-stats .is-warn small,.va-stats .is-warn span{color:var(--vg-warn)}
+.va .vg-section-heading{align-items:flex-end}
+.va .vg-section-heading h1{font-size:clamp(2rem,3.4vw,2.8rem);letter-spacing:-.04em}
+.va .vg-admin-links{display:flex;gap:8px;flex-wrap:wrap}
+.va .vg-admin-tabs a{border:0;border-radius:999px;background:#fff;min-height:40px;display:inline-flex;align-items:center}
+.va .vg-admin-tabs .active{background:var(--vg-ink);color:#fff}
+.va .vg-admin-list>a:not(.vg-button){border:0;border-radius:16px;background:#fff}
+.va .vg-admin-list .active{background:var(--vg-lime-tint)!important}
+.va .vg-editor{background:#fff;border-radius:24px;padding:28px;border:1px solid #e6e9e3}
+.va table{border-collapse:collapse;width:100%;background:#fff;border-radius:16px;overflow:hidden}
+.va th{background:#f6f7f4;text-align:left;font-size:.75rem;letter-spacing:.04em;text-transform:uppercase;color:var(--vg-muted)}
+.va th,.va td{padding:12px 14px;border-bottom:1px solid #eef0ec}
+.va .vg-footer,.va .vg-mobile-nav{display:none}
+@media(max-width:1200px){.va-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:900px){
+  .va{flex-direction:column}
+  .va-side{position:static;height:auto;flex:none;border-right:0;border-bottom:1px solid #e2e6e1;gap:14px}
+  .va-side nav{flex-direction:row;overflow-x:auto;gap:4px}
+  .va-group{flex-direction:row;gap:4px}
+  .va-group-label{display:none}
+  .va-group a{white-space:nowrap}
+  .va-side-foot{flex-direction:row;margin-top:0;padding-top:8px}
+  .va-main>.vg-wrap,.va-main>section{padding:20px 16px 40px}
+  .va-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body:has(.va){padding-bottom:0}
+}
