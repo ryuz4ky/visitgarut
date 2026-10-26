@@ -45,7 +45,7 @@ export default async function PartnerPage() {
   const placeIds = places.map((place) => place.id)
   const [offersResult, leadsResult, inventoryResult] = await Promise.all([
     supabase.from('offers').select('id, place_id, title, description, promo_code, price_label, cta_url, valid_until, status, is_featured').in('place_id', placeIds).order('created_at', { ascending: false }),
-    supabase.from('booking_leads').select('id, place_id, source, intent, full_name, email, phone, message, status, created_at').in('place_id', placeIds).order('created_at', { ascending: false }).limit(100),
+    supabase.from('booking_leads').select('id, place_id, inventory_item_id, source, intent, full_name, email, phone, message, status, start_date, end_date, guests, quantity, quoted_price, currency, conversion_value, created_at').in('place_id', placeIds).order('created_at', { ascending: false }).limit(100),
     supabase.from('inventory_items').select('id, place_id, item_type, name, description, price_amount, currency, price_unit, booking_url, status').in('place_id', placeIds).order('created_at', { ascending: false }),
   ])
 
@@ -54,6 +54,14 @@ export default async function PartnerPage() {
     price_amount: row.price_amount == null ? null : Number(row.price_amount),
   }))
   const inventoryIds = inventory.map((row) => String(row.id))
+
+  const leads = (leadsResult.data ?? []).map((row: Record<string, unknown>) => ({
+    ...row,
+    guests: row.guests == null ? null : Number(row.guests),
+    quantity: Number(row.quantity ?? 1),
+    quoted_price: row.quoted_price == null ? null : Number(row.quoted_price),
+    conversion_value: row.conversion_value == null ? null : Number(row.conversion_value),
+  }))
 
   const today = new Date()
   const horizon = new Date(today)
@@ -81,7 +89,7 @@ export default async function PartnerPage() {
       <AppHeader />
       <section className="partner-hero"><div><span className="marketplace-eyebrow">VISITGARUT PARTNER CENTER</span><h1>Listing, inventory, availability, promo, dan inquiry dalam satu dashboard.</h1><p>Kelola room, kendaraan, produk, paket, kalender stok, offer, dan traveler intent dari satu tempat.</p></div></section>
       <div className="marketplace-shell partner-shell">
-        <PartnerDashboard userId={user.id} places={places} offers={(offersResult.data ?? []) as never} leads={(leadsResult.data ?? []) as never} inventory={inventory as never} />
+        <PartnerDashboard userId={user.id} places={places} offers={(offersResult.data ?? []) as never} leads={leads as never} inventory={inventory as never} />
         <PartnerAvailabilityManager places={places} inventory={inventory as never} availability={availability as never} />
       </div>
       <MobileBottomNav />

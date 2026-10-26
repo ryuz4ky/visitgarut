@@ -13,6 +13,7 @@ import { absoluteUrl } from '@/lib/site'
 
 type PlacePageProps = {
   params: Promise<{ slug: string }>
+  searchParams?: Promise<{ item?: string; start?: string; end?: string; guests?: string }>
 }
 
 function serializeJsonLd(value: unknown) {
@@ -33,6 +34,10 @@ function getOpeningHours(value: Record<string, unknown> | null | undefined) {
   return Object.entries(value)
     .filter(([, hours]) => typeof hours === 'string' && hours.trim())
     .slice(0, 7) as Array<[string, string]>
+}
+
+function isDateValue(value?: string) {
+  return Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value))
 }
 
 export async function generateStaticParams() {
@@ -68,11 +73,18 @@ export async function generateMetadata({ params }: PlacePageProps): Promise<Meta
   }
 }
 
-export default async function PlacePage({ params }: PlacePageProps) {
+export default async function PlacePage({ params, searchParams }: PlacePageProps) {
   const { slug } = await params
+  const bookingParams = searchParams ? await searchParams : {}
   const place = await getPlaceBySlug(slug)
 
   if (!place) notFound()
+
+  const initialItemId = bookingParams.item || ''
+  const initialStartDate = isDateValue(bookingParams.start) ? bookingParams.start! : ''
+  const initialEndDate = isDateValue(bookingParams.end) ? bookingParams.end! : ''
+  const parsedGuests = Number.parseInt(bookingParams.guests || '1', 10)
+  const initialGuests = Number.isFinite(parsedGuests) ? Math.min(Math.max(parsedGuests, 1), 50) : 1
 
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -235,7 +247,7 @@ export default async function PlacePage({ params }: PlacePageProps) {
         </article>
 
         <aside className="place-sidebar rich-sidebar">
-          {place.id ? <BookingInquiry placeId={place.id} placeName={place.name} userId={user?.id ?? null} whatsappNumber={whatsappNumber} /> : null}
+          {place.id ? <BookingInquiry placeId={place.id} placeName={place.name} userId={user?.id ?? null} whatsappNumber={whatsappNumber} categorySlug={place.category?.slug} initialItemId={initialItemId} initialStartDate={initialStartDate} initialEndDate={initialEndDate} initialGuests={initialGuests} /> : null}
 
           <div className="info-card place-info-card">
             <span className="marketplace-kicker">PLAN YOUR VISIT</span>
