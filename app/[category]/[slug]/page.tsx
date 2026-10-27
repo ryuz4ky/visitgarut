@@ -13,9 +13,13 @@ import { absoluteUrl } from '@/lib/site'
 import {eligibleTripPlace,tripCategories} from '@/lib/trip/planner'
 import {hasCoordinates} from '@/lib/mvp/nearby'
 import {publicCoordinateReference} from '@/lib/mvp/coordinate-reference'
+import RatingPanel from '@/components/rating/RatingPanel'
+import {placeRating} from '@/lib/rating/store'
+import {ratingEnabled} from '@/lib/rating/server'
+import {db} from '@/lib/mvp/db'
 export const dynamic='force-dynamic'
 export async function generateMetadata({params}:{params:Promise<{category:string;slug:string}>}){const {category,slug}=await params;const p=await place(slug,category);return p?{title:`${p.name}${p.district?', '+p.district:''} — ${categories.find(c=>c.slug===category)?.name||'Panduan Garut'}`,description:p.excerpt,alternates:{canonical:`/${category}/${slug}`},openGraph:{title:p.name,description:p.excerpt,url:absoluteUrl(`/${category}/${slug}`),...(p.image_url?{images:[p.image_url]}:{})}}:{title:'Tempat tidak ditemukan',robots:{index:false}}}
-export default async function Detail({params}:{params:Promise<{category:string;slug:string}>}){const {category,slug}=await params;if(!categories.some(c=>c.slug===category))notFound();const p=await place(slug,category);if(!p)notFound();const [other,guides,community]=await Promise.all([relatedPlaceSuggestions(p.id),relatedArticles(p.id),pulseForPlace(p.id)]);const c=categories.find(x=>x.slug===category)!;const rental=category==='transportasi';const coordinateRef=publicCoordinateReference(p);const infoTitle=rental?'Layanan & pemesanan':'Info kunjungan';const schemaType=category==='wisata'?'TouristAttraction':category==='hotel'?'Hotel':category==='kuliner'?'Restaurant':category==='cafe'?'CafeOrCoffeeShop':'LocalBusiness';const ticket=knownTicket(p.practical);const checked=p.practical?.checkedAt?shortDate(p.practical.checkedAt):'';const plannable=eligibleTripPlace(p)&&(tripCategories as readonly string[]).includes(p.category)
+export default async function Detail({params}:{params:Promise<{category:string;slug:string}>}){const {category,slug}=await params;if(!categories.some(c=>c.slug===category))notFound();const p=await place(slug,category);if(!p)notFound();const [other,guides,community]=await Promise.all([relatedPlaceSuggestions(p.id),relatedArticles(p.id),pulseForPlace(p.id)]);const rating=ratingEnabled()?await placeRating(db(),p.id,new Date()).catch(()=>null):null;const c=categories.find(x=>x.slug===category)!;const rental=category==='transportasi';const coordinateRef=publicCoordinateReference(p);const infoTitle=rental?'Layanan & pemesanan':'Info kunjungan';const schemaType=category==='wisata'?'TouristAttraction':category==='hotel'?'Hotel':category==='kuliner'?'Restaurant':category==='cafe'?'CafeOrCoffeeShop':'LocalBusiness';const ticket=knownTicket(p.practical);const checked=p.practical?.checkedAt?shortDate(p.practical.checkedAt):'';const plannable=eligibleTripPlace(p)&&(tripCategories as readonly string[]).includes(p.category)
  const facts=[
   category==='wisata'?{label:'Tiket dewasa',value:ticket===null?'Perlu konfirmasi':ticket===0?'Gratis':`mulai ${compactRupiah(ticket)}`,warn:ticket===null}:{label:'Kategori',value:c.name,warn:false},
   {label:'Wilayah',value:p.district||'Garut',warn:false},
@@ -43,6 +47,7 @@ export default async function Detail({params}:{params:Promise<{category:string;s
    <nav className="vg-detail-nav" aria-label="Bagian informasi tempat">{category==='wisata'&&<a href="#praktis">Sebelum memilih</a>}<a href="#tentang-tempat">{rental?'Tentang penyedia':'Tentang tempat'}</a><a href="#info-kunjungan">{infoTitle}</a><a href="#community-pulse">Info &amp; pengalaman</a></nav>
    <PracticalPanel place={p} research={community.research}/>
    <article className="vp-card" id="tentang-tempat"><h2>{rental?'Tentang penyedia':'Tentang tempat'}</h2><TextContent content={p.content}/>{p.source_url&&<p className="vg-source"><a href={p.source_url} target="_blank" rel="noopener noreferrer">Baca sumber informasi <ExternalLink size={14}/></a></p>}<small>Diperbarui {date(p.updated_at)}</small></article>
+   {rating&&<RatingPanel rating={rating}/>}
    <CommunityPulse globeEnabled key={p.id} pulse={community.pulse} placeId={p.id} research={community.research} contents={community.contents} youtubeAvailable={community.youtubeAvailable} rental={rental}/>
   </div>
   <aside className="vp-aside">

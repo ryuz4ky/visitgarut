@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import {LayoutDashboard,Orbit,Youtube,Radar,FileSearch,ClipboardCheck,ExternalLink,LogOut} from 'lucide-react'
+import {LayoutDashboard,Orbit,Youtube,Radar,FileSearch,ClipboardCheck,ExternalLink,LogOut,Star} from 'lucide-react'
 
 /** Superadmin layout — artboards A1–A3. Only routes that exist are listed. */
 const groups=[
@@ -9,6 +9,7 @@ const groups=[
   {href:'/admin/pulse/youtube',label:'Video YouTube',Icon:Youtube},
   {href:'/admin/pulse/discovery',label:'Penemuan sumber',Icon:Radar},
   {href:'/admin/pulse/research',label:'Riset tempat',Icon:FileSearch},
+  {href:'/admin/rating',label:'VisitGarut Rating',Icon:Star},
  ]},
  {label:'Kualitas',items:[
   {href:'/admin/trip-validation',label:'Evaluasi planner',Icon:ClipboardCheck},
