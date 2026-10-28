@@ -5,6 +5,8 @@ export const categories = [
   { slug: 'cafe', name: 'Cafe', shortName: 'Cafe', icon: 'Coffee', unit: 'tempat', description: 'Cari tempat untuk ngopi dan beristirahat.' },
   { slug: 'transportasi', name: 'Rental kendaraan', shortName: 'Rental', icon: 'Car', unit: 'penyedia', description: 'Rental mobil, motor, dan kendaraan rombongan di Garut. Hubungi penyedia untuk tarif dan ketersediaan.' },
   { slug: 'paket-wisata', name: 'Paket wisata', shortName: 'Paket wisata', icon: 'Compass', unit: 'pilihan', description: 'Pilihan perjalanan bersama penyedia lokal.' },
+  { slug: 'oleh-oleh', name: 'Oleh-oleh & UMKM', shortName: 'Oleh-oleh', icon: 'ShoppingBag', unit: 'usaha', description: 'Dodol, kerajinan kulit Sukaregang, batik Garutan, dan produk lokal lainnya.' },
+  { slug: 'jasa', name: 'Jasa lokal', shortName: 'Jasa', icon: 'Wrench', unit: 'usaha', description: 'Bengkel, laundry, salon, dan jasa lain yang melayani warga dan pendatang.' },
 ]
 
 export type DirectoryFilters = { query?: string; district?: string; sort?: string }
@@ -27,6 +29,8 @@ export function categoryForQuery(query: string) {
     rental: 'transportasi', sewa: 'transportasi', transportasi: 'transportasi',
     'rental kendaraan': 'transportasi', 'sewa kendaraan': 'transportasi',
     'paket wisata': 'paket-wisata',
+    'oleh-oleh': 'oleh-oleh', 'oleh oleh': 'oleh-oleh', umkm: 'oleh-oleh', dodol: 'oleh-oleh',
+    jasa: 'jasa', bengkel: 'jasa', laundry: 'jasa', salon: 'jasa',
   }
   return aliases[term]
 }

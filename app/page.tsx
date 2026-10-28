@@ -3,6 +3,10 @@ import {ArrowUpRight,ArrowRight,MapPin,Check,Sparkles,BadgeCheck,CircleHelp,Link
 import {Shell,JsonLd,date as fmtDate} from '@/components/mvp/Shell'
 import SiteHeader from '@/components/mvp/SiteHeader'
 import HeroVideo from '@/components/visit/HeroVideo'
+import RatingHome from '@/components/rating/RatingHome'
+import {PreviewNote} from '@/components/rating/bits'
+import {loadRatingHome} from '@/lib/rating/home'
+import {ratingVisible,ratingPreviewNote} from '@/lib/rating/server'
 import {places,articles,categories,type Place} from '@/lib/mvp/data'
 import {db} from '@/lib/mvp/db'
 import {hubExperienceCountSql,hubExperienceParams} from '@/lib/pulse/hub-query'
@@ -27,7 +31,8 @@ function evidenceLabel(p:PulsePlace){return [p.videos&&`${p.videos} video`,p.exp
 function placeMeta(p:Place){const t=knownTicket(p.practical);return [p.district||'Garut',t!==null?(t===0?'tiket gratis':`± ${compactRupiah(t)}/org`):null].filter(Boolean).join(' · ')}
 
 export default async function Home(){
- const [items,guides,pulse]=await Promise.all([places(),articles(),pulsePlaces()])
+ const visible=await ratingVisible()
+ const [items,guides,pulse,rating]=await Promise.all([places(),articles(),pulsePlaces(),visible?loadRatingHome():Promise.resolve(null)])
  const ranked=[...items].sort((a,b)=>Number(b.category==='wisata')-Number(a.category==='wisata')||Number(!!b.image_url)-Number(!!a.image_url)||Number(!!b.practical)-Number(!!a.practical))
  const withImage=ranked.filter(p=>p.image_url)
  const featured=withImage[0]
@@ -85,6 +90,7 @@ export default async function Home(){
   </div>
  </section>
 
+
  <section className="vh-statement">
   <p>Pilih tempat {pills[0]&&<span className="vh-inline-pill"><img src={pills[0].image_url} alt="" width={170} height={70}/></span>} yang pas, rincikan biayanya, lalu pulang {pills[1]&&<span className="vh-inline-pill"><img src={pills[1].image_url} alt="" width={170} height={70}/></span>} tanpa drama.</p>
   <small>VisitGarut adalah direktori independen. Tarif menyebut sumber dan tanggal pemeriksaannya, dan yang belum pasti selalu ditandai.</small>
@@ -107,6 +113,8 @@ export default async function Home(){
   </Link>})}</div>
   <Link className="vg-pill-cta is-dark vh-center" href="/search">Lihat semua tempat<span className="vg-pill-cta-icon"><ArrowUpRight size={18} aria-hidden="true"/></span></Link>
  </section>}
+
+ {rating&&<><PreviewNote note={ratingPreviewNote()}/><RatingHome tabs={rating.tabs} stats={rating.stats}/></>}
 
  <section className="vh-dark-wrap" aria-labelledby="vh-trip-title"><div className="vh-dark">
   <div className="vh-dark-glow" aria-hidden="true"/>

@@ -76,6 +76,11 @@ const review = (overall, days = 1, evidence = 'qr_geo', reviewer = Math.random()
   assert.equal(core.plaqueState({ status: 'active', expiresAt: ago(1) }, now), 'kedaluwarsa')
   assert.equal(core.plaqueState({ status: 'revoked', expiresAt: ago(-10) }, now), 'dicabut')
 
+  assert.equal(core.normalizeSerial('vg 26 00412'), 'VG-26-00412')
+  assert.equal(core.normalizeSerial('VG2600412'), 'VG-26-00412')
+  assert.equal(core.normalizeSerial('VG-26-0041'), null)
+  assert.equal(core.normalizeSerial('XX-26-00412'), null)
+
   // --- Tokens ---
   const code = tokens.randomCode()
   assert.ok(tokens.validPlateCode(code))
@@ -90,6 +95,8 @@ const review = (overall, days = 1, evidence = 'qr_geo', reviewer = Math.random()
   await db.exec(fs.readFileSync('db/001-mvp.sql', 'utf8'))
   await db.exec(fs.readFileSync('db/013-rating.sql', 'utf8'))
   await db.exec(fs.readFileSync('db/013-rating.sql', 'utf8')) // idempotent
+  await db.exec(fs.readFileSync('db/014-sectors.sql', 'utf8'))
+  await db.exec(fs.readFileSync('db/014-sectors.sql', 'utf8')) // idempotent
   const client = { query: (sql, values) => db.query(sql, values) }
   const placeId = (await client.query(`INSERT INTO vg_places(slug,name,category,latitude,longitude,status) VALUES('bale','Bale Tingtrim','kuliner',-7.2,107.9,'published') RETURNING id`)).rows[0].id
   await client.query(`INSERT INTO vg_places(slug,name,category,status) VALUES('draft','Draft','kuliner','draft')`)
@@ -174,6 +181,39 @@ const review = (overall, days = 1, evidence = 'qr_geo', reviewer = Math.random()
   assert.equal(status.state, 'aktif')
   assert.equal((await store.plaqueBySerial(client, plaque.serial, new Date(now.getTime() + 400 * DAY))).state, 'kedaluwarsa')
   assert.equal(await store.plaqueBySerial(client, 'nope', now), null)
+
+  // --- Listings: batch summaries, sector ranking, headline stats ---
+  assert.deepEqual(core.categoriesForSector('umkm').sort(), ['oleh-oleh', 'umkm'])
+  assert.equal(core.sectorForCategory('oleh-oleh'), 'umkm')
+  assert.equal(core.sectorForCategory('jasa'), 'jasa')
+  const shop = (await client.query(`INSERT INTO vg_places(slug,name,category,status) VALUES('dodol','Toko Dodol','oleh-oleh','published') RETURNING id`)).rows[0].id
+  const cafe = (await client.query(`INSERT INTO vg_places(slug,name,category,status,rating_sector) VALUES('kopi','Kedai Kopi','kuliner','published','kafe') RETURNING id`)).rows[0].id
+  const fakeCheckin = async (pid, i, overall, days) => {
+    const id = require('node:crypto').randomUUID()
+    await client.query('INSERT INTO vg_rating_checkins(id,place_id,phone_hash,verified_at) VALUES($1,$2,$3,$4)', [id, pid, 'h' + pid + '-' + i, ago(days)])
+    await client.query(`INSERT INTO vg_rating_reviews(checkin_id,place_id,phone_hash,sector,overall,party,evidence,status,created_at) VALUES($1,$2,$3,$4,$5,'teman','qr_geo','approved',$6)`, [id, pid, 'h' + pid + '-' + i, 'umkm', overall, ago(days)])
+  }
+  for (let i = 0; i < 3; i++) await fakeCheckin(shop, i, 4, 5 + i)
+  await fakeCheckin(cafe, 0, 5, 3)
+  const sums = await store.ratingSummaries(client, [placeId, shop, cafe, 99999], now)
+  assert.equal(sums.get(placeId).tier, 'tinggi')
+  assert.ok(Math.abs(sums.get(placeId).score - rating.score) < 1e-9)
+  assert.equal(sums.get(shop).tier, 'awal')
+  assert.equal(sums.get(shop).sector, 'umkm')
+  assert.equal(sums.get(cafe).tier, 'kurang')
+  assert.equal(sums.get(cafe).score, null)
+  assert.equal(sums.get(cafe).sector, 'kafe') // rating_sector override
+  assert.equal(sums.has(99999), false)
+  assert.equal((await store.ratingSummaries(client, [], now)).size, 0)
+  const topK = await store.topRated(client, 'kuliner', now)
+  assert.deepEqual(topK.map(t => t.slug), ['bale']) // the cafe override is not counted as kuliner
+  assert.deepEqual((await store.topRated(client, 'umkm', now)).map(t => t.slug), ['dodol'])
+  assert.deepEqual(await store.topRated(client, 'kafe', now), []) // below 3 reviewers: no rank
+  assert.deepEqual((await store.sectorPeers(client, placeId, 'kuliner', now)), [])
+  const stats = await store.ratingStats(client, now)
+  assert.equal(stats.scoredPlaces, 2)
+  assert.equal(stats.reviewers, 19)
+  await assert.rejects(client.query(`INSERT INTO vg_places(slug,name,category,status) VALUES('x','X','bogus','draft')`))
 
   // Reviewer withdrawal removes it from the score
   assert.equal(await store.withdrawReview(client, first.token), true)

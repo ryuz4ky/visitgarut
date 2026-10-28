@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation'
 import { Shell } from '@/components/mvp/Shell'
 import { RATING, evidenceWeight, sectors, coreAspects } from '@/lib/rating/core'
-import { ratingEnabled } from '@/lib/rating/server'
+import { ratingVisible } from '@/lib/rating/server'
 export const dynamic = 'force-dynamic'
 export const metadata = { title: 'Metode & integritas VisitGarut Rating', description: 'Cara skor VisitGarut dihitung, kapan skor tampil, dan apa yang tidak bisa dibeli.', alternates: { canonical: '/rating/metode' } }
 
 // Numbers below are read from lib/rating/core.ts, so this page cannot drift from the code that computes scores.
-export default function Metode() {
-  if (!ratingEnabled()) notFound()
+export default async function Metode() {
+  if (!(await ratingVisible())) notFound()
   return <Shell><main className="vr-wrap vr-doc" id="konten-utama">
     <p className="vr-eyebrow">VisitGarut Rating</p>
     <h1>Metode &amp; integritas</h1>

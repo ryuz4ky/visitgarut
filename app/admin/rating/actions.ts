@@ -71,3 +71,11 @@ export async function saveBusinessReply(f: FormData) {
   revalidatePath('/', 'layout')
   redirect('/admin/rating?tab=approved&saved=1')
 }
+
+export async function setApplicationStatus(f: FormData) {
+  await requireAdmin()
+  const status = str(f, 'status', 12)
+  if (!['baru', 'dihubungi', 'terpasang', 'ditolak'].includes(status)) redirect('/admin/rating?tab=applications&error=status')
+  await db().query('UPDATE vg_rating_applications SET status=$2,admin_note=$3 WHERE id=$1', [Number(f.get('id')), status, str(f, 'admin_note')])
+  redirect('/admin/rating?tab=applications&saved=1')
+}

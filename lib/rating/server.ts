@@ -1,6 +1,7 @@
 import 'server-only'
 import { headers } from 'next/headers'
 import { db } from '@/lib/mvp/db'
+import { isAdmin } from '@/lib/mvp/auth'
 import { siteUrl } from '@/lib/site'
 import { allow } from './store'
 import { limitKey } from './tokens'
@@ -8,6 +9,17 @@ import { limitKey } from './tokens'
 /** Public rating features stay hidden until RATING_ENABLED=1, so deploying this code changes nothing for visitors. */
 export function ratingEnabled() {
   return process.env.RATING_ENABLED === '1'
+}
+
+/** Rating UI shows to everyone once enabled; before that only a signed-in admin sees it (preview). */
+export async function ratingVisible() {
+  if (ratingEnabled()) return true
+  try { return await isAdmin() } catch { return false }
+}
+
+/** Preview banner text for admins while the feature is off; null for the public. */
+export function ratingPreviewNote() {
+  return ratingEnabled() ? null : 'Pratinjau admin: rating belum tampil untuk publik (RATING_ENABLED belum aktif).'
 }
 
 export function ratingSecret() {

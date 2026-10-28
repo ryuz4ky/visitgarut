@@ -1,17 +1,21 @@
 import Link from 'next/link'
-import {Mountain,MapPin,BedDouble,Utensils,Coffee,Car,Bike,Compass,Plus,Info} from 'lucide-react'
+import {Mountain,MapPin,BedDouble,Utensils,Coffee,Car,Bike,Compass,Plus,Info,ShoppingBag,Wrench} from 'lucide-react'
 import {categories} from '@/lib/mvp/categories'
 import type {SavedPlaceCard} from '@/lib/mvp/saved'
 import type {PracticalInfo} from '@/lib/visit/practical'
 import SaveButton from '@/components/saved/SaveButton'
 import {compactRupiah,knownTicket,checkedLabel} from '@/lib/mvp/format'
+import {ScoreRing} from '@/components/rating/bits'
+import {tierLabels,type Tier} from '@/lib/rating/core'
+
+export type CardRating={score:number|null;tier:Tier;reviewers:number}
 
 type CardPlace=SavedPlaceCard&{practical?:PracticalInfo|null}
 const plannable=['wisata','kuliner','cafe']
 
-export default function PlaceCard({place}:{place:CardPlace}) {
+export default function PlaceCard({place,rating}:{place:CardPlace;rating?:CardRating}) {
   const cat=categories.find(c=>c.slug===place.category)
-  const Icon=place.category==='transportasi'&&/\bmotor\b/i.test(place.name)?Bike:({wisata:Mountain,hotel:BedDouble,kuliner:Utensils,cafe:Coffee,transportasi:Car,'paket-wisata':Compass})[place.category]||MapPin
+  const Icon=place.category==='transportasi'&&/\bmotor\b/i.test(place.name)?Bike:({wisata:Mountain,hotel:BedDouble,kuliner:Utensils,cafe:Coffee,transportasi:Car,'paket-wisata':Compass,'oleh-oleh':ShoppingBag,jasa:Wrench})[place.category]||MapPin
   const rental=place.category==='transportasi'
   const href=`/${place.category}/${place.slug}`
   const ticket=knownTicket(place.practical)
@@ -22,6 +26,7 @@ export default function PlaceCard({place}:{place:CardPlace}) {
     <Link className={`vg-card-image cat-${place.category}`} href={href} tabIndex={-1} aria-hidden="true">
       {place.image_url?<img src={place.image_url} alt="" loading="lazy" width={600} height={400}/>:<div className="vg-image-empty"><Icon size={rental?36:44} strokeWidth={1.4}/>{!rental&&<><span>{place.district || 'Garut'}</span><small>Foto belum tersedia</small></>}</div>}
       <span className="vg-tag">{cat?.name}</span>
+      {rating&&rating.tier!=='kurang'&&<span className="vg-card-rating"><ScoreRing score={rating.score} tier={rating.tier} size="sm"/><span><strong>{tierLabels[rating.tier]}</strong><small>{rating.reviewers} penilai</small></span></span>}
     </Link>
     <div className="vg-card-body">
       <div className="vg-card-titlerow">

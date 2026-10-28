@@ -5,7 +5,7 @@ import { categoryHref, type DirectoryFilters } from '@/lib/mvp/categories'
 import { absoluteUrl } from '@/lib/site'
 import MobileNavigation from './MobileNavigation'
 import SiteHeader,{Wordmark} from './SiteHeader'
-import PlaceCard from './PlaceCard'
+import PlaceCard,{type CardRating} from './PlaceCard'
 export {default as PlaceCard} from './PlaceCard'
 export function Header(){return <SiteHeader/>}
 export function Footer(){return <footer className="vg-footer"><div className="vg-footer-card">
@@ -20,7 +20,7 @@ export function Footer(){return <footer className="vg-footer"><div className="vg
 export function Shell({children,overlayHeader=false}:{children:React.ReactNode;overlayHeader?:boolean}){return <><a className="vg-skip" href="#konten-utama">Lewati ke konten</a>{!overlayHeader&&<Header/>}<main id="konten-utama">{children}</main><Footer/><MobileNavigation/></>}
 export function CategoryNav({active='',...filters}:{active?:string}&DirectoryFilters){return <nav className="vg-categories" aria-label="Kategori tempat"><Link className={!active?'active':''} aria-current={!active?'page':undefined} href={categoryHref('',filters)}>Semua tempat</Link>{categories.map(c=><Link className={active===c.slug?'active':''} aria-current={active===c.slug?'page':undefined} key={c.slug} href={categoryHref(c.slug,filters)}>{c.name}</Link>)}</nav>}
 export function SearchForm({query='',category='',district=''}:{query?:string;category?:string;district?:string}){return <form className="vg-search" action="/search"><Search size={22}/><label className="sr-only" htmlFor="search-query">Cari nama tempat, layanan, atau daerah</label><input id="search-query" name="q" defaultValue={query} placeholder={category==='transportasi'?'Cari rental mobil, motor, atau penyedia…':'Cari tempat, rental, atau daerah…'} maxLength={120}/>{category&&<input type="hidden" name="category" value={category}/>}{district&&<input type="hidden" name="district" value={district}/>}<button type="submit">Cari</button></form>}
-export function PlaceGrid({items}:{items:Place[]}){return items.length?<div className="vg-grid">{items.map(p=><PlaceCard key={p.id} place={p}/>)}</div>:<div className="vg-empty"><MapPin size={30}/><h2>Belum ada tempat yang ditampilkan</h2><p>Coba kategori atau kata pencarian lain. Direktori kami sedang bertambah.</p><Link className="vg-button" href="/search">Lihat semua tempat</Link></div>}
+export function PlaceGrid({items,ratings}:{items:Place[];ratings?:Record<number,CardRating>}){return items.length?<div className="vg-grid">{items.map(p=><PlaceCard key={p.id} place={p} rating={ratings?.[p.id]}/>)}</div>:<div className="vg-empty"><MapPin size={30}/><h2>Belum ada tempat yang ditampilkan</h2><p>Coba kategori atau kata pencarian lain. Direktori kami sedang bertambah.</p><Link className="vg-button" href="/search">Lihat semua tempat</Link></div>}
 export function ArticleCard({item}:{item:Article}){return <Link className="vg-article-card" href={`/artikel/${item.slug}`}><span className="vg-eyebrow">PANDUAN GARUT</span><h3>{item.title}</h3><p>{item.excerpt}</p><small>{item.author} · {date(item.published_at||item.updated_at)}</small></Link>}
 export function date(value:Date|string){return new Date(value).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Jakarta'})}
 export function TextContent({content}:{content:string}){return <div className="vg-prose">{content.split(/\n\s*\n/).filter(Boolean).map((block,i)=>block.startsWith('## ')?<h2 key={i}>{block.slice(3)}</h2>:<p key={i}>{block}</p>)}</div>}

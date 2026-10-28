@@ -1,8 +1,8 @@
 // Database operations for VisitGarut Rating. The caller owns the connection (pg Pool/Client or PGlite in tests).
 import { randomUUID } from 'node:crypto'
 import {
-  RATING, aspectsForSector, aspectAverages, bayesianScore, distribution, geoMatches, normalizePhone, plaqueSerial,
-  plaqueState, sectorForCategory, tierFor, unusualActivity, type Evidence, type ReviewInput, type ScoredReview, type Sector,
+  RATING, aspectsForSector, aspectAverages, bayesianScore, categoriesForSector, distribution, geoMatches, normalizePhone, plaqueSerial,
+  plaqueState, rankingScore, sectorForCategory, tierFor, unusualActivity, type Evidence, type ReviewInput, type ScoredReview, type Sector, type Tier,
 } from './core'
 import { inviteHash, newOtp, otpHash, phoneHash, sameHash, validInviteToken, validPlateCode } from './tokens'
 
@@ -185,6 +185,9 @@ export async function placeRating(client: Connection, placeId: number, now: Date
     prior,
     aspects: aspectList.map(a => ({ ...a, ...aspectAverages(reviews, [a.key], now)[a.key] })),
     distribution: reviewers >= 10 ? distribution(reviews) : null,
+    evidence: reviews.filter(r => r.createdAt.getTime() >= now.getTime() - RATING.windowDays * DAY)
+      .reduce((acc, r) => { acc[r.evidence] += 1; return acc }, { receipt: 0, qr_geo: 0, otp_only: 0 } as Record<Evidence, number>),
+    totalApproved: rows.length,
     unusual: unusualActivity(recentIntake, now),
     latest: rows.slice(0, 10).map(r => ({
       id: r.id, overall: Number(r.overall), body: r.body, party: r.party, displayName: r.display_name || 'Pengunjung',
@@ -222,4 +225,77 @@ export async function purgeRating(client: Connection, now: Date) {
   await client.query('UPDATE vg_rating_checkins SET phone_raw=NULL WHERE phone_raw IS NOT NULL AND created_at<$1', [new Date(now.getTime() - 30 * DAY)])
   await client.query('DELETE FROM vg_rating_checkins WHERE verified_at IS NULL AND created_at<$1', [new Date(now.getTime() - DAY)])
   await client.query('DELETE FROM vg_rating_limits WHERE resets_at<=$1', [now])
+}
+
+export type RatingSummary = { placeId: number; sector: Sector; tier: Tier; reviewers: number; score: number | null; rank: number }
+
+async function sectorPriors(client: Connection) {
+  const rows = (await client.query(`SELECT sector, count(*)::int n, avg(overall)::float a FROM vg_rating_reviews WHERE status='approved' GROUP BY sector`)).rows
+  const priors: Record<string, number> = {}
+  for (const r of rows) if (r.n >= RATING.minSectorReviewsForPrior) priors[r.sector] = Number(r.a)
+  return (sector: string) => priors[sector] ?? RATING.defaultPrior
+}
+
+/** Score, tier and ranking value for many places in two queries (listings, sector pages, home). */
+export async function ratingSummaries(client: Connection, placeIds: number[], now: Date) {
+  const ids = [...new Set(placeIds.filter(id => Number.isInteger(id) && id > 0))]
+  const result = new Map<number, RatingSummary>()
+  if (!ids.length) return result
+  const places = (await client.query('SELECT id,category,rating_sector FROM vg_places WHERE id = ANY($1::int[])', [ids])).rows
+  const since = new Date(now.getTime() - RATING.maxAgeDays * DAY)
+  const rows = (await client.query(
+    `SELECT place_id,overall,evidence,created_at,phone_hash FROM vg_rating_reviews
+     WHERE status='approved' AND created_at>=$2 AND place_id = ANY($1::int[])`, [ids, since])).rows
+  const byPlace = new Map<number, ScoredReview[]>()
+  for (const r of rows) {
+    const list = byPlace.get(Number(r.place_id)) ?? []
+    list.push({ overall: Number(r.overall), evidence: r.evidence, createdAt: new Date(r.created_at), reviewer: r.phone_hash })
+    byPlace.set(Number(r.place_id), list)
+  }
+  const prior = await sectorPriors(client)
+  for (const p of places) {
+    const sector = placeSector(p)
+    const reviews = byPlace.get(Number(p.id)) ?? []
+    const { tier, reviewers } = tierFor(reviews, now)
+    const c = prior(sector)
+    result.set(Number(p.id), {
+      placeId: Number(p.id), sector, tier, reviewers,
+      score: tier === 'kurang' ? null : bayesianScore(reviews, c, now),
+      rank: tier === 'kurang' ? -99 : rankingScore(reviews, c, now),
+    })
+  }
+  return result
+}
+
+export type RankedPlace = RatingSummary & { name: string; slug: string; category: string; district: string; image_url: string }
+
+/** Highest-ranked places of one sector that already show a score (3+ independent reviewers). */
+export async function topRated(client: Connection, sector: Sector, now: Date, limit = 5): Promise<RankedPlace[]> {
+  const candidates = (await client.query(
+    `SELECT DISTINCT p.id,p.name,p.slug,p.category,p.district,p.image_url FROM vg_places p
+     JOIN vg_rating_reviews r ON r.place_id=p.id AND r.status='approved'
+     WHERE p.status='published' AND (p.rating_sector=$1 OR (p.rating_sector IS NULL AND p.category = ANY($2::text[])))`,
+    [sector, categoriesForSector(sector)])).rows
+  const summaries = await ratingSummaries(client, candidates.map(c => Number(c.id)), now)
+  return candidates
+    .map(c => ({ ...(summaries.get(Number(c.id)) as RatingSummary), name: c.name, slug: c.slug, category: c.category, district: c.district || '', image_url: c.image_url || '' }))
+    .filter(r => r.tier !== 'kurang')
+    .sort((a, b) => b.rank - a.rank || b.reviewers - a.reviewers)
+    .slice(0, limit)
+}
+
+/** Headline numbers: places with a visible score and independent reviewers in the last 12 months. */
+export async function ratingStats(client: Connection, now: Date) {
+  const since = new Date(now.getTime() - RATING.windowDays * DAY)
+  const row = (await client.query(
+    `SELECT count(DISTINCT phone_hash)::int reviewers, count(*)::int reviews FROM vg_rating_reviews WHERE status='approved' AND created_at>=$1`, [since])).rows[0]
+  const scored = (await client.query(
+    `SELECT count(*)::int n FROM (SELECT place_id FROM vg_rating_reviews WHERE status='approved' AND created_at>=$1
+     GROUP BY place_id HAVING count(DISTINCT phone_hash)>=3) x`, [since])).rows[0]
+  return { reviewers: Number(row.reviewers), reviews: Number(row.reviews), scoredPlaces: Number(scored.n) }
+}
+
+/** Places of the same sector to compare with, best first, excluding one place. */
+export async function sectorPeers(client: Connection, placeId: number, sector: Sector, now: Date, limit = 3) {
+  return (await topRated(client, sector, now, limit + 1)).filter(p => p.placeId !== placeId).slice(0, limit)
 }

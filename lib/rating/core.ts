@@ -43,10 +43,18 @@ export const sectors: Record<Sector, { label: string; aspects: { key: string; la
 }
 
 /** Existing directory categories → rating sector. Unknown categories fall back to "jasa". */
+export const categorySector: Record<string, Sector> = { wisata: 'wisata', hotel: 'penginapan', kuliner: 'kuliner', cafe: 'kafe', transportasi: 'rental', 'paket-wisata': 'tur', 'oleh-oleh': 'umkm', umkm: 'umkm', jasa: 'jasa' }
+
 export function sectorForCategory(category: string): Sector {
-  const map: Record<string, Sector> = { wisata: 'wisata', hotel: 'penginapan', kuliner: 'kuliner', cafe: 'kafe', transportasi: 'rental', 'paket-wisata': 'tur', umkm: 'umkm' }
-  return map[category] ?? 'jasa'
+  return categorySector[category] ?? 'jasa'
 }
+
+/** Directory categories whose places fall in a sector unless a place overrides it with rating_sector. */
+export function categoriesForSector(sector: Sector) {
+  return Object.keys(categorySector).filter(c => categorySector[c] === sector)
+}
+
+export const sectorOrder: Sector[] = ['kuliner', 'kafe', 'penginapan', 'wisata', 'umkm', 'rental', 'tur', 'jasa']
 
 export function aspectsForSector(sector: Sector) {
   return [...coreAspects, ...sectors[sector].aspects]
@@ -206,4 +214,10 @@ export function plaqueState(plaque: { status: string; expiresAt: Date }, now: Da
 
 export function plaqueSerial(year: number, sequence: number) {
   return `VG-${String(year % 100).padStart(2, '0')}-${String(sequence).padStart(5, '0')}`
+}
+
+/** Accepts what people type from a plaque ("vg 26 00412", "VG2600412") and returns the canonical serial, or null. */
+export function normalizeSerial(input: string) {
+  const m = input.toUpperCase().replace(/[\s_]/g, '').match(/^VG-?(\d{2})-?(\d{5})$/)
+  return m ? `VG-${m[1]}-${m[2]}` : null
 }
