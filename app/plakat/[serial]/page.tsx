@@ -44,13 +44,13 @@ export default async function Plakat({ params }: { params: Promise<{ serial: str
     <dl className="vr-card vr-facts">
       <div><dt>Usaha</dt><dd><Link href={`/${plaque.category}/${plaque.slug}#rating`}>{plaque.name}</Link></dd></div>
       {current && <div><dt>Sektor</dt><dd>{sectors[current.sector].label}</dd></div>}
-      <div><dt>Skor saat dicetak</dt><dd>{formatScore(Number(plaque.score_at_issue))} ({plaque.reviewers_at_issue} penilai)</dd></div>
-      <div><dt>Skor hari ini</dt><dd>{current?.score != null ? `${formatScore(current.score)} · ${tierLabels[current.tier]}` : 'Belum cukup penilai'}</dd></div>
+      <div><dt>Skor saat dicetak</dt><dd>{formatScore(Number(plaque.score_at_issue))} ({plaque.reviewers_at_issue} pengunjung)</dd></div>
+      <div><dt>Skor hari ini</dt><dd>{current?.score != null ? `${formatScore(current.score)} · ${tierLabels[current.tier]}` : 'Belum ada skor'}</dd></div>
       <div><dt>Dicetak</dt><dd>{monthYear(plaque.issued_at)}</dd></div>
       <div><dt>Berlaku sampai</dt><dd>{monthYear(plaque.expires_at)}</dd></div>
       {plaque.status_note && plaque.state !== 'aktif' && <div><dt>Catatan</dt><dd>{plaque.status_note}</dd></div>}
     </dl>
     <Link className="vg-button" href={`/${plaque.category}/${plaque.slug}#rating`}>Lihat ulasan lengkap</Link>
-    <p className="vr-fine">Plakat hanya diberikan untuk skor berlabel Keyakinan tinggi dan berlaku {RATING.plaqueValidMonths} bulan. Pemilik tidak bisa membeli skor. Skor ulasan pengunjung, bukan sertifikasi pemerintah. <Link href="/rating/metode">Cara skor dihitung</Link> · Ada yang janggal? <Link href={`/${plaque.category}/${plaque.slug}#community-pulse`}>Laporkan</Link></p>
+    <p className="vr-fine">Plakat hanya diberikan untuk usaha berlabel Skor teruji dan berlaku {RATING.plaqueValidMonths} bulan. Pemilik tidak bisa membeli skor. Skor ulasan pengunjung, bukan sertifikasi pemerintah. <Link href="/rating/metode">Cara skor dihitung</Link> · Ada yang janggal? <Link href={`/${plaque.category}/${plaque.slug}#community-pulse`}>Laporkan</Link></p>
   </main></Shell>
 }

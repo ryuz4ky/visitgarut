@@ -34,7 +34,7 @@ export default async function CetakPlakat({ params }: { params: Promise<{ serial
         <div>
           <small>VISITGARUT RATING</small>
           <b>{score}</b>
-          <span className="vr-door-tier">KEYAKINAN TINGGI</span>
+          <span className="vr-door-tier">SKOR TERUJI</span>
           <em>{plaque.name}{sectorLabel ? ` · ${sectorLabel}` : ''}</em>
           <div className="vr-door-qr"><Qr value={url} label="QR status plakat"/><span><strong>No. {plaque.serial}</strong><span>Berlaku s.d. {monthYear(plaque.expires_at)}</span><span>Pindai: status terkini</span></span></div>
           <small className="vr-door-fine">Skor ulasan pengunjung, bukan sertifikasi pemerintah</small>
@@ -44,7 +44,7 @@ export default async function CetakPlakat({ params }: { params: Promise<{ serial
         <span className="vr-cashier-kicker">DINILAI PENGUNJUNG</span>
         <strong className="vr-cashier-name">{plaque.name}</strong>
         <div className="vr-cashier-score"><b>{score}</b><span>dari 5</span></div>
-        <span className="vr-cashier-meta">Keyakinan tinggi · {plaque.reviewers_at_issue} penilai · 12 bulan terakhir</span>
+        <span className="vr-cashier-meta">Skor teruji · {plaque.reviewers_at_issue} pengunjung · 12 bulan terakhir</span>
         {aspects.length > 0 && <dl>{aspects.map(a => <div key={a.key}><dt>{a.label}</dt><dd>{formatScore(a.average!)}</dd></div>)}</dl>}
         <div className="vr-cashier-qr"><Qr value={url} label="QR status plakat"/><span><strong>No. {plaque.serial}</strong><span>Berlaku s.d. {monthYear(plaque.expires_at)} · pindai untuk cek</span></span></div>
         <small>Skor ulasan pengunjung, bukan sertifikasi pemerintah</small>

@@ -14,10 +14,10 @@ export async function submitReviewAction(_prev: ReviewState, form: FormData): Pr
   const loaded = await loadInvite(db(), token, now)
   if ('error' in loaded) return { ok: false, message: loaded.error === 'used' ? 'Nilai untuk kunjungan ini sudah terkirim.' : loaded.error === 'early' ? 'Undangan baru bisa dipakai 30 menit setelah check-in.' : 'Undangan tidak berlaku atau sudah kedaluwarsa.' }
   const input = parseReview(Object.fromEntries(form.entries()), loaded.sector)
-  if (!input) return { ok: false, message: 'Pilih nilai keseluruhan 1–5, siapa yang ikut, dan centang pernyataan bahwa kamu tidak dibayar atau diminta pemilik.' }
+  if (!input) return { ok: false, message: 'Isi nilai 1–5, datang bersama siapa, lalu centang pernyataan di bawah.' }
   const result = await submitReview(db(), token, input, String(form.get('display_name') || ''), now)
   if (result !== 'ok') return { ok: false, message: 'Nilai belum tersimpan. Undangan mungkin sudah dipakai atau kedaluwarsa.' }
-  return { ok: true, message: 'Hatur nuhun! Nilaimu ditahan 24–48 jam dan diperiksa dengan aturan yang sama untuk nilai baik maupun buruk.' }
+  return { ok: true, message: 'Hatur nuhun! Nilaimu dicek dulu dan tampil dalam 1–2 hari. Nilai bagus maupun jelek dicek dengan cara yang sama.' }
 }
 
 export async function withdrawAction(_prev: ReviewState, form: FormData): Promise<ReviewState> {

@@ -36,12 +36,12 @@ export default async function Category({params,searchParams}:CategoryProps) {
     <Breadcrumbs items={[{name:c.name,path:`/${category}`}]}/>
     <DirectoryHero title={`${c.name} di Garut.`} intro={c.description} active={category} placeholder={rental?'Cari rental mobil, motor, atau penyedia…':undefined}/>
     {rental&&<div className="vg-rental-options" aria-label="Jenis kendaraan"><Link href="/search?category=transportasi&q=mobil"><Car size={18}/>Rental mobil</Link><Link href="/search?category=transportasi&q=motor"><Bike size={18}/>Rental motor</Link><Link href="/search?category=transportasi&q=rombongan"><Compass size={18}/>Kendaraan rombongan</Link></div>}
-    {visible&&<section className="vr-sector" aria-labelledby="vr-sector-title">
+    {visible&&(top.length?<section className="vr-sector" aria-labelledby="vr-sector-title">
      <PreviewNote note={ratingPreviewNote()}/>
-     <div className="vr-sector-head"><div><span className="vg-eyebrow">VISITGARUT RATING · {sectors[sector].label.toLocaleUpperCase('id-ID')}</span><h2 id="vr-sector-title">Nilai tertinggi: {sectorShort[sector].toLocaleLowerCase('id-ID')}</h2></div>
-      <p>Hanya dibandingkan dengan sesama {sectors[sector].label.toLocaleLowerCase('id-ID')}. Dinilai dari: {aspectsForSector(sector).map(a=>a.label.toLocaleLowerCase('id-ID')).join(', ')}.</p></div>
-     {top.length?<TopList rows={top.map(boardRow)}/>:<p className="vr-sector-empty">Belum ada {c.name.toLocaleLowerCase('id-ID')} dengan skor. Skor tampil setelah minimal 3 pengunjung independen menilai lewat plat QR di lokasi.</p>}
-    </section>}
+     <div className="vr-sector-head"><div><span className="vg-eyebrow">NILAI PENGUNJUNG · {sectors[sector].label.toLocaleUpperCase('id-ID')}</span><h2 id="vr-sector-title">Paling disukai pengunjung</h2></div>
+      <p>Dibandingkan hanya dengan sesama {sectors[sector].label.toLocaleLowerCase('id-ID')}. Yang dinilai: {aspectsForSector(sector).map(a=>a.label.toLocaleLowerCase('id-ID')).join(', ')}.</p></div>
+     <TopList rows={top.map(boardRow)}/>
+    </section>:<div className="vr-sector-slim"><PreviewNote note={ratingPreviewNote()}/><span><strong>Nilai pengunjung segera hadir.</strong> Skor muncul setelah 3 pengunjung menilai lewat QR di lokasi. <Link href="/rating/metode">Cara kerjanya</Link></span></div>)}
     <div className="vg-results-heading"><p className="vg-count" role="status"><strong>{total} {c.unit}</strong> dalam direktori{total>0&&<span> · Menampilkan {(page-1)*directoryPageSize+1}–{(page-1)*directoryPageSize+items.length}</span>}</p></div>
     {rental&&items.length>0&&<p className="vg-heading-note vg-rental-note">Profil dirangkum dari situs penyedia. Tarif dan ketersediaan perlu dikonfirmasi langsung.</p>}
     {items.length?<PlaceGrid items={items} ratings={ratings}/>:<div className="vg-empty"><Compass size={30}/><h2>{rental?'Belum ada penyedia rental yang dipublikasikan':`Belum ada listing ${c.name.toLocaleLowerCase('id-ID')}`}</h2><p>{rental?'Direktori rental belum terisi. Penyedia akan ditampilkan setelah informasi layanan dan sumber kontaknya diperiksa.':'Kategori ini tetap tersedia. Listing akan ditampilkan setelah informasi dan sumbernya diperiksa.'}</p><Link className="vg-button" href="/search">Jelajahi kategori lain</Link></div>}

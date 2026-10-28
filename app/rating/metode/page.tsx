@@ -11,7 +11,7 @@ export default async function Metode() {
   return <Shell><main className="vr-wrap vr-doc" id="konten-utama">
     <p className="vr-eyebrow">VisitGarut Rating</p>
     <h1>Metode &amp; integritas</h1>
-    <p className="vr-lead">Skor VisitGarut adalah rata-rata nilai pengunjung terverifikasi selama 12 bulan terakhir, dihaluskan dengan rata-rata sektornya. Rumusnya dipublikasikan dan tidak bisa diubah manual oleh siapa pun, termasuk tim VisitGarut.</p>
+    <p className="vr-lead">Skor VisitGarut adalah rata-rata nilai dari pengunjung yang check-in di lokasi selama 12 bulan terakhir. Supaya tempat dengan sedikit ulasan tidak langsung melonjak atau anjlok, skornya ditarik sedikit ke rata-rata jenis usahanya. Rumusnya terbuka dan tidak bisa diubah manual oleh siapa pun, termasuk tim VisitGarut.</p>
     <h2>Rumus</h2>
     <p className="vr-formula">Skor = (m × C + Σ wᵢ × rᵢ) ÷ (m + Σ wᵢ)</p>
     <ul>
@@ -21,11 +21,11 @@ export default async function Metode() {
       <li>Satu nomor WhatsApp dihitung sekali per usaha per {RATING.repeatDays} hari. Nomor pemilik dan staf diblokir untuk usahanya.</li>
     </ul>
     <h2>Kapan skor tampil</h2>
-    <table className="vr-table"><thead><tr><th>Penilai independen (12 bulan)</th><th>Label</th><th>Yang tampil</th></tr></thead><tbody>
-      <tr><td>0–2</td><td>Belum cukup penilai</td><td>Tidak ada angka</td></tr>
+    <table className="vr-table"><thead><tr><th>Pengunjung yang menilai (12 bulan)</th><th>Label</th><th>Yang tampil</th></tr></thead><tbody>
+      <tr><td>0–2</td><td>Belum ada skor</td><td>Tidak ada angka</td></tr>
       <tr><td>3–9</td><td>Skor awal</td><td>Skor dan jumlah penilai</td></tr>
-      <tr><td>10–14</td><td>Terverifikasi</td><td>Skor dan sebaran nilai dalam persen</td></tr>
-      <tr><td>15+ dari 2 jenis bukti</td><td>Keyakinan tinggi</td><td>Skor lengkap; boleh memesan plakat</td></tr>
+      <tr><td>10–14</td><td>Skor stabil</td><td>Skor dan sebaran nilai dalam persen</td></tr>
+      <tr><td>15+ dari 2 jenis bukti</td><td>Skor teruji</td><td>Skor lengkap; boleh memesan plakat</td></tr>
     </tbody></table>
     <p>Aspek dengan kurang dari {RATING.aspectMinRaters} penilai tidak diberi angka. Peringkat hanya dibandingkan di dalam sektor yang sama.</p>
     <h2>Aspek per sektor</h2>
@@ -34,7 +34,7 @@ export default async function Metode() {
       {Object.entries(sectors).map(([key, s]) => <tr key={key}><td>{s.label}</td><td>{s.aspects.map(a => a.label).join(', ')}</td></tr>)}
     </tbody></table>
     <h2>Yang tidak bisa dibeli</h2>
-    <ul><li>Skor, peringkat, dan urutan di pencarian.</li><li>Penghapusan, penyembunyian, atau penundaan ulasan.</li><li>Label Keyakinan tinggi dan hak memesan plakat.</li></ul>
+    <ul><li>Skor, peringkat, dan urutan di pencarian.</li><li>Penghapusan, penyembunyian, atau penundaan ulasan.</li><li>Label Skor teruji dan hak memesan plakat.</li></ul>
     <p>Usaha hanya boleh membayar proses: cetak plakat setelah lolos ambang, dasbor masukan, dan kunjungan ulang yang hasilnya bisa naik atau turun.</p>
     <h2>Label dan sanksi</h2>
     <ul>

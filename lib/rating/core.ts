@@ -60,7 +60,7 @@ export function aspectsForSector(sector: Sector) {
   return [...coreAspects, ...sectors[sector].aspects]
 }
 
-export const tierLabels: Record<Tier, string> = { kurang: 'Belum cukup penilai', awal: 'Skor awal', terverifikasi: 'Terverifikasi', tinggi: 'Keyakinan tinggi' }
+export const tierLabels: Record<Tier, string> = { kurang: 'Belum ada skor', awal: 'Skor awal', terverifikasi: 'Skor stabil', tinggi: 'Skor teruji' }
 
 const DAY = 86_400_000
 

@@ -38,7 +38,7 @@ export default async function Detail({params}:{params:Promise<{category:string;s
   <div className="vp-hero-bottom">
    <div className="vp-hero-copy">
     <h1>{p.name}</h1>
-    <div className="vp-badges">{checked&&<span className="vp-badge is-light"><i aria-hidden="true"/>Dicek {checked}</span>}<span className="vp-badge"><MapPin size={14} aria-hidden="true"/>{p.district?p.district+', Garut':'Melayani Garut'}</span><span className="vp-badge">{c.name}</span>{rating&&rating.score!==null&&<a className="vp-badge vp-badge-rating" href="#rating"><ScoreRing score={rating.score} tier={rating.tier} size="sm"/>{tierLabels[rating.tier]} · {rating.reviewers} penilai</a>}</div>
+    <div className="vp-badges">{checked&&<span className="vp-badge is-light"><i aria-hidden="true"/>Dicek {checked}</span>}<span className="vp-badge"><MapPin size={14} aria-hidden="true"/>{p.district?p.district+', Garut':'Melayani Garut'}</span><span className="vp-badge">{c.name}</span>{rating&&rating.score!==null&&<a className="vp-badge vp-badge-rating" href="#rating"><ScoreRing score={rating.score} tier={rating.tier} size="sm"/>{tierLabels[rating.tier]} · {rating.reviewers} pengunjung</a>}</div>
    </div>
    <div className="vp-hero-actions"><SaveButton id={p.id} name={p.name}/>{plannable&&<Link className="vg-pill-cta" href={`/trip?add=${p.id}`}>Tambah ke rencana<span className="vg-pill-cta-icon"><ArrowUpRight size={18} aria-hidden="true"/></span></Link>}</div>
   </div>

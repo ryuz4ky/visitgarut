@@ -18,8 +18,8 @@ export default function CheckinFlow({ code, placeName, hasCoordinates }: { code:
   }
 
   if (state.step === 'done') return <section className="vr-card vr-done" role="status">
-    <h2>Selamat menikmati! Check-in tercatat.</h2>
-    <p>Dalam 2–24 jam kami kirim undangan menilai {placeName} lewat WhatsApp. Undangan yang sama dikirim ke semua pengunjung yang check-in, puas atau tidak.</p>
+    <h2>Check-in beres. Selamat menikmati!</h2>
+    <p>Nanti, dalam 2–24 jam, kami kirim link untuk menilai {placeName} lewat WhatsApp. Semua yang check-in dapat link yang sama, puas atau tidak.</p>
   </section>
 
   return <section className="vr-card">
@@ -28,16 +28,16 @@ export default function CheckinFlow({ code, placeName, hasCoordinates }: { code:
       <input type="hidden" name="intent" value="start"/><input type="hidden" name="code" value={code}/>
       {geo && <><input type="hidden" name="lat" value={geo.lat}/><input type="hidden" name="lon" value={geo.lon}/><input type="hidden" name="accuracy" value={geo.accuracy}/></>}
       {hasCoordinates && <div className="vr-geo">
-        {geo ? <p>Lokasi HP siap dicocokkan (akurasi ±{Math.round(geo.accuracy)} m).</p> : <p>Izinkan lokasi supaya nilaimu berbobot lebih tinggi. Tanpa lokasi tetap bisa check-in.</p>}
-        {!geo && <button type="button" className="vg-button vg-secondary" onClick={locate} disabled={locating}>{locating ? 'Mencari lokasi…' : 'Cocokkan lokasi'}</button>}
+        {geo ? <p>Lokasi siap (akurasi ±{Math.round(geo.accuracy)} m).</p> : <p>Nyalakan lokasi supaya nilaimu lebih kuat. Tanpa lokasi juga tetap bisa.</p>}
+        {!geo && <button type="button" className="vg-button vg-secondary" onClick={locate} disabled={locating}>{locating ? 'Mencari lokasi…' : 'Pakai lokasi'}</button>}
       </div>}
       <button className="vg-button" disabled={pending}>{pending ? 'Memproses…' : 'Check-in'}</button>
     </form>}
     {state.step === 'phone' && <form action={action} className="vr-form">
       <input type="hidden" name="intent" value="phone"/><input type="hidden" name="id" value={state.id}/>
-      <p>{state.geo ? 'Lokasi cocok.' : 'Lokasi tidak dicocokkan; nilaimu tetap dihitung dengan bobot lebih kecil.'} Satu langkah lagi: satu orang, satu suara.</p>
+      <p>{state.geo ? 'Lokasi cocok.' : 'Tanpa lokasi juga tidak apa-apa, nilaimu tetap dihitung.'} Tinggal satu langkah: masukkan nomor WhatsApp supaya satu orang dihitung sekali.</p>
       <label>Nomor WhatsApp<input name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="0812…" required/></label>
-      <label className="vr-check"><input type="checkbox" name="consent" value="yes" required/> Saya setuju nomor saya dipakai untuk kode verifikasi dan undangan menilai.</label>
+      <label className="vr-check"><input type="checkbox" name="consent" value="yes" required/> Nomor ini boleh dipakai untuk kirim kode dan link penilaian.</label>
       <button className="vg-button" disabled={pending}>{pending ? 'Mengirim…' : 'Kirim kode lewat WhatsApp'}</button>
     </form>}
     {state.step === 'code' && <form action={action} className="vr-form">

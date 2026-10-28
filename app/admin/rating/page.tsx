@@ -24,7 +24,7 @@ export default async function AdminRating({ searchParams }: { searchParams: Prom
     {!ratingEnabled() && <p className="va-note">RATING_ENABLED belum aktif: halaman publik (check-in, undangan, plakat, panel rating) masih tersembunyi. Admin tetap bisa menyiapkan plat, dan sebagai admin Anda melihat pratinjau rating di beranda, halaman sektor, dan halaman tempat.</p>}
     {q.saved && <p className="va-ok">Tersimpan.</p>}
     {q.issued && <p className="va-ok">Plakat {q.issued} diterbitkan. <Link href={`/admin/rating/cetak/plakat/${q.issued}`}>Cetak plakat</Link> (QR ke {absoluteUrl('/plakat/' + q.issued)})</p>}
-    {q.error && <p className="va-error">Gagal: {q.error === 'tier' ? 'tempat belum berlabel Keyakinan tinggi' : q.error === 'unusual' ? 'ada aktivitas ulasan tidak wajar; periksa dulu' : q.error === 'note' ? 'alasan penolakan wajib diisi' : q.error}</p>}
+    {q.error && <p className="va-error">Gagal: {q.error === 'tier' ? 'tempat belum berlabel Skor teruji' : q.error === 'unusual' ? 'ada aktivitas ulasan tidak wajar; periksa dulu' : q.error === 'note' ? 'alasan penolakan wajib diisi' : q.error}</p>}
     <nav className="va-tabs">{tabs.map(([k, l]) => <Link key={k} href={`/admin/rating?tab=${k}`} aria-current={tab === k ? 'page' : undefined}>{l}</Link>)}</nav>
     {tab === 'queue' && <Queue/>}
     {tab === 'applications' && <Applications/>}
@@ -93,7 +93,7 @@ async function Plaques({ places }: { places: Record<string, any>[] }) {
           <select name="status" defaultValue={p.status}><option value="active">Aktif</option><option value="suspended">Ditangguhkan</option><option value="revoked">Dicabut</option></select>
           <input name="note" defaultValue={p.status_note} placeholder="Alasan"/><button>Simpan</button></form></td></tr>)}
     </tbody></table>
-    <p className="va-note">{places.length} tempat terbit di direktori; plakat hanya untuk label Keyakinan tinggi tanpa aktivitas ulasan tidak wajar.</p>
+    <p className="va-note">{places.length} tempat terbit di direktori; plakat hanya untuk label Skor teruji tanpa aktivitas ulasan tidak wajar.</p>
   </div>
 }
 

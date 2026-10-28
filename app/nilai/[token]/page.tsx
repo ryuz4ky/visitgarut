@@ -18,7 +18,7 @@ export default async function Nilai({ params }: { params: Promise<{ token: strin
   return <Shell><main className="vr-wrap" id="konten-utama">
     <p className="vr-eyebrow">{sectors[sector].label} · check-in {new Date(row.created_at).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Jakarta' })}</p>
     <h1>Bagaimana kunjunganmu ke {row.name}?</h1>
-    <p className="vr-lead">Nilai yang kamu tahu saja. Pemilik tidak bisa melihat nomormu atau menghapus nilaimu.</p>
+    <p className="vr-lead">Cukup isi yang kamu tahu, kurang dari semenit. Pemilik tidak bisa melihat nomormu atau menghapus nilaimu.</p>
     <ReviewForm token={token} placeName={row.name} sectorLabel={sectors[sector].label} aspects={aspectsForSector(sector)}/>
   </main></Shell>
 }

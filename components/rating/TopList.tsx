@@ -9,7 +9,7 @@ export default function TopList({ rows, compact = false }: { rows: BoardRow[]; c
       <Link href={r.href}>
         <span className="vr-rank">{i + 1}</span>
         {r.image ? <img src={r.image} alt="" width={64} height={64} loading="lazy"/> : <span className="vr-thumb" aria-hidden="true">{r.name.slice(0, 1)}</span>}
-        <span className="vr-board-name"><strong>{r.name}</strong><small>{r.meta} · {r.reviewers} penilai</small><span className="vr-tier-inline"><TierPill tier={r.tier}/></span></span>
+        <span className="vr-board-name"><strong>{r.name}</strong><small>{r.meta} · {r.reviewers} pengunjung</small><span className="vr-tier-inline"><TierPill tier={r.tier}/></span></span>
         <TierPill tier={r.tier}/>
         <ScoreRing score={r.score} tier={r.tier} size={compact ? 'sm' : 'md'}/>
       </Link>

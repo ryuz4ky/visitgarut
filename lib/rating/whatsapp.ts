@@ -31,5 +31,5 @@ export function otpMessage(code: string, placeName: string) {
 }
 
 export function inviteMessage(placeName: string, url: string) {
-  return `Sampurasun! Kamu tadi check-in di ${placeName}.\nBagaimana kunjunganmu? Nilaimu membantu pengunjung lain, dan pemilik tidak bisa menghapusnya.\n\nBeri nilai (1 menit): ${url}\n\nUndangan berlaku 7 hari. Balas STOP untuk berhenti.`
+  return `Sampurasun! Kamu tadi check-in di ${placeName}.\nGimana kunjungannya? Nilaimu bantu orang lain memilih, dan pemilik tidak bisa menghapusnya.\n\nBeri nilai (1 menit): ${url}\n\nUndangan berlaku 7 hari. Balas STOP untuk berhenti.`
 }

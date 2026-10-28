@@ -8,7 +8,7 @@ import { ScoreRing, TierPill } from './bits'
 export type BoardRow = { id: number; name: string; href: string; meta: string; image: string; tier: Tier; score: number | null; reviewers: number }
 export type BoardTab = { key: string; label: string; href: string; rows: BoardRow[] }
 
-/** Highest-ranked places per sector. Only places with 3+ independent reviewers are listed. */
+/** Highest-ranked places per sector. Only places with 3+ reviewers are listed. */
 export default function SectorBoard({ tabs }: { tabs: BoardTab[] }) {
   const [active, setActive] = useState(tabs.find(t => t.rows.length)?.key ?? tabs[0]?.key)
   const tab = tabs.find(t => t.key === active) ?? tabs[0]
@@ -25,14 +25,14 @@ export default function SectorBoard({ tabs }: { tabs: BoardTab[] }) {
           <Link href={r.href}>
             <span className="vr-rank">{i + 1}</span>
             {r.image ? <img src={r.image} alt="" width={64} height={64} loading="lazy"/> : <span className="vr-thumb" aria-hidden="true">{r.name.slice(0, 1)}</span>}
-            <span className="vr-board-name"><strong>{r.name}</strong><small>{r.meta} · {r.reviewers} penilai</small><span className="vr-tier-inline"><TierPill tier={r.tier}/></span></span>
+            <span className="vr-board-name"><strong>{r.name}</strong><small>{r.meta} · {r.reviewers} pengunjung</small><span className="vr-tier-inline"><TierPill tier={r.tier}/></span></span>
             <TierPill tier={r.tier}/>
             <ScoreRing score={r.score} tier={r.tier}/>
           </Link>
         </li>)}
       </ol> : <div className="vr-board-empty">
-        <strong>Belum ada {tab.label.toLocaleLowerCase('id-ID')} dengan skor.</strong>
-        <p>Skor baru tampil setelah minimal 3 pengunjung independen menilai lewat plat QR di lokasi. Kami tidak mengisi angka tebakan.</p>
+        <strong>Belum ada {tab.label.toLocaleLowerCase('id-ID')} yang punya skor.</strong>
+        <p>Skor muncul setelah 3 pengunjung menilai lewat QR di lokasi.</p>
       </div>}
       <Link className="vr-board-more" href={tab.href}>Lihat semua {tab.label.toLocaleLowerCase('id-ID')}<ArrowUpRight size={16} aria-hidden="true"/></Link>
     </div>

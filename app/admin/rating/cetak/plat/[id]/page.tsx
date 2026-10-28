@@ -20,10 +20,10 @@ export default async function CetakPlat({ params }: { params: Promise<{ id: stri
     <div className="vr-print-bar"><Link href="/admin/rating?tab=plates">← Kembali</Link><span>Cetak di kertas A6 atau stiker 105 × 148 mm, skala 100%. Jangan perkecil: QR minimal 3 cm.</span><PrintButton/></div>
     <section className="vr-plate">
       <span className="vr-plate-brand"><svg width="16" height="16" viewBox="0 0 24 24" fill="#8db21c" aria-hidden="true"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.4 7L12 17.6 5.8 21l1.4-7L2 9.3l7-.8z"/></svg>VISITGARUT RATING</span>
-      <strong>Titik Ulasan</strong>
-      <p>Pindai untuk check-in. Undangan menilai dikirim VisitGarut, bukan pemilik.</p>
+      <strong>Nilai tempat ini</strong>
+      <p>Check-in sebentar, lalu kami kirim link untuk menilai lewat WhatsApp.</p>
       <Qr className="vr-plate-qr" value={url} label={`QR check-in ${plate.name}`}/>
-      <small>Semua pengunjung boleh memindai. Pemilik tidak bisa melihat siapa kamu atau menghapus nilaimu.</small>
+      <small>Siapa saja boleh memindai. Pemilik tidak bisa melihat siapa kamu atau menghapus nilaimu.</small>
       <footer><span>{plate.name}</span><span>Plat P-{String(plate.id).padStart(4, "0")}{plate.location_note ? ` · ${plate.location_note}` : ''}</span></footer>
     </section>
     <p className="vr-print-url">{url}</p>

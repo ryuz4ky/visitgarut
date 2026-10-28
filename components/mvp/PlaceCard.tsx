@@ -26,7 +26,7 @@ export default function PlaceCard({place,rating}:{place:CardPlace;rating?:CardRa
     <Link className={`vg-card-image cat-${place.category}`} href={href} tabIndex={-1} aria-hidden="true">
       {place.image_url?<img src={place.image_url} alt="" loading="lazy" width={600} height={400}/>:<div className="vg-image-empty"><Icon size={rental?36:44} strokeWidth={1.4}/>{!rental&&<><span>{place.district || 'Garut'}</span><small>Foto belum tersedia</small></>}</div>}
       <span className="vg-tag">{cat?.name}</span>
-      {rating&&rating.tier!=='kurang'&&<span className="vg-card-rating"><ScoreRing score={rating.score} tier={rating.tier} size="sm"/><span><strong>{tierLabels[rating.tier]}</strong><small>{rating.reviewers} penilai</small></span></span>}
+      {rating&&rating.tier!=='kurang'&&<span className="vg-card-rating"><ScoreRing score={rating.score} tier={rating.tier} size="sm"/><span><strong>{tierLabels[rating.tier]}</strong><small>{rating.reviewers} pengunjung</small></span></span>}
     </Link>
     <div className="vg-card-body">
       <div className="vg-card-titlerow">

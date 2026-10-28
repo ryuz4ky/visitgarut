@@ -6,6 +6,6 @@ export default function RatingBadge({ rating, compact = false }: { rating: Place
   const none = rating.score === null
   return <div className={`vr-badge is-${rating.tier}${compact ? ' is-compact' : ''}`}>
     <span className="vr-score" aria-label={none ? 'Belum ada skor' : `Skor ${formatScore(rating.score!)} dari 5`}>{none ? '?' : formatScore(rating.score!)}</span>
-    <span className="vr-badge-text"><strong>{tierLabels[rating.tier]}</strong><small>{rating.reviewers} penilai independen · 12 bulan terakhir</small></span>
+    <span className="vr-badge-text"><strong>{tierLabels[rating.tier]}</strong><small>dari {rating.reviewers} pengunjung · 12 bulan terakhir</small></span>
   </div>
 }
