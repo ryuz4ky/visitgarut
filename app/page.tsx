@@ -2,6 +2,7 @@ import Link from 'next/link'
 import {ArrowUpRight,ArrowRight,MapPin,Check,Sparkles,BadgeCheck,CircleHelp,Link2,Route,Search,Users} from 'lucide-react'
 import {Shell,JsonLd,date as fmtDate} from '@/components/mvp/Shell'
 import SiteHeader from '@/components/mvp/SiteHeader'
+import HeroVideo from '@/components/visit/HeroVideo'
 import {places,articles,categories,type Place} from '@/lib/mvp/data'
 import {db} from '@/lib/mvp/db'
 import {hubExperienceCountSql,hubExperienceParams} from '@/lib/pulse/hub-query'
@@ -36,6 +37,7 @@ export default async function Home(){
  <div className="vh">
  <section className="vh-hero-wrap"><div className="vh-hero">
   <img className="vh-hero-img" src="/papandayan.jpg" alt="Lanskap kawah dan pegunungan Gunung Papandayan, Garut" width={1200} height={800} fetchPriority="high"/>
+  <HeroVideo/>
   <div className="vh-hero-word" aria-hidden="true">GARUT</div>
   <div className="vh-hero-shade" aria-hidden="true"/>
   <SiteHeader overlay/>
