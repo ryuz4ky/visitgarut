@@ -5,7 +5,9 @@ import {parseDirectoryPage,directoryPageSize,directoryPageHref} from '@/lib/mvp/
 import { Car, Bike, Compass } from 'lucide-react'
 import { Shell,CategoryNav,PlaceGrid,Breadcrumbs } from '@/components/mvp/Shell'
 import {DirectoryHero} from '@/components/mvp/Directory'
-import { categories,directoryPlaces } from '@/lib/mvp/data'
+import { categories,directoryPlaces,categoryStats } from '@/lib/mvp/data'
+import FaqBlock from '@/components/mvp/Faq'
+import {categoryFaq} from '@/lib/mvp/faq'
 import TopList from '@/components/rating/TopList'
 import {PreviewNote} from '@/components/rating/bits'
 import {ratingVisible,ratingPreviewNote} from '@/lib/rating/server'
@@ -49,6 +51,7 @@ export default async function Category({params,searchParams}:CategoryProps) {
     {rental&&items.length>0&&<p className="vg-heading-note vg-rental-note">Profil dirangkum dari situs penyedia. Tarif dan ketersediaan perlu dikonfirmasi langsung.</p>}
     {items.length?<PlaceGrid items={items} ratings={ratings}/>:<div className="vg-empty"><Compass size={30}/><h2>{rental?'Belum ada penyedia rental yang dipublikasikan':`Belum ada listing ${c.name.toLocaleLowerCase('id-ID')}`}</h2><p>{rental?'Direktori rental belum terisi. Penyedia akan ditampilkan setelah informasi layanan dan sumber kontaknya diperiksa.':'Kategori ini tetap tersedia. Listing akan ditampilkan setelah informasi dan sumbernya diperiksa.'}</p><Link className="vg-button" href="/search">Jelajahi kategori lain</Link></div>}
     <DirectoryPagination path={`/${category}`} page={page} pages={pages}/>
+    {page===1&&total>0&&<FaqBlock id="tanya-jawab" card={false} title={`Tanya jawab: ${c.name.toLocaleLowerCase('id-ID')} di Garut`} items={categoryFaq(c,await categoryStats(category))}/>}
     {rental&&<details className="vg-rental-guide"><summary>Yang perlu ditanyakan sebelum menyewa</summary><ul><li>Tanggal, durasi, jenis kendaraan, dan jumlah penumpang.</li><li>Total biaya, termasuk sopir, bahan bakar, pengantaran, dan kelebihan waktu.</li><li>Syarat lepas kunci, deposit, titik serah terima, dan ketentuan pembatalan.</li></ul></details>}
     {rental&&<div className="vg-category-followup"><h2>Jelajahi kategori lain</h2><CategoryNav active={category}/></div>}
   </section></Shell>

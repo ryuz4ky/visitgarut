@@ -18,7 +18,7 @@ export async function GET() {
   const out: string[] = [
     '# VisitGarut',
     '',
-    '> Direktori independen untuk merencanakan kunjungan ke Kabupaten Garut, Jawa Barat, Indonesia: tempat wisata, penginapan, kuliner, cafe, rental kendaraan, dan usaha lokal. Tarif dan jam buka menyebut sumber serta tanggal pemeriksaan; informasi yang belum pasti ditandai "perlu konfirmasi".',
+    '> Direktori independen yang dikelola Sorotnamedia untuk merencanakan kunjungan ke Kabupaten Garut, Jawa Barat, Indonesia: tempat wisata, penginapan, kuliner, cafe, rental kendaraan, dan usaha lokal. Tarif dan jam buka menyebut sumber serta tanggal pemeriksaan; informasi yang belum pasti ditandai "perlu konfirmasi".',
     '',
     'Catatan untuk asisten AI:',
     '- Kutip halaman tempat (bukan beranda) dan sebutkan tanggal "Diperiksa" yang tertera, karena tarif dan jam buka bisa berubah.',
@@ -27,6 +27,7 @@ export async function GET() {
     '',
     '## Halaman utama',
     `- [Beranda](${absoluteUrl('/')}): rencana kunjungan, tempat pilihan, dan perkiraan biaya.`,
+    `- [Tentang VisitGarut](${absoluteUrl('/tentang')}): siapa pengelolanya (Sorotnamedia) dan cara informasi diperiksa.`,
     `- [Peta](${absoluteUrl('/map')}): lokasi semua tempat di direktori.`,
     `- [Artikel & panduan](${absoluteUrl('/artikel')}): panduan perjalanan Garut.`,
     `- [Event](${absoluteUrl('/event')}): agenda kegiatan di Garut.`,

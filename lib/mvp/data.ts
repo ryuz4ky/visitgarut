@@ -4,6 +4,7 @@ import { db } from './db'
 import { buildPlacesQuery,buildDirectoryQueries,directorySummarySql,directoryPageSize, type PlaceSearch } from './search'
 import {normalizeSavedIds} from './saved'
 import {relatedPlaceSuggestionsSql} from './related-places'
+import {knownTicket} from './format'
 
 export { categories } from './categories'
 export type Place = {practical?:PracticalInfo|null;coordinate_reference?:unknown;google_place_id?:string; id: number; slug: string; name: string; category: string; district: string; address: string; excerpt: string; content: string; image_url: string; image_credit: string; latitude: number | null; longitude: number | null; website: string; whatsapp: string; source_url: string; status: string; updated_at: Date }
@@ -73,4 +74,15 @@ export async function selectedTripPlaces(ids:number[],startId:number):Promise<Pl
  if(Number.isInteger(startId)&&startId>0&&startId<=2147483647&&!wanted.includes(startId))wanted.push(startId)
  if(!wanted.length)return []
  return (await db().query<Place>(selectedTripPlacesSql,[wanted])).rows.map(hydratePlace)
+}
+
+/** Live counts for a category's Q&A block. Reads published rows only. */
+export async function categoryStats(category:string){
+ if(!process.env.DATABASE_URL)return {total:0,districts:[],ticketed:[],free:0}
+ const rows=(await db().query<Place>("SELECT * FROM vg_places WHERE status='published' AND category=$1 ORDER BY name LIMIT 5000",[category])).rows.map(hydratePlace)
+ const byDistrict=new Map<string,number>()
+ for(const p of rows)if(p.district)byDistrict.set(p.district,(byDistrict.get(p.district)||0)+1)
+ const districts=[...byDistrict].map(([name,n])=>({name,n})).sort((a,b)=>b.n-a.n||a.name.localeCompare(b.name,'id'))
+ const ticketed=rows.map(p=>({p,t:knownTicket(p.practical)})).filter(x=>x.t!==null).map(x=>({name:x.p.name,slug:x.p.slug,amount:x.t as number,checkedAt:x.p.practical!.checkedAt}))
+ return {total:rows.length,districts,ticketed,free:ticketed.filter(t=>t.amount===0).length}
 }

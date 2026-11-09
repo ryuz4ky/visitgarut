@@ -110,3 +110,15 @@
   .vp-hero-actions .vg-save-button{width:52px;padding:0;justify-content:center}
   .vp-credit{position:static;margin-top:12px;display:block}
 }
+
+/* Q&A blocks (place, category, about) */
+.vg-faq h2{margin:0 0 6px}
+.vg-faq-intro{margin:0 0 14px;color:var(--vg-muted);line-height:1.6}
+.vg-faq-list{display:flex;flex-direction:column;border-top:1px solid var(--vg-line)}
+.vg-faq-list details{border-bottom:1px solid var(--vg-line);padding:14px 0}
+.vg-faq-list summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:16px;line-height:1.45}
+.vg-faq-list summary::-webkit-details-marker{display:none}
+.vg-faq-list summary:after{content:"+";flex:none;width:26px;height:26px;border-radius:999px;display:grid;place-items:center;background:var(--vg-ground);font-weight:600;transition:transform .15s}
+.vg-faq-list details[open] summary:after{content:"–"}
+.vg-faq-list details p{margin:10px 0 2px;color:var(--vg-ink-2);line-height:1.65;max-width:72ch}
+.vg-faq.is-section{margin-top:40px}

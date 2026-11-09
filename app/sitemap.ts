@@ -9,7 +9,7 @@ const newest=(dates:Date[])=>dates.length?new Date(Math.max(...dates.map(d=>new 
 export default async function sitemap():Promise<MetadataRoute.Sitemap>{
  const {places:ps,articles:as}=await sitemapRecords()
  const lastPlace=newest(ps.map(p=>p.updated_at)),lastArticle=newest(as.map(a=>a.updated_at))
- const pages=['community-pulse','community-pulse/metode','event','privasi','ketentuan',...(ratingEnabled()?['rating/metode','untuk-usaha']:[])]
+ const pages=['tentang','community-pulse','community-pulse/metode','event','privasi','ketentuan',...(ratingEnabled()?['rating/metode','untuk-usaha']:[])]
  return [
   {url:absoluteUrl('/'),lastModified:newest([lastPlace,lastArticle].filter(Boolean) as Date[]),priority:1},
   ...pages.map(s=>({url:absoluteUrl('/'+s),priority:0.5})),
