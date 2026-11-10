@@ -15,6 +15,11 @@ import {boardRow,cardRatings,sectorShort} from '@/lib/rating/home'
 import {topRated} from '@/lib/rating/store'
 import {aspectsForSector,sectorForCategory,sectors} from '@/lib/rating/core'
 import {db} from '@/lib/mvp/db'
+import {JsonLd} from '@/components/mvp/Shell'
+import DistrictLinks from '@/components/mvp/DistrictLinks'
+import {districts} from '@/lib/mvp/kecamatan'
+import {absoluteUrl} from '@/lib/site'
+import {directoryPageSize as pageSize} from '@/lib/mvp/search'
 export const dynamic='force-dynamic'
 type CategoryProps={params:Promise<{category:string}>;searchParams:Promise<Record<string,string|string[]|undefined>>}
 export async function generateMetadata({params,searchParams}:CategoryProps){
@@ -35,9 +40,11 @@ export default async function Category({params,searchParams}:CategoryProps) {
   if(page>pages)notFound()
   const rental=category==='transportasi'
   const visible=await ratingVisible()
+  const allDistricts=total>0?await districts():[]
   const sector=sectorForCategory(category)
   const [ratings,top]=visible?await Promise.all([cardRatings(items.map(p=>p.id)),topRated(db(),sector,new Date(),5).catch(()=>[])]):[undefined,[]]
   return <Shell><section className="vg-wrap vx-page vx-page-category">
+    {items.length>0&&<JsonLd data={{'@context':'https://schema.org','@type':'ItemList',name:`${c.name} di Garut`,url:absoluteUrl(directoryPageHref(`/${category}`,page)),numberOfItems:total,itemListElement:items.map((p,i)=>({'@type':'ListItem',position:(page-1)*pageSize+i+1,url:absoluteUrl(`/${p.category}/${p.slug}`),name:p.name}))}}/>}
     <Breadcrumbs items={[{name:c.name,path:`/${category}`}]}/>
     <DirectoryHero title={`${c.name} di Garut.`} intro={c.description} active={category} placeholder={rental?'Cari rental mobil, motor, atau penyedia…':undefined}/>
     {rental&&<div className="vg-rental-options" aria-label="Jenis kendaraan"><Link href="/search?category=transportasi&q=mobil"><Car size={18}/>Rental mobil</Link><Link href="/search?category=transportasi&q=motor"><Bike size={18}/>Rental motor</Link><Link href="/search?category=transportasi&q=rombongan"><Compass size={18}/>Kendaraan rombongan</Link></div>}
@@ -51,6 +58,7 @@ export default async function Category({params,searchParams}:CategoryProps) {
     {rental&&items.length>0&&<p className="vg-heading-note vg-rental-note">Profil dirangkum dari situs penyedia. Tarif dan ketersediaan perlu dikonfirmasi langsung.</p>}
     {items.length?<PlaceGrid items={items} ratings={ratings}/>:<div className="vg-empty"><Compass size={30}/><h2>{rental?'Belum ada penyedia rental yang dipublikasikan':`Belum ada listing ${c.name.toLocaleLowerCase('id-ID')}`}</h2><p>{rental?'Direktori rental belum terisi. Penyedia akan ditampilkan setelah informasi layanan dan sumber kontaknya diperiksa.':'Kategori ini tetap tersedia. Listing akan ditampilkan setelah informasi dan sumbernya diperiksa.'}</p><Link className="vg-button" href="/search">Jelajahi kategori lain</Link></div>}
     <DirectoryPagination path={`/${category}`} page={page} pages={pages}/>
+    {total>0&&<DistrictLinks items={allDistricts} category={category} title={`${c.name} per kecamatan`}/>}
     {page===1&&total>0&&<FaqBlock id="tanya-jawab" card={false} title={`Tanya jawab: ${c.name.toLocaleLowerCase('id-ID')} di Garut`} items={categoryFaq(c,await categoryStats(category))}/>}
     {rental&&<details className="vg-rental-guide"><summary>Yang perlu ditanyakan sebelum menyewa</summary><ul><li>Tanggal, durasi, jenis kendaraan, dan jumlah penumpang.</li><li>Total biaya, termasuk sopir, bahan bakar, pengantaran, dan kelebihan waktu.</li><li>Syarat lepas kunci, deposit, titik serah terima, dan ketentuan pembatalan.</li></ul></details>}
     {rental&&<div className="vg-category-followup"><h2>Jelajahi kategori lain</h2><CategoryNav active={category}/></div>}

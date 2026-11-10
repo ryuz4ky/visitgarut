@@ -27,7 +27,7 @@ function ticketAnswer(p: Place, now: Date) {
 type RatingLike = { score: number | null; reviewers: number } | null
 
 /** Short Q&A for a place page. Every answer comes from data already shown on the page; nothing is guessed. */
-export function placeFaq(p: Place, opts: { categoryName: string; rental: boolean; rating?: RatingLike; now?: Date }): Faq[] {
+export function placeFaq(p: Place, opts: { categoryName: string; rental: boolean; rating?: RatingLike; now?: Date; nearby?: string[] }): Faq[] {
   const now = opts.now ?? new Date()
   const out: Faq[] = []
   const info = p.practical
@@ -42,6 +42,8 @@ export function placeFaq(p: Place, opts: { categoryName: string; rental: boolean
   if (opts.rating && opts.rating.score !== null && opts.rating.reviewers >= 3) out.push({ q: `Berapa nilai ${p.name} dari pengunjung?`, a: `${opts.rating.score.toLocaleString('id-ID', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} dari 5, dari ${opts.rating.reviewers} pengunjung yang check-in di lokasi dalam 12 bulan terakhir. Skor ini tidak bisa dibeli oleh pemilik usaha.` })
   const contact = [p.whatsapp && 'WhatsApp', p.website && 'situs resmi'].filter(Boolean) as string[]
   if (contact.length) out.push({ q: opts.rental ? `Bagaimana cara memesan ${p.name}?` : `Bagaimana menghubungi ${p.name}?`, a: `Lewat ${contact.join(' atau ')} yang tercantum di halaman ini. ${opts.rental ? 'Sebutkan tanggal, durasi sewa, dan jumlah penumpang, lalu tanyakan biaya total.' : (p.category === 'hotel' ? 'Tanyakan tarif dan ketersediaan kamar untuk tanggal menginap.' : p.category === 'wisata' ? 'Tanyakan tarif dan jam buka terbaru sebelum berangkat.' : 'Tanyakan menu, harga, dan jam buka terbaru sebelum datang.')}` })
+  const nearby = (opts.nearby || []).filter(n => n && n !== p.name).slice(0, 3)
+  if (nearby.length && p.district && !opts.rental) out.push({ q: `Ada ${opts.categoryName.toLocaleLowerCase('id-ID')} lain di ${p.district} selain ${p.name}?`, a: `Ada. Di direktori VisitGarut, ${opts.categoryName.toLocaleLowerCase('id-ID')} lain di Kecamatan ${p.district} antara lain ${nearby.join(', ')}. Daftar lengkapnya ada di halaman kecamatan ${p.district}.` })
   out.push({ q: `Seberapa baru informasi ${p.name} di VisitGarut?`, a: `${info?.checkedAt ? `Tarif dan catatan kunjungan diperiksa ${longDate(info.checkedAt)} dari ${info.publisher}. ` : ''}Halaman ini terakhir diperbarui ${longDate(p.updated_at)}. Informasi operasional bisa berubah; kirim koreksi lewat bagian "Info di sini tidak sesuai?" bila menemukan perbedaan.` })
   return out
 }

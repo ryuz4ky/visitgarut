@@ -178,3 +178,20 @@
   .vp-actionbar a.is-primary{flex:1.6;background:var(--vg-lime);color:var(--vg-ink)}
 }
 @media(prefers-reduced-motion:reduce){.vp-actionbar{transition:none}}
+
+/* Kecamatan hubs and cross links */
+.vg-district-links{margin:40px 0 8px}
+.vg-district-links h2{font-size:1.25rem;margin:0 0 14px}
+.vg-district-links ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.vg-district-links a{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:#fff;border:1px solid rgba(0,0,0,.08);text-decoration:none;color:inherit;font-size:.92rem}
+.vg-district-links a:hover{border-color:currentColor}
+.vg-district-links span{font-size:.78rem;opacity:.6}
+.vk-summary{max-width:760px;font-size:1.02rem;line-height:1.6;margin:6px 0 22px}
+.vk-section{margin:36px 0}
+.vk-section-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.vk-section-head h2{margin:0;font-size:1.4rem}
+.vk-section-head a{font-weight:600}
+.vk-names{columns:3 220px;margin:10px 0 0;padding-left:18px;font-size:.92rem;line-height:1.7}
+.vp-district-link{margin:10px 0 0;font-size:.92rem}
+.vp-lead.is-summary{font-size:1.15rem;line-height:1.5}
+.vp-district-link a{text-decoration:underline;text-underline-offset:3px}
