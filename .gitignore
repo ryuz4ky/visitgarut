@@ -55,3 +55,7 @@ next-env.d.ts
 /.visit-test/
 
 .visit-validation-test/
+
+# build-time WebP copies of public photos (scripts/image-variants.cjs)
+/public/**/*-640.webp
+/public/**/*-1280.webp

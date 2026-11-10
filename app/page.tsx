@@ -1,5 +1,6 @@
+import Picture from '@/components/mvp/Picture'
 import Link from 'next/link'
-import {isAreaPhoto,areaPhotoTag} from '@/lib/mvp/photo'
+import {isAreaPhoto,areaPhotoTag,photoAlt} from '@/lib/mvp/photo'
 import {ArrowUpRight,ArrowRight,MapPin,Check,Sparkles,BadgeCheck,CircleHelp,Link2,Route,Search,Users,Mountain,BedDouble,UtensilsCrossed,Coffee,Car,Store,ScanLine} from 'lucide-react'
 import {Shell,JsonLd,date as fmtDate} from '@/components/mvp/Shell'
 import SiteHeader from '@/components/mvp/SiteHeader'
@@ -8,6 +9,7 @@ import RatingHome from '@/components/rating/RatingHome'
 import {PreviewNote} from '@/components/rating/bits'
 import {loadRatingHome} from '@/lib/rating/home'
 import {ratingVisible,ratingPreviewNote} from '@/lib/rating/server'
+import {organization} from '@/lib/mvp/org'
 import {places,articles,categories,type Place} from '@/lib/mvp/data'
 import {db} from '@/lib/mvp/db'
 import {hubExperienceCountSql,hubExperienceParams} from '@/lib/pulse/hub-query'
@@ -52,10 +54,10 @@ export default async function Home(){
  const shown=new Set(bento.map(p=>p.id))
  const panels=live.map(c=>({c,n:counts.by[c.slug],items:ranked.filter(p=>p.category===c.slug&&!shown.has(p.id)).slice(0,4)})).filter(x=>x.items.length)
  const noScores=!!rating&&rating.stats.scoredPlaces===0
- return <Shell overlayHeader><JsonLd data={{'@context':'https://schema.org','@graph':[{'@type':'Organization','@id':`${siteUrl}/#organization`,name:'VisitGarut',url:siteUrl,logo:{'@type':'ImageObject',url:`${siteUrl}/icon.png`,width:512,height:512},description:'Direktori independen tempat wisata, penginapan, kuliner, dan usaha lokal di Kabupaten Garut, Jawa Barat, dengan tarif bersumber dan nilai dari pengunjung yang benar-benar datang.',areaServed:{'@type':'AdministrativeArea',name:'Kabupaten Garut, Jawa Barat, Indonesia'},parentOrganization:{'@type':'Organization',name:'Sorotnamedia'}},{'@type':'WebSite','@id':`${siteUrl}/#website`,name:'VisitGarut',url:siteUrl,inLanguage:'id-ID',publisher:{'@id':`${siteUrl}/#organization`}},{'@type':'CollectionPage',url:siteUrl,name:'Rencanakan kunjungan Garut',mainEntity:{'@type':'ItemList',itemListElement:bento.map((p,i)=>({'@type':'ListItem',position:i+1,name:p.name,url:absoluteUrl(`/${p.category}/${p.slug}`)}))}}]}}/>
+ return <Shell overlayHeader><JsonLd data={{'@context':'https://schema.org','@graph':[organization(),{'@type':'WebSite','@id':`${siteUrl}/#website`,name:'VisitGarut',url:siteUrl,inLanguage:'id-ID',publisher:{'@id':`${siteUrl}/#organization`}},{'@type':'CollectionPage',url:siteUrl,name:'Rencanakan kunjungan Garut',mainEntity:{'@type':'ItemList',itemListElement:bento.map((p,i)=>({'@type':'ListItem',position:i+1,name:p.name,url:absoluteUrl(`/${p.category}/${p.slug}`)}))}}]}}/>
  <div className="vh">
  <section className="vh-hero-wrap"><div className="vh-hero">
-  <img className="vh-hero-img" src="/papandayan.jpg" alt="Lanskap kawah dan pegunungan Gunung Papandayan, Garut" width={1200} height={800} fetchPriority="high"/>
+  <Picture className="vh-hero-img" src="/papandayan.jpg" sizes="100vw" alt="Lanskap kawah dan pegunungan Gunung Papandayan, Garut" width={1200} height={800} fetchPriority="high"/>
   <HeroVideo/>
   <div className="vh-hero-word" aria-hidden="true">GARUT</div>
   <div className="vh-hero-shade" aria-hidden="true"/>
@@ -69,7 +71,7 @@ export default async function Home(){
     <Link className="vg-pill-cta is-large" href="/search">Jelajahi Garut<span className="vg-pill-cta-icon"><ArrowUpRight size={20} aria-hidden="true"/></span></Link>
    </div>
    {featured&&<Link className="vh-feature" href={`/${featured.category}/${featured.slug}`}>
-    <span className="vh-feature-img"><img src={featured.image_url} alt={featured.name} width={600} height={480}/>
+    <span className="vh-feature-img"><Picture src={featured.image_url} sizes="(max-width: 700px) 92vw, 600px" alt={photoAlt(featured)} width={600} height={480}/>
      <span className="vh-feature-tags">{checkedLabel(featured.practical)?<span className="vh-tag-light"><i className="vh-dot" aria-hidden="true"/>{checkedLabel(featured.practical)}</span>:<span/>}{featured.district&&<span className="vh-tag-dark">{featured.district}</span>}</span>
     </span>
     <span className="vh-feature-foot"><strong>{featured.name}</strong><span className="vh-round-lime"><ArrowUpRight size={20} aria-hidden="true"/></span></span>
@@ -103,7 +105,7 @@ export default async function Home(){
   <div className="vh-places-head"><h2 id="vh-places-title">Lihat tempatnya.<br/>Periksa rinciannya.</h2>
    <p className="vh-places-note">Tempat dengan foto lebih dulu. Semua tempat menyebut sumber dan tanggal pemeriksaannya.</p></div>
   <div className={`vh-bento vh-bento-${bento.length}`}>{bento.map((p,i)=>{const checked=checkedLabel(p.practical);const unknown=p.category==='wisata'&&knownTicket(p.practical)===null;return <Link key={p.id} className={i===0?'vh-tile is-big':'vh-tile'} href={`/${p.category}/${p.slug}`}>
-   <img src={p.image_url} alt={p.name} loading={i>1?'lazy':undefined} width={800} height={600}/>
+   <Picture src={p.image_url!} sizes={i===0?'(max-width: 700px) 92vw, 60vw':'(max-width: 700px) 92vw, 30vw'} alt={photoAlt(p)} loading={i>1?'lazy':undefined} width={800} height={600}/>
    <span className="vh-tile-shade" aria-hidden="true"/>
    {isAreaPhoto(p)?<span className="vh-tag-light vh-tile-tag">{areaPhotoTag(p)}</span>:unknown?<span className="vh-tag-warn">Tarif perlu konfirmasi</span>:checked?<span className="vh-tag-light vh-tile-tag"><i className="vh-dot" aria-hidden="true"/>{checked}</span>:null}
    <span className="vh-tile-foot"><span><strong>{p.name}</strong><small>{placeMeta(p)}</small></span>{i===0&&<span className="vh-round-lime"><ArrowUpRight size={22} aria-hidden="true"/></span>}</span>
@@ -161,7 +163,7 @@ export default async function Home(){
   </div>
   <div className="vh-panel" id="panduan">
    <div className="vh-panel-head"><h2>Siapkan sebelum<br/>berangkat</h2><Link className="vh-soft-link" href="/artikel">Semua panduan</Link></div>
-   {guides.length>0?<div className="vh-guides">{guides.slice(0,3).map((a,i)=>{const img=a.image_url||withImage[(i+2)%Math.max(withImage.length,1)]?.image_url;return <Link key={a.id} href={`/artikel/${a.slug}`}>{img?<span className="vh-guide-img"><img src={img} alt="" loading="lazy" width={152} height={128}/></span>:<span className="vh-guide-img is-empty" aria-hidden="true"/>}<span><strong>{a.title}</strong><small>{a.author} · {fmtDate(a.published_at||a.updated_at)}</small></span></Link>})}</div>
+   {guides.length>0?<div className="vh-guides">{guides.slice(0,3).map((a,i)=>{const img=a.image_url||withImage[(i+2)%Math.max(withImage.length,1)]?.image_url;return <Link key={a.id} href={`/artikel/${a.slug}`}>{img?<span className="vh-guide-img"><Picture src={img} sizes="152px" alt="" loading="lazy" width={152} height={128}/></span>:<span className="vh-guide-img is-empty" aria-hidden="true"/>}<span><strong>{a.title}</strong><small>{a.author} · {fmtDate(a.published_at||a.updated_at)}</small></span></Link>})}</div>
    :<p className="vh-muted">Panduan baru sedang disiapkan.</p>}
   </div>
  </section>

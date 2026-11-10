@@ -5,7 +5,9 @@ import CommunityPulse from '@/components/pulse/CommunityPulse'
 import { pulseForPlace } from '@/lib/pulse/data'
 import { notFound } from 'next/navigation'
 import { MapPin,ExternalLink,ArrowUpRight,Ticket,Clock,MessageCircle,Phone,Mountain,BedDouble,UtensilsCrossed,Coffee,Car,Store } from 'lucide-react'
-import {isAreaPhoto} from '@/lib/mvp/photo'
+import {isAreaPhoto,photoAlt} from '@/lib/mvp/photo'
+import Picture from '@/components/mvp/Picture'
+import {imageObject} from '@/lib/mvp/image-object'
 import PlaceNav from '@/components/place/PlaceNav'
 import StickyAside from '@/components/place/StickyAside'
 import ActionBar,{type BarAction} from '@/components/place/ActionBar'
@@ -57,10 +59,10 @@ export default async function Detail({params}:{params:Promise<{category:string;s
  const HeroIcon=({wisata:Mountain,hotel:BedDouble,kuliner:UtensilsCrossed,cafe:Coffee,transportasi:Car} as Record<string,typeof Store>)[category]||Store
  const hasMap=p.latitude!==null&&p.longitude!==null
  const bbox=hasMap?[p.longitude!-0.012,p.latitude!-0.007,p.longitude!+0.012,p.latitude!+0.007].map(n=>n.toFixed(5)).join(','):''
- return <Shell><JsonLd data={{'@context':'https://schema.org','@type':schemaType,'@id':absoluteUrl(`/${category}/${slug}#place`),name:p.name,description:p.excerpt,url:absoluteUrl(`/${category}/${slug}`),address:{'@type':'PostalAddress',streetAddress:p.address,addressLocality:p.district,addressRegion:'Jawa Barat',addressCountry:'ID'},...(p.latitude!==null&&p.longitude!==null?{geo:{'@type':'GeoCoordinates',latitude:p.latitude,longitude:p.longitude}}:{}),...(p.image_url?{image:p.image_url.startsWith('/')?absoluteUrl(p.image_url):p.image_url}:{}),...(p.whatsapp?{telephone:p.whatsapp}:{}),...(category==='wisata'&&ticket===0?{isAccessibleForFree:true,publicAccess:true}:{}),...(p.website?{sameAs:[p.website]}:{}),...(routeUrl?{hasMap:routeUrl}:{}),...(ratingEnabled()&&rating&&rating.score!==null&&rating.reviewers>=3?{aggregateRating:{'@type':'AggregateRating',ratingValue:Number(rating.score.toFixed(1)),bestRating:5,worstRating:1,ratingCount:rating.reviewers}}:{}),containedInPlace:p.district?{'@type':'AdministrativeArea',name:`Kecamatan ${p.district}`,url:absoluteUrl(`/kecamatan/${districtSlug(p.district)}`),containedInPlace:{'@type':'AdministrativeArea',name:'Kabupaten Garut, Jawa Barat'}}:{'@type':'AdministrativeArea',name:'Kabupaten Garut, Jawa Barat'}}}/>
+ return <Shell><JsonLd data={{'@context':'https://schema.org','@type':schemaType,'@id':absoluteUrl(`/${category}/${slug}#place`),name:p.name,description:p.excerpt,url:absoluteUrl(`/${category}/${slug}`),address:{'@type':'PostalAddress',streetAddress:p.address,addressLocality:p.district,addressRegion:'Jawa Barat',addressCountry:'ID'},...(p.latitude!==null&&p.longitude!==null?{geo:{'@type':'GeoCoordinates',latitude:p.latitude,longitude:p.longitude}}:{}),...(p.image_url?{image:imageObject(p.image_url,isAreaPhoto(p)?photoAlt(p):undefined)}:{}),...(p.whatsapp?{telephone:p.whatsapp}:{}),...(category==='wisata'&&ticket===0?{isAccessibleForFree:true,publicAccess:true}:{}),...(p.website?{sameAs:[p.website]}:{}),...(routeUrl?{hasMap:routeUrl}:{}),...(ratingEnabled()&&rating&&rating.score!==null&&rating.reviewers>=3?{aggregateRating:{'@type':'AggregateRating',ratingValue:Number(rating.score.toFixed(1)),bestRating:5,worstRating:1,ratingCount:rating.reviewers}}:{}),containedInPlace:p.district?{'@type':'AdministrativeArea',name:`Kecamatan ${p.district}`,url:absoluteUrl(`/kecamatan/${districtSlug(p.district)}`),containedInPlace:{'@type':'AdministrativeArea',name:'Kabupaten Garut, Jawa Barat'}}:{'@type':'AdministrativeArea',name:'Kabupaten Garut, Jawa Barat'}}}/>
  <section className="vp-hero-wrap"><div className={`${p.image_url?'vp-hero':`vp-hero is-plain cat-${category}`}${p.name.length>26?' is-long':''}`}>
   {!p.image_url&&<HeroIcon className="vp-hero-icon" size={260} strokeWidth={1} aria-hidden="true"/>}
-  {p.image_url&&<img className="vp-hero-img" src={p.image_url} alt={p.name} width={1600} height={900} fetchPriority="high"/>}
+  {p.image_url&&<Picture className="vp-hero-img" src={p.image_url} sizes="100vw" alt={photoAlt(p)} width={1600} height={900} fetchPriority="high"/>}
   <div className="vp-hero-shade" aria-hidden="true"/>
   <div className="vp-hero-top"><Breadcrumbs items={[{name:c.name,path:`/${category}`},{name:p.name,path:`/${category}/${slug}`}]}/></div>
   <div className="vp-hero-bottom">

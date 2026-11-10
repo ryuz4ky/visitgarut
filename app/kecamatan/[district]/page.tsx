@@ -8,7 +8,9 @@ import { categories } from '@/lib/mvp/data'
 import { districts, districtPlaces, hubIndexable } from '@/lib/mvp/kecamatan'
 import { districtIntro, districtIntroFallback, isThinPlace, clip } from '@/lib/mvp/seo'
 import { absoluteUrl } from '@/lib/site'
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
+// Rendered on first visit, then cached; nothing is built ahead of time.
+export async function generateStaticParams() { return [] }
 
 type Props = { params: Promise<{ district: string }> }
 const PREVIEW = 6
