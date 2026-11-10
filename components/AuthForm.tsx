@@ -89,7 +89,7 @@ export default function AuthForm({ next = '/account' }: { next?: string }) {
         </button>
       </form>
 
-      <p className="auth-note">Dengan akun VisitGarut, kamu bisa menyimpan tempat favorit, membuat itinerary, dan mengelola claim bisnis.</p>
+      <p className="auth-note">Dengan akun VisitGarut, kamu bisa menyimpan tempat favorit, membuat rencana perjalanan, dan mengelola klaim usaha.</p>
     </div>
   )
 }

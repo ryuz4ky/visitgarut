@@ -73,7 +73,7 @@ export default function TripDetailEditor({ trip, items, favoritePlaces }: { trip
     const { error } = await supabase.from('itinerary_items').insert({ itinerary_id: trip.id, place_id: selectedPlace, day_number: 1, position: items.length })
     setBusy(null)
     if (error?.code === '23505') {
-      setMessage('Tempat ini sudah ada di itinerary.')
+      setMessage('Tempat ini sudah ada di rencanamu.')
       return
     }
     setMessage(error ? error.message : 'Tempat ditambahkan ke Hari 1.')

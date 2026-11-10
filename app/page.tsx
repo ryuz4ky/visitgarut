@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import {ArrowUpRight,ArrowRight,MapPin,Check,Sparkles,BadgeCheck,CircleHelp,Link2,Route,Search,Users} from 'lucide-react'
+import {isAreaPhoto,areaPhotoTag} from '@/lib/mvp/photo'
+import {ArrowUpRight,ArrowRight,MapPin,Check,Sparkles,BadgeCheck,CircleHelp,Link2,Route,Search,Users,Mountain,BedDouble,UtensilsCrossed,Coffee,Car,Store,ScanLine} from 'lucide-react'
 import {Shell,JsonLd,date as fmtDate} from '@/components/mvp/Shell'
 import SiteHeader from '@/components/mvp/SiteHeader'
 import HeroVideo from '@/components/visit/HeroVideo'
@@ -27,17 +28,30 @@ async function pulsePlaces():Promise<PulsePlace[]>{
   return rows.filter(r=>r.videos+r.research+r.experiences>0).sort((a,b)=>(b.videos+b.research+b.experiences)-(a.videos+a.research+a.experiences)).slice(0,3)
  }catch{return []}
 }
-function evidenceLabel(p:PulsePlace){return [p.videos&&`${p.videos} video`,p.experiences&&`${p.experiences} pengalaman`,p.research&&`${p.research} riset sumber`].filter(Boolean).join(' · ')}
+function evidenceLabel(p:PulsePlace){return [p.videos&&`${p.videos} video`,p.experiences&&`${p.experiences} pengalaman`,p.research&&`${p.research} catatan`].filter(Boolean).join(' · ')}
+const catIcon:Record<string,typeof Store>={wisata:Mountain,hotel:BedDouble,kuliner:UtensilsCrossed,cafe:Coffee,transportasi:Car}
+async function categoryCounts(){
+ if(!process.env.DATABASE_URL)return {by:{} as Record<string,number>,total:0,districts:0,last:null as Date|null}
+ try{
+  const r=(await db().query<{category:string;n:number;districts:number;last:Date}>("SELECT category,count(*)::int n,count(DISTINCT NULLIF(district,''))::int districts,max(updated_at) last FROM vg_places WHERE status='published' GROUP BY ROLLUP(category)")).rows
+  const all=r.find(x=>x.category===null)
+  return {by:Object.fromEntries(r.filter(x=>x.category!==null).map(x=>[x.category,x.n])) as Record<string,number>,total:all?.n??0,districts:all?.districts??0,last:all?.last??null}
+ }catch{return {by:{} as Record<string,number>,total:0,districts:0,last:null as Date|null}}
+}
 function placeMeta(p:Place){const t=knownTicket(p.practical);return [p.district||'Garut',t!==null?(t===0?'tiket gratis':`± ${compactRupiah(t)}/org`):null].filter(Boolean).join(' · ')}
 
 export default async function Home(){
  const visible=await ratingVisible()
  const [items,guides,pulse,rating]=await Promise.all([places(),articles(),pulsePlaces(),visible?loadRatingHome():Promise.resolve(null)])
- const ranked=[...items].sort((a,b)=>Number(b.category==='wisata')-Number(a.category==='wisata')||Number(!!b.image_url)-Number(!!a.image_url)||Number(!!b.practical)-Number(!!a.practical))
- const withImage=ranked.filter(p=>p.image_url)
+ const ranked=[...items].sort((a,b)=>Number(b.category==='wisata')-Number(a.category==='wisata')||Number(!!b.image_url)-Number(!!a.image_url)||Number(knownTicket(b.practical)!==null)-Number(knownTicket(a.practical)!==null)||Number(!!b.practical)-Number(!!a.practical))
+ const withImage=ranked.filter(p=>p.image_url&&!isAreaPhoto(p))
  const featured=withImage[0]
  const bento=withImage.slice(0,5)
- const pills=withImage.slice(1,3)
+ const counts=await categoryCounts()
+ const live=categories.filter(c=>counts.by[c.slug])
+ const shown=new Set(bento.map(p=>p.id))
+ const panels=live.map(c=>({c,n:counts.by[c.slug],items:ranked.filter(p=>p.category===c.slug&&!shown.has(p.id)).slice(0,4)})).filter(x=>x.items.length)
+ const noScores=!!rating&&rating.stats.scoredPlaces===0
  return <Shell overlayHeader><JsonLd data={{'@context':'https://schema.org','@graph':[{'@type':'Organization','@id':`${siteUrl}/#organization`,name:'VisitGarut',url:siteUrl,logo:{'@type':'ImageObject',url:`${siteUrl}/icon.png`,width:512,height:512},description:'Direktori independen tempat wisata, penginapan, kuliner, dan usaha lokal di Kabupaten Garut, Jawa Barat, dengan tarif bersumber dan nilai dari pengunjung yang benar-benar datang.',areaServed:{'@type':'AdministrativeArea',name:'Kabupaten Garut, Jawa Barat, Indonesia'},parentOrganization:{'@type':'Organization',name:'Sorotnamedia'}},{'@type':'WebSite','@id':`${siteUrl}/#website`,name:'VisitGarut',url:siteUrl,inLanguage:'id-ID',publisher:{'@id':`${siteUrl}/#organization`}},{'@type':'CollectionPage',url:siteUrl,name:'Rencanakan kunjungan Garut',mainEntity:{'@type':'ItemList',itemListElement:bento.map((p,i)=>({'@type':'ListItem',position:i+1,name:p.name,url:absoluteUrl(`/${p.category}/${p.slug}`)}))}}]}}/>
  <div className="vh">
  <section className="vh-hero-wrap"><div className="vh-hero">
@@ -63,58 +77,51 @@ export default async function Home(){
    <Link className="vh-glass-card" href="/trip">
     <span className="vh-glass-label"><Route size={16} aria-hidden="true"/>Rencana perjalanan</span>
     <strong>Ceritakan rombonganmu. Biaya, rute, dan jam pulang dibantu susun.</strong>
-    <span className="vh-glass-chips"><span>Bareng anak</span><span>Naik kereta</span><span>Hitung budget</span></span>
+    <span className="vh-glass-chips"><span>Bareng anak</span><span>Naik kereta</span><span>Hitung biaya</span></span>
    </Link>
   </div>
  </div></section>
 
- <section className="vh-planner-wrap" aria-labelledby="vh-planner-title">
-  <div className="vh-planner">
-   <h2 id="vh-planner-title" className="sr-only">Mulai rencana perjalanan</h2>
-   <nav className="vh-tabs" aria-label="Mulai dari">
-    <span className="is-active" aria-current="true"><Route size={16} aria-hidden="true"/>Rencana</span>
-    <Link href="/wisata">Wisata</Link><Link href="/hotel">Penginapan</Link><Link href="/kuliner">Kuliner</Link><Link href="/transportasi">Rental</Link><Link href="/map">Peta</Link>
-   </nav>
-   <form action="/trip" className="vh-plan-form">
-    <label>Pergi dengan<select name="intent" defaultValue="together"><option value="together">Sendiri / teman</option><option value="family">Keluarga + anak</option><option value="train">Naik kereta</option></select></label>
-    <label>Tanggal kunjungan<input name="date" type="date"/></label>
-    <label>Budget rombongan (Rp)<input name="budget" inputMode="numeric" pattern="[0-9]*" placeholder="Contoh: 500000"/></label>
-    <button className="vg-button vh-plan-submit" type="submit">Susun rencana<ArrowRight size={18} aria-hidden="true"/></button>
-   </form>
-   <form action="/search" className="vh-plan-search" role="search">
+ <section className="vh-planner-wrap" aria-labelledby="vh-find-title">
+  <div className="vh-planner vh-finder">
+   <h2 id="vh-find-title" className="sr-only">Cari tempat di Garut</h2>
+   <form action="/search" className="vh-plan-search vh-find-search" role="search">
     <Search size={20} aria-hidden="true"/>
     <label className="sr-only" htmlFor="vh-q">Cari tempat di Garut</label>
-    <input id="vh-q" name="q" maxLength={120} placeholder="Sudah punya tujuan? Cari tempat, rental, atau daerah…"/>
+    <input id="vh-q" name="q" maxLength={120} placeholder="Cari tempat, penginapan, rental, atau daerah…"/>
     <button type="submit">Cari</button>
    </form>
+   <div className="vh-find-row">
+    <nav className="vh-cat-chips" aria-label="Kategori tempat">{live.map(c=>{const Icon=catIcon[c.slug]||Store;return <Link key={c.slug} href={`/${c.slug}`}><Icon size={16} aria-hidden="true"/>{c.name}<b>{counts.by[c.slug]}</b></Link>})}<Link href="/map"><MapPin size={16} aria-hidden="true"/>Peta</Link></nav>
+    <Link className="vh-find-plan" href="/trip"><Route size={16} aria-hidden="true"/>Susun rencana perjalanan<ArrowRight size={16} aria-hidden="true"/></Link>
+   </div>
+   {counts.total>0&&<p className="vh-find-meta"><i className="vh-dot" aria-hidden="true"/>{counts.total} tempat di {counts.districts} kecamatan{counts.last?<> · terakhir diperbarui {fmtDate(counts.last)}</>:null} · setiap tarif menyebut sumbernya</p>}
   </div>
- </section>
-
-
- <section className="vh-statement">
-  <p>Pilih tempat {pills[0]&&<span className="vh-inline-pill"><img src={pills[0].image_url} alt="" width={170} height={70}/></span>} yang pas, rincikan biayanya, lalu pulang {pills[1]&&<span className="vh-inline-pill"><img src={pills[1].image_url} alt="" width={170} height={70}/></span>} tanpa drama.</p>
-  <small>VisitGarut adalah direktori independen. Tarif menyebut sumber dan tanggal pemeriksaannya, dan yang belum pasti selalu ditandai.</small>
- </section>
-
- <section className="vh-principles" aria-label="Prinsip VisitGarut">
-  <div><span><BadgeCheck size={22} aria-hidden="true"/></span><h3>Bersumber &amp; bertanggal</h3><p>Setiap tarif menyebut sumber dan kapan terakhir diperiksa.</p></div>
-  <div><span><CircleHelp size={22} aria-hidden="true"/></span><h3>Yang belum pasti, ditandai</h3><p>Kamu tahu apa yang perlu ditanyakan sebelum berangkat.</p></div>
-  <div><span><Link2 size={22} aria-hidden="true"/></span><h3>Sumbernya bisa dibuka</h3><p>Ringkasan pengalaman selalu menautkan ke sumber aslinya.</p></div>
  </section>
 
  {bento.length>0&&<section className="vh-places" aria-labelledby="vh-places-title">
   <div className="vh-places-head"><h2 id="vh-places-title">Lihat tempatnya.<br/>Periksa rinciannya.</h2>
-   <nav className="vh-chips" aria-label="Kategori tempat">{categories.map(c=><Link key={c.slug} href={`/${c.slug}`}>{c.name}</Link>)}</nav></div>
+   <p className="vh-places-note">Tempat dengan foto lebih dulu. Semua tempat menyebut sumber dan tanggal pemeriksaannya.</p></div>
   <div className={`vh-bento vh-bento-${bento.length}`}>{bento.map((p,i)=>{const checked=checkedLabel(p.practical);const unknown=p.category==='wisata'&&knownTicket(p.practical)===null;return <Link key={p.id} className={i===0?'vh-tile is-big':'vh-tile'} href={`/${p.category}/${p.slug}`}>
    <img src={p.image_url} alt={p.name} loading={i>1?'lazy':undefined} width={800} height={600}/>
    <span className="vh-tile-shade" aria-hidden="true"/>
-   {unknown?<span className="vh-tag-warn">Tarif perlu konfirmasi</span>:checked?<span className="vh-tag-light vh-tile-tag"><i className="vh-dot" aria-hidden="true"/>{checked}</span>:null}
+   {isAreaPhoto(p)?<span className="vh-tag-light vh-tile-tag">{areaPhotoTag(p)}</span>:unknown?<span className="vh-tag-warn">Tarif perlu konfirmasi</span>:checked?<span className="vh-tag-light vh-tile-tag"><i className="vh-dot" aria-hidden="true"/>{checked}</span>:null}
    <span className="vh-tile-foot"><span><strong>{p.name}</strong><small>{placeMeta(p)}</small></span>{i===0&&<span className="vh-round-lime"><ArrowUpRight size={22} aria-hidden="true"/></span>}</span>
   </Link>})}</div>
+  {panels.length>0&&<div className="vh-cat-panels">{panels.map(({c,n,items})=>{const Icon=catIcon[c.slug]||Store;return <section key={c.slug} className="vh-cat-panel" aria-labelledby={`vh-cat-${c.slug}`}>
+   <div className="vh-cat-head"><span className="vh-cat-icon"><Icon size={18} aria-hidden="true"/></span><h3 id={`vh-cat-${c.slug}`}>{c.name}</h3><Link href={`/${c.slug}`}>Semua {n}<ArrowUpRight size={14} aria-hidden="true"/></Link></div>
+   <ul>{items.map(p=>{const ck=checkedLabel(p.practical);return <li key={p.id}><Link href={`/${p.category}/${p.slug}`}><span><strong>{p.name}</strong><small>{placeMeta(p)}{ck?` · ${ck}`:''}</small></span><ArrowUpRight size={16} aria-hidden="true"/></Link></li>})}</ul>
+  </section>})}</div>}
   <Link className="vg-pill-cta is-dark vh-center" href="/search">Lihat semua tempat<span className="vg-pill-cta-icon"><ArrowUpRight size={18} aria-hidden="true"/></span></Link>
  </section>}
 
- {rating&&<><PreviewNote note={ratingPreviewNote()}/><RatingHome tabs={rating.tabs} stats={rating.stats}/></>}
+ <section className="vh-principles vh-principles-strip" aria-label="Prinsip VisitGarut">
+  <div><span><BadgeCheck size={18} aria-hidden="true"/></span><p><strong>Bersumber &amp; bertanggal.</strong> Setiap tarif menyebut sumber dan kapan terakhir diperiksa.</p></div>
+  <div><span><CircleHelp size={18} aria-hidden="true"/></span><p><strong>Yang belum pasti, ditandai.</strong> Kamu tahu apa yang perlu ditanyakan sebelum berangkat.</p></div>
+  <div><span><Link2 size={18} aria-hidden="true"/></span><p><strong>Sumbernya bisa dibuka.</strong> Ringkasan pengalaman selalu menautkan ke sumber aslinya.</p></div>
+ </section>
+
+ {rating&&!noScores&&<><PreviewNote note={ratingPreviewNote()}/><RatingHome tabs={rating.tabs} stats={rating.stats}/></>}
 
  <section className="vh-dark-wrap" aria-labelledby="vh-trip-title"><div className="vh-dark">
   <div className="vh-dark-glow" aria-hidden="true"/>
@@ -122,18 +129,19 @@ export default async function Home(){
    <div className="vh-dark-copy">
     <span className="vh-lime-chip"><Sparkles size={15} aria-hidden="true"/>Rencana perjalanan</span>
     <h2 id="vh-trip-title">Satu rencana,<br/>sampai pulang.</h2>
-    <p>Pilih tempat, isi jumlah orang dan budget, lalu lihat biaya yang sudah diketahui serta waktu yang perlu disisakan untuk perjalanan kembali.</p>
+    <p>Pilih tempat, isi jumlah orang dan dana, lalu lihat biaya yang sudah diketahui serta waktu yang perlu disisakan untuk perjalanan kembali.</p>
     <ul>
      <li><span><Check size={16} aria-hidden="true"/></span>Biaya dipisah: tiket, parkir, makan, transport</li>
      <li><span><Check size={16} aria-hidden="true"/></span>Tarif yang belum diketahui ditandai, bukan ditebak</li>
      <li><span><Check size={16} aria-hidden="true"/></span>Rute bisa dibuka di peta dan tautannya dibagikan</li>
     </ul>
+    <nav className="vh-intents" aria-label="Mulai rencana untuk"><Link href="/trip?intent=together">Sendiri / teman</Link><Link href="/trip?intent=family"><Users size={15} aria-hidden="true"/>Keluarga + anak</Link><Link href="/trip?intent=train">Naik kereta</Link></nav>
     <Link className="vg-pill-cta is-large" href="/trip">Coba susun rencanamu<span className="vg-pill-cta-icon"><ArrowUpRight size={20} aria-hidden="true"/></span></Link>
    </div>
    <div className="vh-steps">
     <div className="vh-steps-top"><span className="vh-steps-kicker">Cara kerjanya</span><strong>Atur, bandingkan,<br/>lalu cek biayanya.</strong></div>
     <ol>
-     <li><span>01</span><span><strong>Atur perjalanan</strong><small>Tanggal, jumlah dewasa dan anak, budget, serta jam harus pulang.</small></span></li>
+     <li><span>01</span><span><strong>Atur perjalanan</strong><small>Tanggal, jumlah dewasa dan anak, dana, serta jam harus pulang.</small></span></li>
      <li><span>02</span><span><strong>Bandingkan tempat</strong><small>Tambahkan tujuan dari direktori atau simpananmu.</small></span></li>
      <li><span>03</span><span><strong>Cek biaya &amp; waktu</strong><small>Total yang sudah diketahui, yang perlu ditanyakan, dan sisa waktu pulang.</small></span></li>
     </ol>
@@ -143,7 +151,7 @@ export default async function Home(){
 
  <section className="vh-duo">
   <div className="vh-panel" id="pulse">
-   <div className="vh-panel-head"><h2>Bisa kamu<br/>periksa sendiri</h2><Link className="vh-soft-link" href="/community-pulse">Buka Community Pulse</Link></div>
+   <div className="vh-panel-head"><h2>Bisa kamu<br/>periksa sendiri</h2><Link className="vh-soft-link" href="/community-pulse">Lihat cerita & video</Link></div>
    {pulse.length>0?<ul className="vh-list">{pulse.map(p=><li key={p.id}><span><strong>{p.name}</strong><small>{evidenceLabel(p)}</small></span><Link href={`/${p.category}/${p.slug}#community-pulse`} aria-label={`Lihat sumber tentang ${p.name}`} className="vh-round-line"><ArrowUpRight size={18} aria-hidden="true"/></Link></li>)}</ul>
    :<ul className="vh-list">
      <li><span><strong>Peta hubungan antartempat</strong><small>Kenali area sebelum menentukan perjalanan.</small></span><Link href="/map" aria-label="Buka peta" className="vh-round-line"><ArrowUpRight size={18} aria-hidden="true"/></Link></li>
@@ -158,8 +166,8 @@ export default async function Home(){
   </div>
  </section>
 
- <section className="vh-duo vh-duo-last">
-  <div className="vh-color is-lime"><span className="vh-color-kicker"><Users size={16} aria-hidden="true"/>Rombongan &amp; keluarga</span><h2>Datang bersama anak atau rombongan besar?</h2><p>Hitung tiket dewasa dan anak terpisah, lalu siapkan pertanyaan untuk pengelola sebelum berangkat.</p><Link className="vg-pill-cta is-dark" href="/trip?intent=family">Susun rencana keluarga<span className="vg-pill-cta-icon"><ArrowUpRight size={18} aria-hidden="true"/></span></Link></div>
+ <section className={noScores?"vh-duo vh-duo-last":"vh-duo vh-duo-last is-single"}>
+  {noScores&&<div className="vh-color is-lime"><span className="vh-color-kicker"><ScanLine size={16} aria-hidden="true"/>Untuk pelaku usaha · VisitGarut Rating</span><h2>Nilai dari tamu yang benar-benar datang.</h2><p>Kami sedang memasang plat QR di warung, kafe, penginapan, dan tempat wisata. Begitu 3 pengunjung menilai sebuah tempat, skornya tampil. Skor tidak bisa dibeli.</p><div className="vh-color-ctas"><Link className="vg-pill-cta is-dark" href="/untuk-usaha">Minta plat QR gratis<span className="vg-pill-cta-icon"><ArrowUpRight size={18} aria-hidden="true"/></span></Link><Link className="vh-color-link" href="/rating/metode">Cara skor dihitung</Link></div></div>}
   <div className="vh-color is-sage"><span className="vh-color-kicker">Untuk pelaku usaha</span><h2>Data tempatmu kurang tepat?</h2><p>Kirim koreksi lewat halaman tempat. Setiap laporan diperiksa sebelum mengubah informasi yang tampil.</p><Link className="vg-pill-cta is-dark" href="/community-pulse/metode">Pelajari cara kami memeriksa<span className="vg-pill-cta-icon"><ArrowUpRight size={18} aria-hidden="true"/></span></Link></div>
  </section>
  </div></Shell>

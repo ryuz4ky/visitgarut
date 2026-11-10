@@ -122,3 +122,59 @@
 .vg-faq-list details[open] summary:after{content:"–"}
 .vg-faq-list details p{margin:10px 0 2px;color:var(--vg-ink-2);line-height:1.65;max-width:72ch}
 .vg-faq.is-section{margin-top:40px}
+
+/* —— Place page UX pass: sticky nav, adaptive aside, phone order, action bar —— */
+.vp-hero.is-plain{min-height:300px;justify-content:space-between;overflow:hidden}
+.vp-hero.is-plain.cat-hotel{background:linear-gradient(150deg,#3a3226,#15120d)}
+.vp-hero.is-plain.cat-kuliner,.vp-hero.is-plain.cat-cafe{background:linear-gradient(150deg,#3d2c22,#140f0c)}
+.vp-hero.is-plain.cat-transportasi{background:linear-gradient(150deg,#22303a,#0d1216)}
+.vp-hero-icon{position:absolute;right:-24px;top:50%;transform:translateY(-50%);z-index:-1;color:#fff;opacity:.07;pointer-events:none}
+.vp-hero.is-plain h1{font-size:clamp(40px,5.6vw,80px)}
+.vp-hero.is-long h1{font-size:clamp(36px,4.8vw,72px);line-height:1}
+
+.vp-facts{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.vp-main .vp-nav{position:sticky;top:var(--vp-header-h,84px);z-index:20;display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -4px;padding:8px 4px;background:var(--vg-ground,#f2f3ec);-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 8px,#000 calc(100% - 24px),transparent);mask-image:linear-gradient(90deg,transparent 0,#000 8px,#000 calc(100% - 24px),transparent)}
+.vp-nav::-webkit-scrollbar{display:none}
+.vp-nav a{flex:none;white-space:nowrap}
+.vp-nav a[aria-current]{background:var(--vg-ink);color:#fff}
+.vp-layout [id]{scroll-margin-top:calc(var(--vp-header-h,84px) + var(--vp-nav-h,56px) + 12px)}
+.vp-aside{top:var(--vp-aside-top,104px)}
+
+.vp-map{margin:0 0 14px;border-radius:18px;overflow:hidden;background:var(--vg-ground)}
+.vp-map iframe{display:block;width:100%;height:180px;border:0}
+.vp-map figcaption{padding:8px 12px;font-size:.76rem;color:var(--vg-muted)}
+
+.vp-related .vg-card-image.vg-image-empty{height:76px}
+.vp-related .vg-image-empty>span,.vp-related .vg-image-empty small{display:none}
+.vp-related .vg-image-empty svg{width:28px;height:28px}
+
+.vp-actionbar{display:none}
+@media(max-width:900px){
+  .vp-layout{display:flex;flex-direction:column;align-items:stretch}
+  .vp-main,.vp-aside{display:contents}
+  .vp-layout>*>*{order:5}
+  .vp-layout .vp-gist,.vp-layout .vp-lead,.vp-layout .vp-nav{order:0}
+  .vp-layout .vp-info{order:1}
+  .vp-layout .vg-practical-panel{order:2}
+  .vp-layout .vp-estimator{order:3}
+  .vp-layout .vp-report{order:8}
+  .vp-layout .pulse-section{order:9}
+}
+@media(max-width:640px){
+  .vp-hero.is-plain{min-height:0;gap:56px}
+  .vp-hero.is-plain h1,.vp-hero.is-long h1{font-size:clamp(2.1rem,9.5vw,2.6rem);line-height:1.02}
+  .vp-hero-icon{width:180px;height:180px;right:-30px}
+  .vp-facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .vp-facts>div:last-child:nth-child(odd){grid-column:span 2}
+  .vg-practical-panel .vg-practical-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;margin-inline:-22px;padding:0 22px 6px;scroll-padding-inline:22px;scrollbar-width:none}
+  .vg-practical-panel .vg-practical-grid>article{flex:0 0 84%;scroll-snap-align:start}
+  .vg-practical-panel .vg-practical-grid::-webkit-scrollbar{display:none}
+}
+@media(max-width:760px){
+  body:has(.vp-actionbar){padding-bottom:calc(172px + env(safe-area-inset-bottom,0px))}
+  .vp-actionbar{position:fixed;left:14px;right:14px;bottom:calc(96px + env(safe-area-inset-bottom,0px));z-index:69;display:flex;gap:6px;padding:6px;border-radius:999px;background:var(--vg-ink);box-shadow:0 14px 34px -12px rgba(14,19,17,.5);transform:translateY(16px);opacity:0;pointer-events:none;transition:opacity .18s,transform .18s}
+  .vp-actionbar.is-shown{transform:none;opacity:1;pointer-events:auto}
+  .vp-actionbar a{flex:1;min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:999px;color:#fff;font-weight:600;font-size:.84rem;text-decoration:none!important;white-space:nowrap}
+  .vp-actionbar a.is-primary{flex:1.6;background:var(--vg-lime);color:var(--vg-ink)}
+}
+@media(prefers-reduced-motion:reduce){.vp-actionbar{transition:none}}

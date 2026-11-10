@@ -15,6 +15,7 @@ import './planner.css'
 import './pulse-brand.css'
 import './admin-brand.css'
 import './rating.css'
+import './readable.css'
 export const viewport: Viewport={themeColor:'#f4f5ef'}
 export const metadata: Metadata={metadataBase:new URL(siteUrl),title:{default:'VisitGarut — Rencana Garut, lebih jelas',template:'%s | VisitGarut'},description:'Rencanakan kunjungan Garut dengan biaya yang jelas, informasi kelompok, sumber yang bisa diperiksa, dan perjalanan pergi-pulang.',openGraph:{siteName:'VisitGarut',locale:'id_ID',type:'website'},twitter:{card:'summary_large_image'},robots:{index:true,follow:true}}
 export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="id"><body>{children}</body></html>}

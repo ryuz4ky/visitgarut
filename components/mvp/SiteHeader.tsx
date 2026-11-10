@@ -7,7 +7,7 @@ const links = [
   { href: '/search', label: 'Jelajahi', match: (p: string) => p === '/search' || p === '/explore' || /^\/(wisata|hotel|kuliner|cafe|transportasi|paket-wisata)(\/|$)/.test(p) },
   { href: '/trip', label: 'Rencana', match: (p: string) => p.startsWith('/trip') },
   { href: '/map', label: 'Peta', match: (p: string) => p === '/map' },
-  { href: '/community-pulse', label: 'Pulse', match: (p: string) => p.startsWith('/community-pulse') },
+  { href: '/community-pulse', label: 'Cerita', match: (p: string) => p.startsWith('/community-pulse') },
   { href: '/artikel', label: 'Panduan', match: (p: string) => p.startsWith('/artikel') },
 ]
 

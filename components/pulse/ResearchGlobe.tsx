@@ -80,7 +80,7 @@ export default function ResearchGlobe({items,placeId}:{items:ResearchEvidence[];
  const shown=selected===null?records:records.filter(item=>item.topic===selected)
  if(!records.length)return null
  return <section className="pulse-globe pulse-research-globe" aria-labelledby={'place-globe-title-'+placeId}>
-  <div className="pulse-globe-intro"><div><span className="vg-eyebrow">KENALI TEMPATNYA</span><h3 id={'place-globe-title-'+placeId}>Informasi tempat, dalam satu Globe</h3><p>Pilih topik untuk membaca catatan dari pengelola, instansi, dan sumber publik.</p><p className="pulse-globe-hint">Gerakkan pointer atau tarik Globe untuk memutar.</p></div><button type="button" className="pulse-globe-pause" aria-pressed={paused} onClick={()=>setPaused(value=>!value)}>{paused?'Putar otomatis':'Jeda putaran otomatis'}</button></div>
+  <div className="pulse-globe-intro"><div><span className="vg-eyebrow">KENALI TEMPATNYA</span><h3 id={'place-globe-title-'+placeId}>Informasi tempat dari berbagai sumber</h3><p>Pilih topik untuk membaca catatan dari pengelola, instansi, dan sumber publik.</p><p className="pulse-globe-hint">Gerakkan pointer atau tarik Globe untuk memutar.</p></div><button type="button" className="pulse-globe-pause" aria-pressed={paused} onClick={()=>setPaused(value=>!value)}>{paused?'Putar otomatis':'Jeda putaran otomatis'}</button></div>
   <div className="pulse-globe-layout">
    <div ref={stage} className="pulse-globe-stage" data-paused={paused} aria-label="Globe informasi tempat; tarik untuk memutar"
     onPointerDown={down} onPointerMove={move} onPointerUp={end} onPointerCancel={end}

@@ -1,0 +1,112 @@
+/* Easy-reading pass: larger text, bigger touch areas, simpler mobile layouts.
+   Loaded last so it can lift sizes set in older stylesheets. */
+
+/* —— base text —— */
+body{font-size:17px;line-height:1.6}
+.vg-prose{font-size:1.08rem;line-height:1.8}
+.vg-eyebrow{font-size:13px!important;letter-spacing:.06em}
+.vg-breadcrumb,.vg-breadcrumb a,.vg-breadcrumb span{font-size:14px!important}
+
+/* —— forms: 16px+ stops phones from zooming in, and is easier to read —— */
+input,select,textarea{font-size:16px!important}
+label{font-size:15px}
+
+/* —— footer —— */
+.vg-footer nav a{font-size:15px;min-height:32px;display:inline-flex;align-items:center}
+.vg-footer-card small,.vg-footer-card p{font-size:14px}
+
+/* —— mobile bottom navigation —— */
+.vg-mobile-nav a,.vg-mobile-nav span{font-size:12px!important}
+
+/* —— place cards and lists —— */
+.vg-card-meta,.vg-card-plan{font-size:14px!important}
+.vg-card-flag,.vg-tag{font-size:13px!important}
+.vg-image-empty span,.vg-image-empty small{font-size:12px!important}
+.vh-cat-panel li small,.vh-cat-head a,.vh-find-meta,.vh-guides small,.vh-list small,.vh-tile-foot small{font-size:14px!important}
+.vh-cat-panel li strong{font-size:16px}
+.vh-cat-head a{min-height:44px;padding:0 6px}
+.vh-cat-chips a{font-size:15px}
+.vh-cat-chips b{font-size:13px!important}
+.vh-intents a,.vh-soft-link,.vh-color-kicker{font-size:14px!important}
+
+/* —— place page —— */
+.vp-badge{font-size:14px!important}
+.vp-lead{font-size:clamp(1.25rem,2vw,1.6rem)}
+.vp-info p{font-size:16px;line-height:1.6}
+.vp-info-links{font-size:15px}
+.vp-info-links a{min-height:40px;display:inline-flex;align-items:center}
+.vp-info-actions .vg-button{min-height:52px;font-size:16px;gap:8px}
+.vg-detail-nav a{font-size:15px!important;min-height:44px!important}
+.vg-source a{display:inline-flex;align-items:center;gap:6px;min-height:44px}
+.vg-coordinate-source small,.vg-coordinate-source p{font-size:14px!important}
+.vp-map figcaption{font-size:14px}
+.vg-practical-cost dt{font-size:14px!important}
+.vg-practical-cost dd{font-size:16px!important}
+.vg-practical-grid p,.vg-practical-grid small{font-size:15px!important;line-height:1.6}
+.vg-practical-evidence,.vg-practical-evidence a,.vg-practical-evidence span{font-size:13px!important}
+.vp-credit{font-size:12px!important}
+.vp-est-note{font-size:14px!important}
+.vp-estimator dl>div{font-size:15px}
+.vp-unknown{font-size:13px!important}
+.vg-rate-note{font-size:13px!important}
+.vp-report p{font-size:15px}
+.vp-actionbar a{font-size:15px!important}
+
+/* "Intinya" summary card */
+.vp-gist{background:var(--vg-card);border-radius:var(--vg-r-lg);padding:24px 28px}
+.vp-gist h2{margin:0 0 6px;font-size:1.5rem}
+.vp-gist ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:4px 24px}
+.vp-gist li{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--vg-ground-2)}
+.vp-gist li>span:last-child{display:flex;flex-direction:column;gap:2px;min-width:0}
+.vp-gist strong{font-size:14px;font-weight:600;color:var(--vg-muted)}
+.vp-gist li>span:last-child>span{font-size:17px;line-height:1.45;color:var(--vg-ink)}
+.vp-gist-icon{flex:none;width:44px;height:44px;border-radius:999px;background:var(--vg-lime-tint);color:var(--vg-olive);display:grid;place-items:center}
+.vp-gist p{margin:14px 0 0;font-size:14px;color:var(--vg-muted)}
+@media(max-width:640px){.vp-gist{padding:20px;border-radius:28px}.vp-gist li{padding:12px 0}}
+
+/* FAQ rows: whole row is a big touch target */
+.vg-faq-list details{padding:0}
+.vg-faq-list summary{min-height:56px;align-items:center;padding:12px 0;font-size:16px}
+.vg-faq-list details p{font-size:16px;margin:0 0 14px}
+.vg-faq-intro{font-size:15px}
+
+/* —— Community Pulse: easier text; on phones skip the spinning globe and show the list —— */
+.pulse-hub-tags span,.pulse-confidence,.pulse-research-heading span,.pulse-supporting span,.pulse-hub-facts span,.pulse-overview-meta,.pulse-globe-caption,.pulse-globe-method{font-size:14px!important}
+.pulse-hub-link{font-size:15px!important}
+.pulse-globe-node strong{font-size:14px!important}
+.pulse-globe-node small{font-size:12px!important}
+.pulse-globe-chips button,.pulse-globe-chips span{font-size:15px!important}
+.pulse-globe-chips button{min-height:44px}
+.pulse-section details>summary{min-height:52px;display:flex;align-items:center;gap:8px;font-size:16px}
+@media(max-width:640px){
+  .pulse-globe-stage,.pulse-globe-hint,.pulse-globe-pause{display:none!important}
+  .pulse-globe-layout{display:block!important;min-height:0!important}
+}
+
+/* —— trip planner —— */
+.vg-decision-card small,.vg-decision-card dt{font-size:13px!important}
+.vg-decision-card dd{font-size:15px!important}
+.vg-decision-card p{font-size:15px!important}
+.vg-decision-bottom a,.vg-decision-bottom button{font-size:14px!important;min-height:44px}
+.vg-trip-brief label,.vg-visit-two label{font-size:15px!important}
+.vg-trip-brief small,.vg-trip-evaluation p{font-size:14px!important}
+.vg-visit-filters button{font-size:14px!important;min-height:44px}
+.vg-trip-page-heading span,.vg-step-title span,.vg-step-title b{font-size:14px!important}
+@media(max-width:760px){
+  /* planner.css set two columns up to 1150px, which squeezed phones; one column here */
+  .vg-companion-layout{grid-template-columns:minmax(0,1fr)!important;gap:14px}
+  .vg-trip-brief{grid-row:auto!important;grid-column:auto!important}
+  .vg-budget-panel{grid-column:auto!important;position:static!important}
+  .vg-trip-workspace{grid-column:auto!important;min-width:0}
+  .vg-trip-brief .vg-visit-two input{padding:0 10px!important;font-size:16px!important;min-width:0}
+  .vg-trip-brief input,.vg-trip-brief select{width:100%;min-height:52px}
+  .vg-visit-filters{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto;gap:8px;scrollbar-width:none}
+  .vg-visit-filters button{flex:none;white-space:nowrap}
+  .vg-visit-search{min-width:0}
+}
+/* centre "Rencana" button: keep the icon lime on black when it is the active page */
+.vg-mobile-nav a.is-primary.is-active svg,.vg-mobile-nav a.is-primary svg{color:var(--vg-lime)!important}
+/* area photos are labelled so nobody mistakes them for the business itself */
+.vg-area-tag{position:absolute;left:12px;bottom:12px;z-index:2;padding:4px 10px;border-radius:999px;background:rgba(14,19,17,.72);color:#fff;font-size:12px;font-weight:600}
+.vp-area-note{position:absolute;left:20px;top:72px;z-index:2;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.92);color:var(--vg-ink);font-size:13px;font-weight:600}
+@media(max-width:640px){.vp-area-note{left:14px;top:auto;bottom:auto;position:relative;align-self:flex-start;margin-top:10px}}

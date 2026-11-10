@@ -8,7 +8,7 @@ const items = [
   { href: '/', label: 'Beranda', Icon: House, section: 'home' },
   { href: '/search', label: 'Jelajahi', Icon: Compass, section: 'explore' },
   { href: '/trip', label: 'Rencana', Icon: Route, section: 'trip', primary: true },
-  { href: '/community-pulse', label: 'Pulse', Icon: Orbit, section: 'pulse' },
+  { href: '/community-pulse', label: 'Cerita', Icon: Orbit, section: 'pulse' },
   { href: '/saved', label: 'Simpanan', Icon: Bookmark, section: 'saved' },
 ] as const
 

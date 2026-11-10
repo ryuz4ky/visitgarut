@@ -1,3 +1,4 @@
+import {isAreaPhoto,areaPhotoTag} from '@/lib/mvp/photo'
 import Link from 'next/link'
 import {Mountain,MapPin,BedDouble,Utensils,Coffee,Car,Bike,Compass,Plus,Info,ShoppingBag,Wrench} from 'lucide-react'
 import {categories} from '@/lib/mvp/categories'
@@ -26,6 +27,7 @@ export default function PlaceCard({place,rating}:{place:CardPlace;rating?:CardRa
     <Link className={`vg-card-image cat-${place.category}`} href={href} tabIndex={-1} aria-hidden="true">
       {place.image_url?<img src={place.image_url} alt="" loading="lazy" width={600} height={400}/>:<div className="vg-image-empty"><Icon size={rental?36:44} strokeWidth={1.4}/>{!rental&&<><span>{place.district || 'Garut'}</span><small>Foto belum tersedia</small></>}</div>}
       <span className="vg-tag">{cat?.name}</span>
+      {place.image_url&&isAreaPhoto(place)&&<span className="vg-area-tag">{areaPhotoTag(place)}</span>}
       {rating&&rating.tier!=='kurang'&&<span className="vg-card-rating"><ScoreRing score={rating.score} tier={rating.tier} size="sm"/><span><strong>{tierLabels[rating.tier]}</strong><small>{rating.reviewers} pengunjung</small></span></span>}
     </Link>
     <div className="vg-card-body">

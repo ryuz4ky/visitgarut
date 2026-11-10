@@ -82,7 +82,7 @@ export default function TripPlannerClient({ userId, trips, selectedPlace }: { us
     <div className="trip-app-grid">
       <section className="trip-create-card">
         <span className="marketplace-kicker"><Sparkles size={14} /> NEW TRIP</span>
-        <h2>Buat itinerary baru</h2>
+        <h2>Buat rencana baru</h2>
         <p>Mulai dengan nama dan tanggal. Tempat bisa ditambahkan dari Explore atau daftar favorit.</p>
         <label><span>Nama trip</span><input value={title} onChange={(event) => setTitle(event.target.value)} /></label>
         <div className="trip-date-grid">
@@ -107,7 +107,7 @@ export default function TripPlannerClient({ userId, trips, selectedPlace }: { us
               </Link>
             ))}
           </div>
-        ) : <p className="trip-empty-copy">Belum ada trip tersimpan. Buat itinerary pertamamu dari panel di sebelah.</p>}
+        ) : <p className="trip-empty-copy">Belum ada rencana tersimpan. Buat rencana pertamamu dari panel di sebelah.</p>}
 
         {selectedPlace && trips.length ? (
           <div className="trip-quick-add">

@@ -25,7 +25,7 @@ export default function PlaceEstimator({placeId,name,practical,whatsapp,plannabl
  const wa=whatsapp.replace(/\D/g,'')
  const message=`Halo, saya ingin berkunjung ke ${name} pada ${date} untuk ${adults} dewasa${children?` dan ${children} anak`:''}. Mohon konfirmasi jam buka, tarif tiket dewasa dan anak, parkir, serta biaya tambahan. Terima kasih.`
  return <form className="vp-estimator" onSubmit={e=>e.preventDefault()} aria-labelledby="vp-est-title">
-  <h2 id="vp-est-title">Estimasi rombonganmu</h2>
+  <h2 id="vp-est-title">Perkiraan biaya rombongan</h2>
   <label>Tanggal kunjungan<input type="date" value={date} min={today()} onChange={e=>setDate(e.target.value)}/></label>
   <Counter label="Dewasa" value={adults} min={1} onChange={setAdults}/>
   <Counter label="Anak" value={children} min={0} onChange={setChildren}/>
@@ -37,6 +37,6 @@ export default function PlaceEstimator({placeId,name,practical,whatsapp,plannabl
   </dl>
   <p className="vp-est-note">{adult===null?'Tarif untuk tanggal ini belum tersedia atau sudah lebih dari 30 hari sejak diperiksa.':'Dari tarif dewasa yang bersumber. Biaya lain ditanyakan ke pengelola.'}</p>
   {plannable&&<Link className="vg-pill-cta is-dark vp-est-cta" href={`/trip?add=${placeId}&date=${date}`}>Tambah ke rencana<span className="vg-pill-cta-icon"><ArrowUpRight size={18} aria-hidden="true"/></span></Link>}
-  {wa&&<a className="vg-button vg-secondary" href={`https://wa.me/${wa}?text=${encodeURIComponent(message)}`} target="_blank" rel="noopener noreferrer"><MessageCircle size={17} aria-hidden="true"/>Tanya pengelola</a>}
+  {wa&&<a className="vg-button vg-secondary" href={`https://wa.me/${wa}?text=${encodeURIComponent(message)}`} target="_blank" rel="noopener noreferrer"><MessageCircle size={17} aria-hidden="true"/>Tanya pengelola via WhatsApp</a>}
  </form>
 }
