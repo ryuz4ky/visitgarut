@@ -28,6 +28,16 @@ async function publishedArticles(): Promise<{ slug: string; updated_at: Date }[]
   if (!process.env.DATABASE_URL) return []
   return (await db().query("SELECT slug,updated_at FROM vg_articles WHERE status='published' ORDER BY id LIMIT 4500")).rows
 }
+/** English pages; empty when the translation table is missing. */
+async function englishPages(): Promise<{ kind: string; slug: string; updated_at: Date }[]> {
+  if (!process.env.DATABASE_URL) return []
+  try {
+    return (await db().query(`SELECT t.kind, COALESCE(p.slug,a.slug) AS slug, t.updated_at FROM vg_i18n t
+      LEFT JOIN vg_places p ON t.kind='place' AND p.id=t.ref_id AND p.status='published' AND p.category='wisata'
+      LEFT JOIN vg_articles a ON t.kind='article' AND a.id=t.ref_id AND a.status='published'
+      WHERE t.lang='en' AND COALESCE(p.slug,a.slug) IS NOT NULL ORDER BY t.kind, t.ref_id`)).rows
+  } catch { return [] }
+}
 async function categoryLastmod(): Promise<Record<string, Date>> {
   if (!process.env.DATABASE_URL) return {}
   const rows = (await db().query<{ category: string; m: Date }>("SELECT category,max(updated_at) AS m FROM vg_places WHERE status='published' GROUP BY category")).rows
@@ -36,7 +46,7 @@ async function categoryLastmod(): Promise<Record<string, Date>> {
 
 /** Each sitemap section, keyed by file name. Only indexable URLs are listed. */
 export async function sitemapSections(): Promise<Record<string, SitemapUrl[]>> {
-  const [ps, as, lastByCat, ds] = await Promise.all([indexablePlaces(), publishedArticles(), categoryLastmod(), districts()])
+  const [ps, as, lastByCat, ds, en] = await Promise.all([indexablePlaces(), publishedArticles(), categoryLastmod(), districts(), englishPages()])
   const lastAll = newest(Object.values(lastByCat))
   const pages = ['tentang', 'community-pulse', 'community-pulse/metode', 'event', 'privasi', 'ketentuan', ...(ratingEnabled() ? ['rating/metode', 'untuk-usaha'] : [])]
   const out: Record<string, SitemapUrl[]> = {
@@ -58,6 +68,7 @@ export async function sitemapSections(): Promise<Record<string, SitemapUrl[]>> {
     const rows = ps.filter(p => p.category === c.slug)
     if (rows.length) out[c.slug] = rows.map(p => ({ loc: absoluteUrl(`/${p.category}/${p.slug}`), lastmod: p.updated_at, priority: 0.8 }))
   }
+  if (en.length) out.en = [{ loc: absoluteUrl('/en'), lastmod: newest(en.map(e => e.updated_at)), priority: 0.8 }, { loc: absoluteUrl('/en/attractions'), lastmod: newest(en.map(e => e.updated_at)), priority: 0.7 }, ...en.map(e => ({ loc: absoluteUrl(e.kind === 'place' ? `/en/attractions/${e.slug}` : `/en/guides/${e.slug}`), lastmod: e.updated_at, priority: 0.7 }))]
   return out
 }
 

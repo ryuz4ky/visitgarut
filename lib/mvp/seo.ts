@@ -2,16 +2,16 @@
 
 /** Listings whose only source is a Google Maps location check carry no information of their own yet. */
 export const mapsOnlySourcePrefix = 'https://www.google.com/maps/search/'
-export const indexableSql = `(source_url NOT LIKE '${mapsOnlySourcePrefix}%' OR website<>'' OR whatsapp<>'' OR content LIKE '%visitgarut:practical%')`
+export const indexableSql = `(source_url NOT LIKE '${mapsOnlySourcePrefix}%' OR website<>'' OR whatsapp<>'' OR content LIKE '%visitgarut:practical%' OR EXISTS (SELECT 1 FROM vg_owner_updates ou WHERE ou.place_id=vg_places.id AND ou.status='diterima'))`
 
-type ThinInput = { source_url?: string | null; website?: string | null; whatsapp?: string | null; practical?: unknown }
+type ThinInput = { source_url?: string | null; website?: string | null; whatsapp?: string | null; practical?: unknown; ownerInfo?: unknown }
 
 /**
  * A page is kept out of search indexes while everything on it was generated from a location check alone.
  * It stays public and linked; it becomes indexable as soon as an editor adds a real source, contact, or field data.
  */
 export function isThinPlace(p: ThinInput) {
-  return (p.source_url || '').startsWith(mapsOnlySourcePrefix) && !p.website && !p.whatsapp && !p.practical
+  return (p.source_url || '').startsWith(mapsOnlySourcePrefix) && !p.website && !p.whatsapp && !p.practical && !p.ownerInfo
 }
 
 export function districtSlug(name: string) {

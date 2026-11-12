@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { absoluteUrl } from '@/lib/site'
 
-const disallow = ['/admin', '/api/', '/search', '/account', '/partner', '/trip', '/claim', '/auth', '/login']
+const disallow = ['/admin', '/api/', '/search', '/account', '/partner', '/trip', '/claim', '/auth', '/login', '/lengkapi']
 // Search and answer engines are welcome to read and cite public pages; private and transactional paths stay closed for everyone.
 const answerEngines = ['Googlebot', 'Bingbot', 'GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-SearchBot', 'Claude-User', 'PerplexityBot', 'Perplexity-User', 'Google-Extended', 'Applebot', 'Applebot-Extended', 'CCBot', 'DuckDuckBot']
 

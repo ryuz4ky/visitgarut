@@ -195,3 +195,18 @@
 .vp-district-link{margin:10px 0 0;font-size:.92rem}
 .vp-lead.is-summary{font-size:1.15rem;line-height:1.5}
 .vp-district-link a{text-decoration:underline;text-underline-offset:3px}
+/* English section */
+.ve-title{font-size:clamp(2.4rem,5vw,4rem);line-height:1;letter-spacing:-.045em;margin:10px 0 16px}
+.ve-links a{white-space:nowrap}
+.ve-lang{margin-left:auto;min-height:44px;display:inline-flex;align-items:center;padding:0 16px;border-radius:999px;background:var(--vg-sage,#eef0e6);font-weight:600;font-size:.88rem;text-decoration:none;color:inherit;white-space:nowrap}
+.ve-card-meta{margin:0;font-size:.82rem;color:var(--vg-ink-2,#5a625b)}
+.ve-facts{margin:8px 0 24px;display:grid;gap:14px}
+.ve-facts>div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding-top:14px;border-top:1px solid var(--vg-line,#dcdfd3)}
+.ve-facts dt{font-weight:700}
+.ve-facts dd{margin:0;line-height:1.6}
+.ve-facts a,.ve-more a,.ve-about a{text-decoration:underline}
+.ve-more{margin-top:24px;padding:16px 18px;border-radius:16px;background:var(--vg-sage,#eef0e6)}
+.ve-about{max-width:760px}
+.ve-qa h3{font-size:1.05rem;margin:18px 0 4px}
+.ve-qa p{margin:0;line-height:1.6}
+@media(max-width:700px){.ve-facts>div{grid-template-columns:1fr;gap:2px}.ve .vg-header-links{display:none}}

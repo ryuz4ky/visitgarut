@@ -34,6 +34,7 @@ export async function GET() {
     `- [Peta](${absoluteUrl('/map')}): lokasi semua tempat di direktori.`,
     `- [Per kecamatan](${absoluteUrl('/kecamatan')}): wisata, hotel, kuliner, dan cafe di tiap kecamatan.`,
     `- [Artikel & panduan](${absoluteUrl('/artikel')}): panduan perjalanan Garut.`,
+    `- [English: Garut travel guide](${absoluteUrl('/en')}): attractions and guides in English, translated from the Indonesian pages.`,
     `- [Event](${absoluteUrl('/event')}): agenda kegiatan di Garut.`,
     `- [Community Pulse](${absoluteUrl('/community-pulse')}): video dan percakapan publik tentang tempat di Garut, dengan sumber aslinya.`,
     `- [Metode Community Pulse](${absoluteUrl('/community-pulse/metode')})`,
