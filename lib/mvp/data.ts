@@ -16,6 +16,13 @@ export async function places(options: PlaceSearch = {}): Promise<Place[]> {
   const query = buildPlacesQuery(options)
   return (await db().query<Place>(query.text, query.values)).rows.map(hydratePlace)
 }
+/** Homepage selection: up to 12 places per category, own photos first, then area photos, then the most recently updated.
+ *  places() returns the first 100 by name, which on a 900+ place directory is mostly cafes and kuliner without their own photo. */
+export async function homePlaces(): Promise<Place[]> {
+  if (!process.env.DATABASE_URL) return []
+  const text=`SELECT * FROM (SELECT vg_places.*, row_number() OVER (PARTITION BY category ORDER BY (image_url<>'' AND image_credit !~* '^Foto (kawasan|arsip)') DESC, (image_url<>'') DESC, updated_at DESC, name, id) AS home_rank FROM vg_places WHERE status='published') ranked WHERE home_rank<=12 ORDER BY category, home_rank`
+  return (await db().query<Place>(text)).rows.map(hydratePlace)
+}
 export async function directoryPlaces(options:PlaceSearch={},page=1){
   if(!process.env.DATABASE_URL)return {items:[] as Place[],total:0,pages:1,page}
   const queries=buildDirectoryQueries(options,page)

@@ -1,7 +1,7 @@
 import Picture from '@/components/mvp/Picture'
 import Link from 'next/link'
 import {isAreaPhoto,areaPhotoTag,photoAlt} from '@/lib/mvp/photo'
-import {ArrowUpRight,ArrowRight,MapPin,Check,Sparkles,BadgeCheck,CircleHelp,Link2,Route,Search,Users,Mountain,BedDouble,UtensilsCrossed,Coffee,Car,Store,ScanLine} from 'lucide-react'
+import {ArrowUpRight,MapPin,BookOpen,Check,Sparkles,BadgeCheck,CircleHelp,Link2,Route,Search,Users,Mountain,BedDouble,UtensilsCrossed,Coffee,Car,Store,ScanLine} from 'lucide-react'
 import {Shell,JsonLd,date as fmtDate} from '@/components/mvp/Shell'
 import SiteHeader from '@/components/mvp/SiteHeader'
 import HeroVideo from '@/components/visit/HeroVideo'
@@ -10,7 +10,7 @@ import {PreviewNote} from '@/components/rating/bits'
 import {loadRatingHome} from '@/lib/rating/home'
 import {ratingVisible,ratingPreviewNote} from '@/lib/rating/server'
 import {organization} from '@/lib/mvp/org'
-import {places,articles,categories,type Place} from '@/lib/mvp/data'
+import {homePlaces,articles,categories,type Place} from '@/lib/mvp/data'
 import {db} from '@/lib/mvp/db'
 import {hubExperienceCountSql,hubExperienceParams} from '@/lib/pulse/hub-query'
 import {siteUrl,absoluteUrl} from '@/lib/site'
@@ -44,11 +44,13 @@ function placeMeta(p:Place){const t=knownTicket(p.practical);return [p.district|
 
 export default async function Home(){
  const visible=await ratingVisible()
- const [items,guides,pulse,rating]=await Promise.all([places(),articles(),pulsePlaces(),visible?loadRatingHome():Promise.resolve(null)])
+ const [items,guides,pulse,rating]=await Promise.all([homePlaces(),articles(),pulsePlaces(),visible?loadRatingHome():Promise.resolve(null)])
  const ranked=[...items].sort((a,b)=>Number(b.category==='wisata')-Number(a.category==='wisata')||Number(!!b.image_url)-Number(!!a.image_url)||Number(knownTicket(b.practical)!==null)-Number(knownTicket(a.practical)!==null)||Number(!!b.practical)-Number(!!a.practical))
  const withImage=ranked.filter(p=>p.image_url&&!isAreaPhoto(p))
+ const areaImage=ranked.filter(p=>p.image_url&&isAreaPhoto(p)).filter((p,i,a)=>a.findIndex(q=>q.image_url===p.image_url)===i)
  const featured=withImage[0]
- const bento=withImage.slice(0,5)
+ const bento=[...withImage.slice(1),...areaImage.filter(p=>!withImage.some(q=>q.image_url===p.image_url))].slice(0,5)
+ const photoPool=[...withImage,...areaImage].map(p=>p.image_url)
  const counts=await categoryCounts()
  const live=categories.filter(c=>counts.by[c.slug])
  const shown=new Set(bento.map(p=>p.id))
@@ -95,21 +97,20 @@ export default async function Home(){
    </form>
    <div className="vh-find-row">
     <nav className="vh-cat-chips" aria-label="Kategori tempat">{live.map(c=>{const Icon=catIcon[c.slug]||Store;return <Link key={c.slug} href={`/${c.slug}`}><Icon size={16} aria-hidden="true"/>{c.name}<b>{counts.by[c.slug]}</b></Link>})}<Link href="/map"><MapPin size={16} aria-hidden="true"/>Peta</Link></nav>
-    <Link className="vh-find-plan" href="/trip"><Route size={16} aria-hidden="true"/>Susun rencana perjalanan<ArrowRight size={16} aria-hidden="true"/></Link>
    </div>
    {counts.total>0&&<p className="vh-find-meta"><i className="vh-dot" aria-hidden="true"/>{counts.total} tempat di {counts.districts} kecamatan{counts.last?<> · terakhir diperbarui {fmtDate(counts.last)}</>:null} · setiap tarif menyebut sumbernya</p>}
   </div>
  </section>
 
- {bento.length>0&&<section className="vh-places" aria-labelledby="vh-places-title">
+ {(bento.length>0||panels.length>0)&&<section className="vh-places" aria-labelledby="vh-places-title">
   <div className="vh-places-head"><h2 id="vh-places-title">Lihat tempatnya.<br/>Periksa rinciannya.</h2>
    <p className="vh-places-note">Tempat dengan foto lebih dulu. Semua tempat menyebut sumber dan tanggal pemeriksaannya.</p></div>
-  <div className={`vh-bento vh-bento-${bento.length}`}>{bento.map((p,i)=>{const checked=checkedLabel(p.practical);const unknown=p.category==='wisata'&&knownTicket(p.practical)===null;return <Link key={p.id} className={i===0?'vh-tile is-big':'vh-tile'} href={`/${p.category}/${p.slug}`}>
+  {bento.length>0&&<div className={`vh-bento vh-bento-${bento.length}`}>{bento.map((p,i)=>{const checked=checkedLabel(p.practical);const unknown=p.category==='wisata'&&knownTicket(p.practical)===null;return <Link key={p.id} className={i===0?'vh-tile is-big':'vh-tile'} href={`/${p.category}/${p.slug}`}>
    <Picture src={p.image_url!} sizes={i===0?'(max-width: 700px) 92vw, 60vw':'(max-width: 700px) 92vw, 30vw'} alt={photoAlt(p)} loading={i>1?'lazy':undefined} width={800} height={600}/>
    <span className="vh-tile-shade" aria-hidden="true"/>
    {isAreaPhoto(p)?<span className="vh-tag-light vh-tile-tag">{areaPhotoTag(p)}</span>:unknown?<span className="vh-tag-warn">Tarif perlu konfirmasi</span>:checked?<span className="vh-tag-light vh-tile-tag"><i className="vh-dot" aria-hidden="true"/>{checked}</span>:null}
    <span className="vh-tile-foot"><span><strong>{p.name}</strong><small>{placeMeta(p)}</small></span>{i===0&&<span className="vh-round-lime"><ArrowUpRight size={22} aria-hidden="true"/></span>}</span>
-  </Link>})}</div>
+  </Link>})}</div>}
   {panels.length>0&&<div className="vh-cat-panels">{panels.map(({c,n,items})=>{const Icon=catIcon[c.slug]||Store;return <section key={c.slug} className="vh-cat-panel" aria-labelledby={`vh-cat-${c.slug}`}>
    <div className="vh-cat-head"><span className="vh-cat-icon"><Icon size={18} aria-hidden="true"/></span><h3 id={`vh-cat-${c.slug}`}>{c.name}</h3><Link href={`/${c.slug}`}>Semua {n}<ArrowUpRight size={14} aria-hidden="true"/></Link></div>
    <ul>{items.map(p=>{const ck=checkedLabel(p.practical);return <li key={p.id}><Link href={`/${p.category}/${p.slug}`}><span><strong>{p.name}</strong><small>{placeMeta(p)}{ck?` · ${ck}`:''}</small></span><ArrowUpRight size={16} aria-hidden="true"/></Link></li>})}</ul>
@@ -163,7 +164,7 @@ export default async function Home(){
   </div>
   <div className="vh-panel" id="panduan">
    <div className="vh-panel-head"><h2>Siapkan sebelum<br/>berangkat</h2><Link className="vh-soft-link" href="/artikel">Semua panduan</Link></div>
-   {guides.length>0?<div className="vh-guides">{guides.slice(0,3).map((a,i)=>{const img=a.image_url||withImage[(i+2)%Math.max(withImage.length,1)]?.image_url;return <Link key={a.id} href={`/artikel/${a.slug}`}>{img?<span className="vh-guide-img"><Picture src={img} sizes="152px" alt="" loading="lazy" width={152} height={128}/></span>:<span className="vh-guide-img is-empty" aria-hidden="true"/>}<span><strong>{a.title}</strong><small>{a.author} · {fmtDate(a.published_at||a.updated_at)}</small></span></Link>})}</div>
+   {guides.length>0?<div className="vh-guides">{guides.slice(0,3).map((a,i)=>{const img=a.image_url||photoPool[(i+1)%Math.max(photoPool.length,1)];return <Link key={a.id} href={`/artikel/${a.slug}`}>{img?<span className="vh-guide-img"><Picture src={img} sizes="152px" alt="" loading="lazy" width={152} height={128}/></span>:<span className="vh-guide-img is-empty" aria-hidden="true"><BookOpen size={20}/></span>}<span><strong>{a.title}</strong><small>{a.author} · {fmtDate(a.published_at||a.updated_at)}</small></span></Link>})}</div>
    :<p className="vh-muted">Panduan baru sedang disiapkan.</p>}
   </div>
  </section>
