@@ -51,6 +51,16 @@ export async function article(slug: string): Promise<Article | undefined> {
 export async function relatedPlaces(id: number): Promise<Place[]> {
   return (await db().query<Place>("SELECT p.* FROM vg_places p JOIN vg_article_places ap ON ap.place_id=p.id WHERE ap.article_id=$1 AND p.status='published' ORDER BY p.name",[id])).rows.map(hydratePlace)
 }
+/** Cover photo for each article that has none of its own: the first place it covers that has a real photo (area photos last). */
+export async function articleCovers(ids: number[]): Promise<Record<number, { image_url: string; image_credit: string; name: string }>> {
+  if (!process.env.DATABASE_URL || !ids.length) return {}
+  try {
+    const rows = (await db().query<{ article_id: number; image_url: string; image_credit: string; name: string }>(`SELECT DISTINCT ON (ap.article_id) ap.article_id, p.image_url, p.image_credit, p.name
+      FROM vg_article_places ap JOIN vg_places p ON p.id=ap.place_id AND p.status='published' AND COALESCE(p.image_url,'')<>''
+      WHERE ap.article_id = ANY($1::int[]) ORDER BY ap.article_id, (COALESCE(p.image_credit,'') ~* '^Foto (kawasan|arsip)'), p.name`, [ids])).rows
+    return Object.fromEntries(rows.map(r => [r.article_id, { image_url: r.image_url, image_credit: r.image_credit, name: r.name }]))
+  } catch { return {} }
+}
 export async function relatedArticles(id: number): Promise<Article[]> {
   return (await db().query<Article>("SELECT a.* FROM vg_articles a JOIN vg_article_places ap ON ap.article_id=a.id WHERE ap.place_id=$1 AND a.status='published' ORDER BY a.published_at DESC",[id])).rows
 }

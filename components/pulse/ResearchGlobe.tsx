@@ -1,4 +1,5 @@
 'use client'
+import '@/app/pulse-globe.css'
 import {useEffect,useMemo,useRef,useState,type CSSProperties,type PointerEvent} from 'react'
 import {buildResearchGlobeNodes,publicResearchItems} from '@/lib/pulse/research-globe'
 import {clampPitch,projectGlobePoint} from '@/lib/pulse/globe-motion'

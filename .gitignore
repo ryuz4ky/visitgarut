@@ -59,3 +59,7 @@ next-env.d.ts
 # build-time WebP copies of public photos (scripts/image-variants.cjs)
 /public/**/*-640.webp
 /public/**/*-1280.webp
+
+# build outputs of rating tests/worker
+/.rating-test/
+/.rating-worker/

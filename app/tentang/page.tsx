@@ -3,13 +3,14 @@ import { Shell, JsonLd } from '@/components/mvp/Shell'
 import FaqBlock from '@/components/mvp/Faq'
 import { directorySummary } from '@/lib/mvp/data'
 import { absoluteUrl } from '@/lib/site'
-import { organization } from '@/lib/mvp/org'
+import { organization, editors } from '@/lib/mvp/org'
 import { ratingEnabled } from '@/lib/rating/server'
 import type { Faq } from '@/lib/mvp/faq'
 export const dynamic = 'force-dynamic'
 export const metadata = { title: 'Tentang VisitGarut', description: 'VisitGarut adalah direktori independen untuk merencanakan kunjungan ke Kabupaten Garut, dikelola oleh Sorotnamedia. Cara kami memeriksa informasi dan menjaga independensi.', alternates: { canonical: '/tentang' } }
 
 export default async function Tentang() {
+  const team = editors()
   const summary = await directorySummary().catch(() => ({ total: 0, districts: [] as string[] }))
   const count = summary.total
   const rating = ratingEnabled()
@@ -20,7 +21,7 @@ export default async function Tentang() {
     { q: 'Bagaimana jika ada informasi yang salah?', a: 'Kirim koreksi lewat bagian "Info di sini tidak sesuai?" di halaman tempat. Laporan diperiksa dulu sebelum informasi yang tampil diubah.' },
   ]
   return <Shell>
-    <JsonLd data={{ '@context': 'https://schema.org', '@type': 'AboutPage', url: absoluteUrl('/tentang'), name: 'Tentang VisitGarut', inLanguage: 'id-ID', mainEntity: organization() }}/>
+    <JsonLd data={{ '@context': 'https://schema.org', '@type': 'AboutPage', url: absoluteUrl('/tentang'), name: 'Tentang VisitGarut', inLanguage: 'id-ID', mainEntity: team.length ? { ...organization(), employee: team.map(e => ({ '@type': 'Person', name: e.name, jobTitle: e.role, ...(e.url ? { url: e.url } : {}) })) } : organization() }}/>
     <article className="vg-wrap vg-section vg-reading" id="konten-utama">
       <span className="vg-eyebrow">TENTANG</span>
       <h1>Tentang VisitGarut</h1>
@@ -40,6 +41,11 @@ export default async function Tentang() {
         <li>Informasi yang belum pasti ditulis apa adanya: "perlu konfirmasi", bukan angka tebakan.</li>
         <li>Koreksi dari pengunjung dan pengelola diperiksa dulu sebelum mengubah informasi yang tampil.</li>
       </ul>
+      {team.length > 0 && <>
+        <h2 id="tim">Tim editorial</h2>
+        <p>Halaman tempat dan panduan ditinjau oleh:</p>
+        <ul>{team.map(e => <li key={e.name}>{e.url ? <a href={e.url} target="_blank" rel="noopener noreferrer">{e.name}</a> : <strong>{e.name}</strong>}, {e.role}</li>)}</ul>
+      </>}
       <h2 id="sumber">Sumber yang kami pakai</h2>
       <ul>
         <li><strong>Pengelola tempat:</strong> situs resmi, akun media sosial resmi, dan nomor kontak yang dicantumkan pengelola sendiri.</li>

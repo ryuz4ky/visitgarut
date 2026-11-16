@@ -5,7 +5,7 @@ import { submitOwnerUpdate, type OwnerState } from '@/app/lengkapi/[category]/[s
 export default function OwnerForm({ placeId, placeName }: { placeId: number; placeName: string }) {
   const [state, action, pending] = useActionState<OwnerState, FormData>(submitOwnerUpdate, { ok: false, message: '' })
   if (state.ok) return <div className="vr-card vr-done" role="status"><h2>Terima kasih</h2><p>{state.message}</p></div>
-  return <form action={action} className="vr-card vr-form vr-apply">
+  return <form action={action} className="vr-card vr-form vr-apply" data-vg-event="owner_update">
     {state.message && <p className="vr-message" role="alert">{state.message}</p>}
     <input type="hidden" name="place_id" value={placeId}/>
     <fieldset className="vo-set"><legend>Tentang Anda</legend>

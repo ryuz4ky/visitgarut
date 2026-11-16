@@ -10,13 +10,13 @@ import {PreviewNote} from '@/components/rating/bits'
 import {loadRatingHome} from '@/lib/rating/home'
 import {ratingVisible,ratingPreviewNote} from '@/lib/rating/server'
 import {organization} from '@/lib/mvp/org'
-import {homePlaces,articles,categories,type Place} from '@/lib/mvp/data'
+import {homePlaces,articles,articleCovers,categories,type Place} from '@/lib/mvp/data'
 import {db} from '@/lib/mvp/db'
 import {hubExperienceCountSql,hubExperienceParams} from '@/lib/pulse/hub-query'
 import {siteUrl,absoluteUrl} from '@/lib/site'
 import {compactRupiah,knownTicket,checkedLabel} from '@/lib/mvp/format'
 export const dynamic='force-dynamic'
-export const metadata={title:'VisitGarut — Pilih tempat, hitung biaya, rencanakan pulang',description:'Rencanakan kunjungan Garut sesuai rombongan, budget, dan waktu. Bandingkan tempat, periksa sumber biaya, lalu atur perjalanan pergi-pulang.',alternates:{canonical:'/'}}
+export const metadata={title:'VisitGarut — Pilih tempat, hitung biaya, rencanakan pulang',description:'Rencanakan kunjungan Garut sesuai rombongan, budget, dan waktu. Bandingkan tempat, periksa sumber biaya, lalu atur perjalanan pergi-pulang.',alternates:{canonical:'/',languages:{'id-ID':'/',en:'/en','x-default':'/'}}}
 
 type PulsePlace={id:number;name:string;category:string;slug:string;district:string;videos:number;research:number;experiences:number}
 async function pulsePlaces():Promise<PulsePlace[]>{
@@ -50,8 +50,8 @@ export default async function Home(){
  const areaImage=ranked.filter(p=>p.image_url&&isAreaPhoto(p)).filter((p,i,a)=>a.findIndex(q=>q.image_url===p.image_url)===i)
  const featured=withImage[0]
  const bento=[...withImage.slice(1),...areaImage.filter(p=>!withImage.some(q=>q.image_url===p.image_url))].slice(0,5)
- const photoPool=[...withImage,...areaImage].map(p=>p.image_url)
  const counts=await categoryCounts()
+ const covers=await articleCovers(guides.slice(0,3).filter(a=>!a.image_url).map(a=>a.id))
  const live=categories.filter(c=>counts.by[c.slug])
  const shown=new Set(bento.map(p=>p.id))
  const panels=live.map(c=>({c,n:counts.by[c.slug],items:ranked.filter(p=>p.category===c.slug&&!shown.has(p.id)).slice(0,4)})).filter(x=>x.items.length)
@@ -164,7 +164,7 @@ export default async function Home(){
   </div>
   <div className="vh-panel" id="panduan">
    <div className="vh-panel-head"><h2>Siapkan sebelum<br/>berangkat</h2><Link className="vh-soft-link" href="/artikel">Semua panduan</Link></div>
-   {guides.length>0?<div className="vh-guides">{guides.slice(0,3).map((a,i)=>{const img=a.image_url||photoPool[(i+1)%Math.max(photoPool.length,1)];return <Link key={a.id} href={`/artikel/${a.slug}`}>{img?<span className="vh-guide-img"><Picture src={img} sizes="152px" alt="" loading="lazy" width={152} height={128}/></span>:<span className="vh-guide-img is-empty" aria-hidden="true"><BookOpen size={20}/></span>}<span><strong>{a.title}</strong><small>{a.author} · {fmtDate(a.published_at||a.updated_at)}</small></span></Link>})}</div>
+   {guides.length>0?<div className="vh-guides">{guides.slice(0,3).map((a,i)=>{const img=a.image_url||covers[a.id]?.image_url;return <Link key={a.id} href={`/artikel/${a.slug}`}>{img?<span className="vh-guide-img"><Picture src={img} sizes="152px" alt="" loading="lazy" width={152} height={128}/></span>:<span className="vh-guide-img is-empty" aria-hidden="true"><BookOpen size={20}/></span>}<span><strong>{a.title}</strong><small>{a.author} · {fmtDate(a.published_at||a.updated_at)}</small></span></Link>})}</div>
    :<p className="vh-muted">Panduan baru sedang disiapkan.</p>}
   </div>
  </section>

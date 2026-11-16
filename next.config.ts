@@ -7,7 +7,7 @@ import path from 'node:path'
 const variants = require('./scripts/image-variants.cjs') as { available: () => string[] }
 
 const longCache = [{ key: 'Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=86400' }]
-const nextConfig:NextConfig={output:'standalone',htmlLimitedBots:/.*/,experimental:{cpus:1},images:{unoptimized:true,remotePatterns:[{protocol:'https',hostname:'images.unsplash.com'},{protocol:'https',hostname:'upload.wikimedia.org'}]},async headers(){return [{source:'/:path*',headers:[{key:'X-Content-Type-Options',value:'nosniff'},{key:'Referrer-Policy',value:'strict-origin-when-cross-origin'},{key:'X-Frame-Options',value:'SAMEORIGIN'}]},{source:'/places/:file*',headers:longCache},{source:'/:file(papandayan|situ-bagendit|talaga-bodas)(.*)',headers:longCache}]}}
+const nextConfig:NextConfig={output:'standalone',htmlLimitedBots:/.*/,experimental:{cpus:1},images:{unoptimized:true,remotePatterns:[{protocol:'https',hostname:'images.unsplash.com'},{protocol:'https',hostname:'upload.wikimedia.org'}]},async headers(){return [{source:'/:path*',headers:[{key:'X-Content-Type-Options',value:'nosniff'},{key:'Referrer-Policy',value:'strict-origin-when-cross-origin'},{key:'X-Frame-Options',value:'SAMEORIGIN'}]},{source:'/places/:file*',headers:longCache},{source:'/fonts/:file*',headers:[{key:'Cache-Control',value:'public, max-age=31536000, immutable'}]},{source:'/:file(papandayan|situ-bagendit|talaga-bodas)(.*)',headers:longCache}]}}
 
 /** Production builds first write WebP copies of the site's photos, then tell the pages which ones exist. */
 export default async function config(phase: string): Promise<NextConfig> {

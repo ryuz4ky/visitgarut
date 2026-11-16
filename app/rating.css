@@ -223,6 +223,7 @@
 .vr-p-detail{display:flex;flex-direction:column;gap:12px}
 .vr-p-empty{padding:22px;border-radius:20px;border:1.5px dashed var(--vg-line);display:flex;flex-direction:column;gap:8px}
 .vr-p-empty p{margin:0;color:var(--vg-muted);line-height:1.6}
+.vr-p-empty .vr-p-empty-title{color:var(--vg-ink,inherit);font-weight:700;font-size:1.05rem}
 .vr-avatar{flex:none;width:36px;height:36px;border-radius:999px;background:var(--vg-sage);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--vg-olive)}
 .vr-review header>span:not(.vr-avatar){display:flex;flex-direction:column;gap:2px}
 .vr-review header>span>span{display:inline-flex;align-items:center;gap:4px;font-size:13px;color:var(--vg-muted)}
@@ -349,7 +350,7 @@
 .vr-sector-slim a{font-weight:600;color:var(--vg-ink);text-decoration:underline;text-underline-offset:3px}
 .vr-panel-empty{display:grid!important;grid-template-columns:auto 1fr auto;align-items:center;gap:18px}
 .vr-pe-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--vg-ground);color:var(--vg-ink)}
-.vr-pe-copy h2{margin:2px 0 6px;font-size:1.25rem}
+.vr-pe-copy h2,.vr-pe-copy .vr-pe-title{margin:2px 0 6px;font-size:1.25rem;font-weight:700;color:var(--vg-ink,inherit);line-height:1.25}
 .vr-pe-copy p:last-child{margin:0;color:var(--vg-muted);line-height:1.55}
 .vr-pe-copy .vr-eyebrow{margin:0}
 .vr-pe-link{font-weight:600;color:var(--vg-ink);text-decoration:underline;text-underline-offset:3px;white-space:nowrap}

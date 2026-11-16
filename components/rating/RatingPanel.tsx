@@ -25,7 +25,7 @@ export default function RatingPanel({ rating, peers = [] }: { rating: PlaceRatin
       <div className="vr-pe-icon" aria-hidden="true"><QrCode size={22}/></div>
       <div className="vr-pe-copy">
         <p className="vr-eyebrow">Nilai pengunjung</p>
-        <h2 id="rating-title">Belum ada skor untuk tempat ini</h2>
+        <p className="vr-pe-title" id="rating-title">Belum ada skor untuk tempat ini</p>
         <p>{rating.reviewers > 0 ? `${rating.reviewers} pengunjung sudah menilai. Butuh ${left} lagi sebelum skornya muncul.` : `Skor muncul setelah ${MIN_REVIEWERS} pengunjung menilai lewat QR VisitGarut di lokasi.`} Pernah ke sini? Cari plat QR di kasir atau meja.</p>
       </div>
       <Link className="vr-pe-link" href="/rating/metode">Cara kerjanya</Link>
@@ -65,7 +65,7 @@ export default function RatingPanel({ rating, peers = [] }: { rating: PlaceRatin
             ? <><h3>Sebaran nilai</h3><div className="vr-dist" aria-label="Sebaran nilai keseluruhan">{[5, 4, 3, 2, 1].map(star => <div key={star}><span>{star}</span><span className="vr-bar" aria-hidden="true"><i style={{ width: `${rating.distribution![star - 1]}%` }}/></span><small>{rating.distribution![star - 1]}%</small></div>)}</div></>
             : <p className="vr-fine">Sebaran nilai tampil setelah 10 pengunjung menilai.</p>}
         </> : <div className="vr-p-empty">
-          <h3>Belum ada skor</h3>
+          <p className="vr-p-empty-title">Belum ada skor</p>
           <p>Skor muncul setelah 3 pengunjung menilai. Sampai saat itu kami tidak menampilkan angka apa pun.</p>
         </div>}
       </div>

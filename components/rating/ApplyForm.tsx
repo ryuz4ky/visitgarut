@@ -5,7 +5,7 @@ import { applyForPlate, type ApplyState } from '@/app/untuk-usaha/actions'
 export default function ApplyForm({ categories }: { categories: { slug: string; name: string }[] }) {
   const [state, action, pending] = useActionState<ApplyState, FormData>(applyForPlate, { ok: false, message: '' })
   if (state.ok) return <div className="vr-card vr-done" role="status"><h2>Terima kasih</h2><p>{state.message}</p></div>
-  return <form action={action} className="vr-card vr-form vr-apply">
+  return <form action={action} className="vr-card vr-form vr-apply" data-vg-event="qr_request">
     {state.message && <p className="vr-message" role="alert">{state.message}</p>}
     <label>Nama usaha<input name="business_name" required maxLength={120} autoComplete="organization"/></label>
     <div className="vr-apply-row">

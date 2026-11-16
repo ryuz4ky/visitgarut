@@ -28,7 +28,7 @@ export async function generateMetadata({params,searchParams}:CategoryProps){
   if(!c||page===null)return {title:'Halaman tidak ditemukan',robots:{index:false}}
   const {total}=await directoryPlaces({category},1)
   // Empty categories stay reachable for visitors but are kept out of search indexes until they have listings.
-  return {title:`${c.name} di Garut${page>1?` — Halaman ${page}`:''}`,description:c.seoDescription,alternates:{canonical:directoryPageHref(`/${category}`,page)},...(total===0?{robots:{index:false,follow:true}}:{})}
+  return {title:`${c.name} di Garut${page>1?` — Halaman ${page}`:''}`,description:c.seoDescription,alternates:{canonical:directoryPageHref(`/${category}`,page),...(category==='wisata'&&page===1?{languages:{'id-ID':'/wisata',en:'/en/attractions','x-default':'/wisata'}}:{})},...(total===0?{robots:{index:false,follow:true}}:{})}
 }
 export default async function Category({params,searchParams}:CategoryProps) {
   const {category}=await params

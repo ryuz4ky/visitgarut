@@ -1,4 +1,5 @@
 'use client'
+import '@/app/pulse-globe.css'
 import { useState,useTransition,useRef } from 'react'
 import Link from 'next/link'
 import type { Pulse, Topic } from '@/lib/pulse/core'

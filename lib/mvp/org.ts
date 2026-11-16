@@ -26,3 +26,7 @@ export function organization() {
 
 /** Short reference for publisher/author fields once the full node is on the page or elsewhere on the site. */
 export const organizationRef = () => ({ '@type': 'Organization', '@id': organizationId, name: 'VisitGarut', url: siteUrl })
+
+/** Editorial team shown on /tentang#tim, e.g. VISITGARUT_EDITORS="Nama Lengkap|Peran|https://profil;Nama Kedua|Peran". Empty = section hidden. */
+export type Editor = { name: string; role: string; url?: string }
+export const editors = (): Editor[] => (process.env.VISITGARUT_EDITORS || '').split(';').map(s => s.split('|').map(x => x.trim())).filter(([name, role]) => name && role).map(([name, role, url]) => ({ name, role, ...(url && /^https:\/\//.test(url) ? { url } : {}) }))
